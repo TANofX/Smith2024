@@ -202,7 +202,7 @@ public final class Constants {
   }
 
   public static final class Swerve {
-    public static final int imuCanID = 1;
+    public static final int imuCanID = 3;
     public static final double maxVelTele = 4.7;
     public static final double maxAccelTele = 6.0;
     public static final double maxAngularVelTele = Units.degreesToRadians(180);

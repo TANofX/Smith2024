@@ -33,6 +33,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
+    SmartDashboard.putData(swerve.zeroModulesCommand());
   }
   
 
