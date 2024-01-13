@@ -3,10 +3,10 @@ package frc.lib.util;
 import edu.wpi.first.util.CircularBuffer;
 
 public class MovingAverage {
-  private final CircularBuffer buffer;
+  private final CircularBuffer<Double> buffer;
 
   public MovingAverage(int size) {
-    buffer = new CircularBuffer(size);
+    buffer = new CircularBuffer<Double>(size);
   }
 
   public void add(double d) {

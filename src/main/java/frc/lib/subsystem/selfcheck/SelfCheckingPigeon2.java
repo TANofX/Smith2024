@@ -1,8 +1,7 @@
 package frc.lib.subsystem.selfcheck;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.sensors.Pigeon2;
-import com.ctre.phoenix.sensors.Pigeon2_Faults;
+
+import com.ctre.phoenix6.hardware.Pigeon2;
 import frc.lib.subsystem.SubsystemFault;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,32 +19,23 @@ public class SelfCheckingPigeon2 implements SelfChecking {
   public List<SubsystemFault> checkForFaults() {
     List<SubsystemFault> faults = new ArrayList<>();
 
-    Pigeon2_Faults f = new Pigeon2_Faults();
-    pigeon.getFaults(f);
 
-    if (f.HardwareFault) {
+    if (pigeon.getFault_Hardware().getValue()) {
       faults.add(new SubsystemFault(String.format("[%s]: Hardware fault detected", label)));
     }
-    if (f.ResetDuringEn) {
+    if (pigeon.getFault_BootDuringEnable().getValue()) {
       faults.add(new SubsystemFault(String.format("[%s]: Device booted while enabled", label)));
     }
-    if (f.BootIntoMotion) {
+    if (pigeon.getFault_BootIntoMotion().getValue()) {
       faults.add(new SubsystemFault(String.format("[%s]: Device booted while in motion", label)));
     }
-    if (f.GyroFault) {
+    if (pigeon.getFault_BootupGyroscope().getValue()) {
       faults.add(new SubsystemFault(String.format("[%s]: Gyro fault detected", label)));
     }
-    if (f.AccelFault) {
+    if (pigeon.getFault_BootupAccelerometer().getValue()) {
       faults.add(new SubsystemFault(String.format("[%s]: Accelerometer fault detected", label)));
     }
-
-    ErrorCode err = pigeon.getLastError();
-    if (err != ErrorCode.OK) {
-      faults.add(
-          new SubsystemFault(
-              String.format("[%s]: Error Code (%s)", label, err.name()), err.value > 0));
-    }
-
+    
     return faults;
   }
 }

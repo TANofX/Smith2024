@@ -1,20 +1,27 @@
 package frc.lib.subsystem;
 
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenixpro.hardware.CANcoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.ctre.phoenix6.hardware.CANcoder;
+//import com.ctre.phoenix6.motorcontrol.can.BaseMotorController;
 import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.subsystem.selfcheck.*;
+import frc.lib.subsystem.selfcheck.SelfChecking;
+import frc.lib.subsystem.selfcheck.SelfCheckingCANCoder;
+import frc.lib.subsystem.selfcheck.SelfCheckingCANCoderPro;
+import frc.lib.subsystem.selfcheck.SelfCheckingPWMMotor;
+import frc.lib.subsystem.selfcheck.SelfCheckingPigeon2;
+import frc.lib.subsystem.selfcheck.SelfCheckingSparkMax;
+import frc.lib.subsystem.selfcheck.SelfCheckingTalonFXPro;
 import frc.robot.Robot;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AdvancedSubsystem extends SubsystemBase {
   public enum SystemStatus {
@@ -30,28 +37,28 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
 
   public AdvancedSubsystem() {
     this.statusTable = "SystemStatus/" + this.getName();
-    CommandBase systemCheck = getSystemCheckCommand();
+    Command systemCheck = getSystemCheckCommand();
     systemCheck.setName(getName() + "Check");
     SmartDashboard.putData(statusTable + "/SystemCheck", systemCheck);
     SmartDashboard.putBoolean(statusTable + "/CheckRan", false);
     checkErrors = RobotBase.isReal();
 
-    setupCallbacks();
+    // setupCallbacks();
   }
 
   public AdvancedSubsystem(String name) {
     this.setName(name);
     this.statusTable = "SystemStatus/" + name;
-    CommandBase systemCheck = getSystemCheckCommand();
+    Command systemCheck = getSystemCheckCommand();
     systemCheck.setName(getName() + "Check");
     SmartDashboard.putData(statusTable + "/SystemCheck", systemCheck);
     SmartDashboard.putBoolean(statusTable + "/CheckRan", false);
     checkErrors = RobotBase.isReal();
 
-    setupCallbacks();
+    // setupCallbacks();
   }
 
-  public CommandBase getSystemCheckCommand() {
+  public Command getSystemCheckCommand() {
     return Commands.sequence(
         Commands.runOnce(
             () -> {
@@ -67,10 +74,16 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
             }));
   }
 
-  private void setupCallbacks() {
-    Robot.addPeriodicCallback(this::checkForFaults, 0.25);
-    Robot.addPeriodicCallback(this::publishStatus, 1.0);
+  @Override
+  public void periodic() {
+    checkForFaults();
+    publishStatus();
   }
+
+  // private void setupCallbacks() {
+  //   Robot.addPeriodic(this::checkForFaults, 0.25);
+  //   Robot.addPeriodic(this::publishStatus, 1.0);
+  // }
 
   private void publishStatus() {
     SystemStatus status = getSystemStatus();
@@ -138,11 +151,11 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
     return worstStatus;
   }
 
-  public void registerHardware(String label, BaseMotorController phoenixMotor) {
-    hardware.add(new SelfCheckingPhoenixMotor(label, phoenixMotor));
-  }
+ // public void registerHardware(String label, BaseMotorController phoenixMotor) {
+ //   hardware.add(new SelfCheckingPhoenixMotor(label, phoenixMotor));
+  //}
 
-  public void registerHardware(String label, com.ctre.phoenixpro.hardware.TalonFX talon) {
+  public void registerHardware(String label, com.ctre.phoenix6.hardware.TalonFX talon) {
     hardware.add(new SelfCheckingTalonFXPro(label, talon));
   }
 
@@ -154,24 +167,21 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
     hardware.add(new SelfCheckingSparkMax(label, spark));
   }
 
-  public void registerHardware(String label, com.ctre.phoenix.sensors.Pigeon2 pigeon2) {
+  public void registerHardware(String label, com.ctre.phoenix6.hardware.Pigeon2 pigeon2) {
     hardware.add(new SelfCheckingPigeon2(label, pigeon2));
   }
 
-  public void registerHardware(String label, com.ctre.phoenixpro.hardware.Pigeon2 pigeon2) {
-    hardware.add(new SelfCheckingPigeon2Pro(label, pigeon2));
-  }
 
-  public void registerHardware(String label, CANCoder canCoder) {
-    hardware.add(new SelfCheckingCANCoder(label, canCoder));
-  }
+  //public void registerHardware(String label, CANCoder canCoder) {
+    //hardware.add(new SelfCheckingCANCoder(label, canCoder));
+  //}
 
   public void registerHardware(String label, CANcoder canCoder) {
     hardware.add(new SelfCheckingCANCoderPro(label, canCoder));
   }
 
   // Command to run a full systems check
-  protected abstract CommandBase systemCheckCommand();
+  protected abstract Command systemCheckCommand();
 
   // Method to check for faults while the robot is operating normally
   private void checkForFaults() {

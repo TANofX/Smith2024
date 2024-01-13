@@ -1,18 +1,18 @@
 package frc.lib.swerve;
 
-import com.ctre.phoenixpro.StatusCode;
-import com.ctre.phoenixpro.StatusSignalValue;
-import com.ctre.phoenixpro.configs.CANcoderConfiguration;
-import com.ctre.phoenixpro.configs.TalonFXConfiguration;
-import com.ctre.phoenixpro.controls.NeutralOut;
-import com.ctre.phoenixpro.controls.PositionVoltage;
-import com.ctre.phoenixpro.controls.StaticBrake;
-import com.ctre.phoenixpro.controls.VelocityVoltage;
-import com.ctre.phoenixpro.hardware.CANcoder;
-import com.ctre.phoenixpro.hardware.TalonFX;
-import com.ctre.phoenixpro.signals.*;
-import com.ctre.phoenixpro.sim.CANcoderSimState;
-import com.ctre.phoenixpro.sim.TalonFXSimState;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.*;
+import com.ctre.phoenix6.sim.CANcoderSimState;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.subsystem.AdvancedSubsystem;
 
@@ -67,25 +67,25 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
 
   private final TalonFX driveMotor;
   private final TalonFXSimState driveSimState;
-  private final StatusSignalValue<Double> drivePositionSignal;
-  private final StatusSignalValue<Double> driveVelocitySignal;
-  private final StatusSignalValue<Double> driveCurrentSignal;
-  private final StatusSignalValue<Double> driveVoltageSignal;
-  private final StatusSignalValue<Double> driveTempSignal;
+  private final StatusSignal<Double> drivePositionSignal;
+  private final StatusSignal<Double> driveVelocitySignal;
+  private final StatusSignal<Double> driveCurrentSignal;
+  private final StatusSignal<Double> driveVoltageSignal;
+  private final StatusSignal<Double> driveTempSignal;
 
   private final TalonFX rotationMotor;
   private final TalonFXSimState rotationSimState;
-  private final StatusSignalValue<Double> rotationPositionSignal;
-  private final StatusSignalValue<Double> rotationVelocitySignal;
-  private final StatusSignalValue<Double> rotationCurrentSignal;
-  private final StatusSignalValue<Double> rotationVoltageSignal;
-  private final StatusSignalValue<Double> rotationTempSignal;
+  private final StatusSignal<Double> rotationPositionSignal;
+  private final StatusSignal<Double> rotationVelocitySignal;
+  private final StatusSignal<Double> rotationCurrentSignal;
+  private final StatusSignal<Double> rotationVoltageSignal;
+  private final StatusSignal<Double> rotationTempSignal;
 
   private final CANcoder rotationEncoder;
   private final CANcoderConfiguration rotationEncoderConfig;
   private final CANcoderSimState rotationEncoderSimState;
-  private final StatusSignalValue<Double> rotationAbsoluteSignal;
-  private final StatusSignalValue<Double> rotationAbsoluteVelSignal;
+  private final StatusSignal<Double> rotationAbsoluteSignal;
+  private final StatusSignal<Double> rotationAbsoluteVelSignal;
 
   private SwerveModuleState targetState = new SwerveModuleState();
 
@@ -168,7 +168,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
     SmartDashboard.putNumber(getName() + "/RotationTemp", rotationMotor.getDeviceTemp().getValue());
 
     // Refresh cached values in background
-    StatusSignalValue.waitForAll(
+    StatusSignal.waitForAll(
         0,
         drivePositionSignal,
         driveVelocitySignal,
@@ -348,7 +348,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
 
   /** Sync the relative rotation encoder (falcon) to the value of the absolute encoder (CANCoder) */
   public void syncRotationEncoders() {
-    rotationMotor.setRotorPosition(getAbsoluteRotationDegrees() / ROTATION_DEGREES_PER_ROTATION);
+    rotationMotor.setPosition(getAbsoluteRotationDegrees() / ROTATION_DEGREES_PER_ROTATION);
   }
 
   public void lockModule() {
@@ -368,6 +368,8 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
     }
     double angle = getRelativeRotationDegrees() + deltaRot;
 
+
+    //MAYBE? .setRotorControl
     driveMotor.setControl(new StaticBrake());
     rotationMotor.setControl(new PositionVoltage(angle / ROTATION_DEGREES_PER_ROTATION));
   }
@@ -377,7 +379,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
   }
 
   @Override
-  public CommandBase systemCheckCommand() {
+  public Command systemCheckCommand() {
     return Commands.sequence(
             Commands.runOnce(
                 () -> {

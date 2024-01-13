@@ -1,19 +1,19 @@
 package frc.lib.subsystem.selfcheck;
 
-import com.ctre.phoenixpro.StatusCode;
-import com.ctre.phoenixpro.StatusSignalValue;
-import com.ctre.phoenixpro.hardware.TalonFX;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.TalonFX;
 import frc.lib.subsystem.SubsystemFault;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SelfCheckingTalonFXPro implements SelfChecking {
   private final String label;
-  private final StatusSignalValue<Integer> firmwareVersionSignal;
-  private final StatusSignalValue<Boolean> hardwareFaultSignal;
-  private final StatusSignalValue<Boolean> bootEnabledSignal;
-  private final StatusSignalValue<Boolean> deviceTempSignal;
-  private final StatusSignalValue<Boolean> procTempSignal;
+  private final StatusSignal<Integer> firmwareVersionSignal;
+  private final StatusSignal<Boolean> hardwareFaultSignal;
+  private final StatusSignal<Boolean> bootEnabledSignal;
+  private final StatusSignal<Boolean> deviceTempSignal;
+  private final StatusSignal<Boolean> procTempSignal;
 
   public SelfCheckingTalonFXPro(String label, TalonFX talon) {
     this.label = label;
@@ -29,7 +29,7 @@ public class SelfCheckingTalonFXPro implements SelfChecking {
   public List<SubsystemFault> checkForFaults() {
     List<SubsystemFault> faults = new ArrayList<>();
 
-    if (firmwareVersionSignal.refresh().getError() != StatusCode.OK) {
+    if (firmwareVersionSignal.refresh().getStatus() != StatusCode.OK) {
       faults.add(new SubsystemFault(String.format("[%s]: No communication with device", label)));
     }
     if (hardwareFaultSignal.refresh().getValue()) {

@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenixpro.StatusSignalValue;
-import com.ctre.phoenixpro.configs.Pigeon2Configuration;
-import com.ctre.phoenixpro.hardware.Pigeon2;
-import com.ctre.phoenixpro.sim.Pigeon2SimState;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.sim.Pigeon2SimState;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -37,12 +37,12 @@ public class Swerve extends AdvancedSubsystem {
 
   protected final Pigeon2 imu;
   protected final Pigeon2SimState imuSim;
-  protected final StatusSignalValue<Double> imuRollSignal;
-  protected final StatusSignalValue<Double> imuPitchSignal;
-  protected final StatusSignalValue<Double> imuYawSignal;
+  protected final StatusSignal<Double> imuRollSignal;
+  protected final StatusSignal<Double> imuPitchSignal;
+  protected final StatusSignal<Double> imuYawSignal;
   //  protected final StatusSignalValue<Double> imuAccelXSignal;
   //  protected final StatusSignalValue<Double> imuAccelYSignal;
-  protected final StatusSignalValue<Double> imuAccelZSignal;
+  protected final StatusSignal<Double> imuAccelZSignal;
 
   private final RobotPoseLookup poseLookup;
 
@@ -177,11 +177,12 @@ public class Swerve extends AdvancedSubsystem {
     //        "Swerve/Acceleration", new double[] {accel.getX(), accel.getY(), accel.getZ()});
     //    SmartDashboard.putNumber("Swerve/Pitch", getPitch());
 
-    if (!DriverStation.isAutonomousEnabled()) {
-      correctOdom(RobotContainer.driver.getBackButton(), RobotContainer.driver.getBackButton());
-    }
+                                                                            //WE MAY WANT THIS HELLO
+    //if (!DriverStation.isAutonomousEnabled()) {
+      //correctOdom(RobotContainer.driver.getBackButton(), RobotContainer.driver.getBackButton());
+    //}
 
-    StatusSignalValue.waitForAll(0, imuRollSignal, imuPitchSignal, imuYawSignal, imuAccelZSignal);
+    StatusSignal.waitForAll(0, imuRollSignal, imuPitchSignal, imuYawSignal, imuAccelZSignal);
     //    imuRollSignal.refresh();
     //    imuPitchSignal.refresh();
     //    imuYawSignal.refresh();
@@ -374,7 +375,7 @@ public class Swerve extends AdvancedSubsystem {
    *
    * @return Command to trim the modules, runs while disabled
    */
-  public CommandBase zeroModulesCommand() {
+  public Command zeroModulesCommand() {
     return Commands.runOnce(
             () -> {
               for (Mk4SwerveModulePro module : modules) {
@@ -388,7 +389,7 @@ public class Swerve extends AdvancedSubsystem {
     return kinematics.toChassisSpeeds(getStates());
   }
 
-  public CommandBase autoBalance(double maxVel) {
+  public Command autoBalance(double maxVel) {
     PIDController controller =
         new PIDController(
             Constants.AutoBalance.BALANCE_CONSTANTS.kP,
@@ -425,8 +426,8 @@ public class Swerve extends AdvancedSubsystem {
                   double chargeStationPitch =
                       Units.radiansToDegrees(chargeStationOrientation.getRotation().getY());
 
-                  double rollVel = imu.getAngularVelocityX().getValue();
-                  double pitchVel = imu.getAngularVelocityY().getValue();
+                  double rollVel = imu.getAngularVelocityXDevice().getValue();
+                  double pitchVel = imu.getAngularVelocityYDevice().getValue();
                   double angularVel = Math.sqrt(Math.pow(rollVel, 2) + Math.pow(pitchVel, 2));
 
                   if (Math.abs(chargeStationPitch) < 3 || angularVel > 10) {
@@ -468,7 +469,7 @@ public class Swerve extends AdvancedSubsystem {
 
     if (LimelightHelpers.getTV("limelight-left")) {
       Pose2d botpose =
-          (DriverStation.getAlliance() == DriverStation.Alliance.Blue
+          (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
               ? LimelightHelpers.getBotPose2d_wpiBlue("limelight-left")
               : LimelightHelpers.getBotPose2d_wpiRed("limelight-left"));
 
@@ -482,7 +483,7 @@ public class Swerve extends AdvancedSubsystem {
 
     if (LimelightHelpers.getTV("limelight-right")) {
       Pose2d botpose =
-          (DriverStation.getAlliance() == DriverStation.Alliance.Blue
+          (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue
               ? LimelightHelpers.getBotPose2d_wpiBlue("limelight-right")
               : LimelightHelpers.getBotPose2d_wpiRed("limelight-right"));
 
@@ -586,7 +587,7 @@ public class Swerve extends AdvancedSubsystem {
   }
 
   @Override
-  protected CommandBase systemCheckCommand() {
+  protected Command systemCheckCommand() {
     return Commands.sequence(
             Commands.runOnce(
                 () -> {

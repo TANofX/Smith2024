@@ -1,17 +1,17 @@
 package frc.lib.subsystem.selfcheck;
 
-import com.ctre.phoenixpro.StatusSignalValue;
-import com.ctre.phoenixpro.hardware.CANcoder;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.CANcoder;
 import frc.lib.subsystem.SubsystemFault;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SelfCheckingCANCoderPro implements SelfChecking {
   private final String label;
-  private final StatusSignalValue<Boolean> hardwareFaultSignal;
-  private final StatusSignalValue<Boolean> bootEnabledSignal;
-  private final StatusSignalValue<Boolean> badMagnetSignal;
-  private final StatusSignalValue<Boolean> undervoltageSignal;
+  private final StatusSignal<Boolean> hardwareFaultSignal;
+  private final StatusSignal<Boolean> bootEnabledSignal;
+  private final StatusSignal<Boolean> badMagnetSignal;
+  private final StatusSignal<Boolean> undervoltageSignal;
 
   public SelfCheckingCANCoderPro(String label, CANcoder canCoder) {
     this.label = label;
