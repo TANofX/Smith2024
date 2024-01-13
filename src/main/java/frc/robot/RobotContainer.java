@@ -11,6 +11,7 @@ import frc.lib.input.controllers.XboxControllerWrapper;
 import frc.lib.input.controllers.rumble.RumbleOff;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.lib.util.CycleTracker;
+import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
@@ -30,7 +31,9 @@ public class RobotContainer {
   
 
 
- 
+  public RobotContainer() {
+    swerve.setDefaultCommand(new SwerveDriveWithGamepad());
+  }
   
 
   
