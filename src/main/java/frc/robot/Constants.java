@@ -17,7 +17,7 @@ import frc.robot.util.Util;
 import java.io.IOException;
 
 public final class Constants {
-  public static final String canivoreBusName = "*";
+  public static final String canivoreBusName = "rio";
 
   public static final AprilTagFieldLayout apriltagLayout;
 
@@ -262,7 +262,7 @@ public final class Constants {
   public static final class LEDStrip {
     public static final int numLEDs = 45;
 
-    public static final int candleID = 1;
+    public static final int candleID = 4;
     public static final int swerveLED = 0;
     public static final int pinkArmLED = 1;
     public static final int turretLED = 2;
