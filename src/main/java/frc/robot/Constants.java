@@ -221,33 +221,33 @@ public final class Constants {
     }
 
     public static final class FrontLeftModule {
-      public static final int driveMotorCanID = 7;
-      public static final int rotationMotorCanID = 8;
-      public static final int rotationEncoderCanID = 4;
+      public static final int driveMotorCanID = 11;
+      public static final int rotationMotorCanID = 15;
+      public static final int rotationEncoderCanID = 62;
       public static Translation2d moduleOffset =
           new Translation2d(Units.inchesToMeters(24), Units.inchesToMeters(24));
     }
 
     public static final class FrontRightModule {
-      public static final int driveMotorCanID = 1;
-      public static final int rotationMotorCanID = 2;
-      public static final int rotationEncoderCanID = 1;
+      public static final int driveMotorCanID = 14;
+      public static final int rotationMotorCanID = 18;
+      public static final int rotationEncoderCanID = 61;
       public static Translation2d moduleOffset =
           new Translation2d(Units.inchesToMeters(24), -Units.inchesToMeters(24));
     }
 
     public static final class BackLeftModule {
-      public static final int driveMotorCanID = 5;
-      public static final int rotationMotorCanID = 6;
-      public static final int rotationEncoderCanID = 3;
+      public static final int driveMotorCanID = 12;
+      public static final int rotationMotorCanID = 16;
+      public static final int rotationEncoderCanID = 59;
       public static Translation2d moduleOffset =
           new Translation2d(-Units.inchesToMeters(24), Units.inchesToMeters(24));
     }
 
     public static final class BackRightModule {
-      public static final int driveMotorCanID = 3;
-      public static final int rotationMotorCanID = 4;
-      public static final int rotationEncoderCanID = 2;
+      public static final int driveMotorCanID = 13;
+      public static final int rotationMotorCanID = 17;
+      public static final int rotationEncoderCanID = 60;
       public static Translation2d moduleOffset =
           new Translation2d(-Units.inchesToMeters(24), -Units.inchesToMeters(24));
     }
