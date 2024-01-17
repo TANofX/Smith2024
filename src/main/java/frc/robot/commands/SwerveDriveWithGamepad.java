@@ -53,9 +53,9 @@ public class SwerveDriveWithGamepad extends Command {
 
   @Override
   public void execute() {
-    double x = -RobotContainer.driver.getLeftY();
+    double x = RobotContainer.driver.getLeftY();
     x = Math.copySign(x * x, x);
-    double y = -RobotContainer.driver.getLeftX();
+    double y = RobotContainer.driver.getLeftX();
     y = Math.copySign(y * y, y);
     double rot = -RobotContainer.driver.getRightX();
     rot = Math.copySign(rot * rot, rot);
