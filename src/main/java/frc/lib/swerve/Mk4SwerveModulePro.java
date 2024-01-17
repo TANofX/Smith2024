@@ -49,7 +49,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
 
   private static final double DRIVE_GEARING = 1.0 / 8.14;
   private static final double DRIVE_METERS_PER_ROTATION =
-      DRIVE_GEARING * Math.PI * Units.inchesToMeters(3.875);
+      DRIVE_GEARING * Math.PI * Units.inchesToMeters(4);
   private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 / 12.8) * 360.0;
 
   // M/s - Tune (Apply full output and measure max vel. Adjust KV/KA for sim if needed)

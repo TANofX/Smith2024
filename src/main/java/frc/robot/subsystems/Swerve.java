@@ -136,6 +136,10 @@ public class Swerve extends AdvancedSubsystem {
         new double[] {
           currentPose.getX(), currentPose.getY(), currentPose.getRotation().getDegrees()
         });
+         SmartDashboard.putNumber("OdometryX", currentPose.getX());
+    SmartDashboard.putNumber("OdometryY", currentPose.getY());
+    SmartDashboard.putNumber("OdometryR", currentPose.getRotation().getDegrees());
+
 
     //    SmartDashboard.putNumberArray(
     //        "Swerve/ModuleStates",
@@ -192,6 +196,7 @@ public class Swerve extends AdvancedSubsystem {
 
     double runtimeMS = (Timer.getFPGATimestamp() - startTime) * 1000;
     SmartDashboard.putNumber("Swerve/PeriodicRuntime", runtimeMS);
+   
   }
 
   @Override
