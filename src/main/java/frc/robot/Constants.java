@@ -233,7 +233,7 @@ public final class Constants {
       public static final int rotationMotorCanID = 18;
       public static final int rotationEncoderCanID = 18;
       public static Translation2d moduleOffset =
-          new Translation2d(Units.inchesToMeters(11.25), -Units.inchesToMeters(-12.25));
+          new Translation2d(Units.inchesToMeters(11.25), -Units.inchesToMeters(12.25));
     }
 
     public static final class BackLeftModule {
@@ -241,7 +241,7 @@ public final class Constants {
       public static final int rotationMotorCanID = 16;
       public static final int rotationEncoderCanID = 16;
       public static Translation2d moduleOffset =
-          new Translation2d(-Units.inchesToMeters(-11.25), Units.inchesToMeters(12.25));
+          new Translation2d(-Units.inchesToMeters(11.25), Units.inchesToMeters(12.25));
     }
 
     public static final class BackRightModule {
@@ -249,7 +249,7 @@ public final class Constants {
       public static final int rotationMotorCanID = 17;
       public static final int rotationEncoderCanID = 17;
       public static Translation2d moduleOffset =
-          new Translation2d(-Units.inchesToMeters(-11.25), -Units.inchesToMeters(-12.25));
+          new Translation2d(-Units.inchesToMeters(11.25), -Units.inchesToMeters(12.25));
     }
   }
 
