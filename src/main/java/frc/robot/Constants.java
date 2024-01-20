@@ -252,6 +252,19 @@ public final class Constants {
           new Translation2d(-Units.inchesToMeters(11.25), -Units.inchesToMeters(12.25));
     }
   }
+  public static final class Shooter {
+    public static final int topCANID = 0;
+    public static final int bottomCANID = 0;
+    public static final int intakeCANID = 0;
+    public static final double gearRatio = 1/1.333; //Rotations of the motor per rotations of the wheel
+    public static final double wheelDiameter = Units.inchesToMeters(3.0);
+    public static final double maxRPM = 5700.0;
+  }
+    public static final class Intake {
+      public static final int intakeCANID = 0;
+      public static final int pivotIntakeCANID = 0;
+
+    }  
 
   public static final class AutoBalance {
     public static final PIDConstants BALANCE_CONSTANTS = new PIDConstants(0.3, 0.0, 0.1);
@@ -270,23 +283,7 @@ public final class Constants {
     public static final int jawLED = 4;
     public static final int stealerLED = 5;
     public static final int manhattanLED = 6;
-  }
-
-  public static final class Intake {
-    public static final int intakeMotorID = 6;
-
-    public static final int intakeCurrentLimit = 60;
-
-    public static final double intakeHoldPercentCone = -0.1;
-    public static final double intakeHoldPercentCube = 0.05;
-
-    public static double intakeSpeedCone = -0.7;
-    public static double intakeSpeedCube = 0.6;
-    public static double outtakeSpeedCone = 0.6;
-    public static double outtakeSpeedCube = -0.45;
-    public static double outtakeSpeedCubeLow = -0.2;
-  }
-
+  }  
   public static final class Jaw {
     public static final int pivotMotorID = 5;
 
