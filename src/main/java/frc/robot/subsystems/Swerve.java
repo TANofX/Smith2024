@@ -128,7 +128,7 @@ public class Swerve extends AdvancedSubsystem {
     Pose2d currentPose = odometry.update(getYaw(), getPositions());
     double correctTimeMS = (Timer.getFPGATimestamp() - startTime) * 1000;
     SmartDashboard.putNumber("Swerve/OdomRuntime", correctTimeMS);
-    //    field2d.setRobotPose(currentPose);
+        field2d.setRobotPose(currentPose);
     poseLookup.addPose(currentPose);
 
     SmartDashboard.putNumberArray(
@@ -136,7 +136,16 @@ public class Swerve extends AdvancedSubsystem {
         new double[] {
           currentPose.getX(), currentPose.getY(), currentPose.getRotation().getDegrees()
         });
+         SmartDashboard.putNumber("OdometryX", currentPose.getX());
+    SmartDashboard.putNumber("OdometryY", currentPose.getY());
+    SmartDashboard.putNumber("OdometryR", currentPose.getRotation().getDegrees());
 
+    
+    SmartDashboard.putNumber("FL", modules[0].getDriveVelocityMetersPerSecond());
+    SmartDashboard.putNumber("FR", modules[1].getDriveVelocityMetersPerSecond());
+    SmartDashboard.putNumber("BL", modules[2].getDriveVelocityMetersPerSecond());
+    SmartDashboard.putNumber("BR", modules[3].getDriveVelocityMetersPerSecond());
+    
     //    SmartDashboard.putNumberArray(
     //        "Swerve/ModuleStates",
     //        new double[] {
@@ -192,6 +201,7 @@ public class Swerve extends AdvancedSubsystem {
 
     double runtimeMS = (Timer.getFPGATimestamp() - startTime) * 1000;
     SmartDashboard.putNumber("Swerve/PeriodicRuntime", runtimeMS);
+   
   }
 
   @Override
@@ -388,7 +398,7 @@ public class Swerve extends AdvancedSubsystem {
   public ChassisSpeeds getCurrentSpeeds() {
     return kinematics.toChassisSpeeds(getStates());
   }
-
+/*
   public Command autoBalance(double maxVel) {
     PIDController controller =
         new PIDController(
@@ -585,7 +595,7 @@ public class Swerve extends AdvancedSubsystem {
           });
     }
   }
-
+*/
   @Override
   protected Command systemCheckCommand() {
     return Commands.sequence(
@@ -635,8 +645,9 @@ public class Swerve extends AdvancedSubsystem {
         .andThen(Commands.runOnce(() -> driveFieldRelative(new ChassisSpeeds()), this));
   }
 
+  /*
   @Override
-  public SystemStatus getSystemStatus() {
+   public SystemStatus getSystemStatus() {
     SystemStatus worstStatus = SystemStatus.OK;
 
     for (SubsystemFault f : this.getFaults()) {
@@ -661,5 +672,5 @@ public class Swerve extends AdvancedSubsystem {
     }
 
     return worstStatus;
-  }
+  }*/
 }
