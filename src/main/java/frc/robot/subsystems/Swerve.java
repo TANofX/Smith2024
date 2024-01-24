@@ -49,6 +49,9 @@ public class Swerve extends AdvancedSubsystem {
   protected double teleopVelConstraint;
   protected double teleopAngularVelConstraint;
 
+    
+   
+
   protected final Field2d field2d = new Field2d();
 
   public Swerve() {
@@ -123,6 +126,8 @@ public class Swerve extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
+
+
     double startTime = Timer.getFPGATimestamp();
 
     Pose2d currentPose = odometry.update(getYaw(), getPositions());

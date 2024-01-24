@@ -5,6 +5,9 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
@@ -209,6 +212,7 @@ public final class Constants {
     public static final double maxAngularAccelTele = Units.degreesToRadians(540);
     public static final double teleAngleHoldFactor = 3.0;
 
+   
     public static final class Odometry {
       public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);
       public static final Matrix<N3, N1> visionStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
@@ -257,6 +261,13 @@ public final class Constants {
     public static final PIDConstants BALANCE_CONSTANTS = new PIDConstants(0.3, 0.0, 0.1);
     public static final double maxVelAuto = 0.4;
     public static final double maxVelTele = 0.3;
+  }
+  public static final class FireControl {
+    public static final double ACCELERATION = 9.81;
+    public static final double HEIGHT = Units.inchesToMeters(80.13); //heightSpeaker - heightShooter
+    public static final Transform2d BLUE_SPEAKER_POSITION = new Transform2d(Units.inchesToMeters(0), Units.inchesToMeters(218.5), Rotation2d.fromDegrees(0.0));
+    public static final Transform2d RED_SPEAKER_POSITION = new Transform2d(Units.inchesToMeters(apriltagLayout.getFieldLength()), apriltagLayout.getFieldWidth() - Units.inchesToMeters(218.5), Rotation2d.fromDegrees(180));
+    public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(6), Units.inchesToMeters(0), Rotation2d.fromDegrees(0));
   }
 
   public static final class LEDStrip {
