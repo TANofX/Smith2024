@@ -47,9 +47,9 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
   // Volts to deg/sec^2
   private static final double ROTATION_KA = 0.00006;
 
-  private static final double DRIVE_GEARING = 1.0 / 8.14;
+  private static final double DRIVE_GEARING = 1.0 / 6.75;
   private static final double DRIVE_METERS_PER_ROTATION =
-      DRIVE_GEARING * Math.PI * Units.inchesToMeters(4);
+      DRIVE_GEARING * Units.inchesToMeters(12.375); //Math.PI * Units.inchesToMeters(4);
   private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 / 12.8) * 360.0;
 
   // M/s - Tune (Apply full output and measure max vel. Adjust KV/KA for sim if needed)

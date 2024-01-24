@@ -5,25 +5,20 @@ import java.util.List;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkBase;
 //import com.ctre.phoenix6.motorcontrol.can.BaseMotorController;
-import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.motorcontrol.PWMMotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.subsystem.selfcheck.SelfChecking;
-import frc.lib.subsystem.selfcheck.SelfCheckingCANCoder;
 import frc.lib.subsystem.selfcheck.SelfCheckingCANCoderPro;
-import frc.lib.subsystem.selfcheck.SelfCheckingPWMMotor;
 import frc.lib.subsystem.selfcheck.SelfCheckingPigeon2;
-import frc.lib.subsystem.selfcheck.SelfCheckingSparkMax;
+import frc.lib.subsystem.selfcheck.SelfCheckingSparkBase;
 import frc.lib.subsystem.selfcheck.SelfCheckingTalonFXPro;
-import frc.robot.Robot;
 
 public abstract class AdvancedSubsystem extends SubsystemBase {
   public enum SystemStatus {
@@ -36,7 +31,9 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
   private final List<SelfChecking> hardware = new ArrayList<>();
   private final String statusTable;
   private final boolean checkErrors;
-
+  private final Timer faultsTimer = new Timer();
+  private final Timer statusTimer = new Timer();
+  
   public AdvancedSubsystem() {
     this.statusTable = "SystemStatus/" + this.getName();
     Command systemCheck = getSystemCheckCommand();
@@ -45,6 +42,7 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean(statusTable + "/CheckRan", false);
     checkErrors = RobotBase.isReal();
 
+    initializeTimers();
     // setupCallbacks();
   }
 
@@ -57,7 +55,13 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean(statusTable + "/CheckRan", false);
     checkErrors = RobotBase.isReal();
 
+    initializeTimers();
     // setupCallbacks();
+  }
+
+  private void initializeTimers() {
+    faultsTimer.start();
+    statusTimer.start();
   }
 
   public Command getSystemCheckCommand() {
@@ -78,8 +82,8 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    checkForFaults();
-    publishStatus();
+    if (faultsTimer.advanceIfElapsed(0.25)) checkForFaults();
+    if (statusTimer.advanceIfElapsed(1.0)) publishStatus();
   }
 
   // private void setupCallbacks() {
@@ -161,12 +165,9 @@ public abstract class AdvancedSubsystem extends SubsystemBase {
     hardware.add(new SelfCheckingTalonFXPro(label, driveMotor));
   }
 
-  public void registerHardware(String label, TalonFX driveMotor) {
-    hardware.add(new SelfCheckingPWMMotor(label, driveMotor));
-  }
 
-  public void registerHardware(String label, CANSparkMax spark) {
-    hardware.add(new SelfCheckingSparkMax(label, spark));
+  public void registerHardware(String label, CANSparkBase spark) {
+    hardware.add(new SelfCheckingSparkBase(label, spark));
   }
 
   public void registerHardware(String label, com.ctre.phoenix6.hardware.Pigeon2 pigeon2) {

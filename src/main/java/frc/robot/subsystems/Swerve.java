@@ -128,7 +128,7 @@ public class Swerve extends AdvancedSubsystem {
     Pose2d currentPose = odometry.update(getYaw(), getPositions());
     double correctTimeMS = (Timer.getFPGATimestamp() - startTime) * 1000;
     SmartDashboard.putNumber("Swerve/OdomRuntime", correctTimeMS);
-    //    field2d.setRobotPose(currentPose);
+        field2d.setRobotPose(currentPose);
     poseLookup.addPose(currentPose);
 
     SmartDashboard.putNumberArray(
@@ -398,7 +398,7 @@ public class Swerve extends AdvancedSubsystem {
   public ChassisSpeeds getCurrentSpeeds() {
     return kinematics.toChassisSpeeds(getStates());
   }
-
+/*
   public Command autoBalance(double maxVel) {
     PIDController controller =
         new PIDController(
@@ -595,7 +595,7 @@ public class Swerve extends AdvancedSubsystem {
           });
     }
   }
-
+*/
   @Override
   protected Command systemCheckCommand() {
     return Commands.sequence(
@@ -645,8 +645,9 @@ public class Swerve extends AdvancedSubsystem {
         .andThen(Commands.runOnce(() -> driveFieldRelative(new ChassisSpeeds()), this));
   }
 
+  /*
   @Override
-  public SystemStatus getSystemStatus() {
+   public SystemStatus getSystemStatus() {
     SystemStatus worstStatus = SystemStatus.OK;
 
     for (SubsystemFault f : this.getFaults()) {
@@ -671,5 +672,5 @@ public class Swerve extends AdvancedSubsystem {
     }
 
     return worstStatus;
-  }
+  }*/
 }
