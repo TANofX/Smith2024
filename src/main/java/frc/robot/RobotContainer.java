@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,11 +15,15 @@ import frc.lib.subsystem.AdvancedSubsystem;
 import frc.lib.util.CycleTracker;
 import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class RobotContainer {
   // Controllers
   public static final XboxControllerWrapper driver = new XboxControllerWrapper(0, 0.1);
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
+
+  // Auto choser
+  private final SendableChooser<Command> autoChooser;
 
   // Subsystems
   public static final Swerve swerve = new Swerve();
@@ -35,11 +41,12 @@ public class RobotContainer {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
 
-    // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser();
+    // Build an auto chooser
 
-    // Another option that allows you to specify the default auto by its name
+    // Allows us to specify the default auto by its name
     // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+
+    autoChooser = AutoBuilder.buildAutoChooser("Test Path");
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }

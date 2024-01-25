@@ -125,7 +125,7 @@ public class Swerve extends AdvancedSubsystem {
     SmartDashboard.putData("Field", field2d);
     SmartDashboard.putData("Trim Modules", zeroModulesCommand());
     
-    // Create auto builder
+    // Configure auto builder
     AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
             this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
