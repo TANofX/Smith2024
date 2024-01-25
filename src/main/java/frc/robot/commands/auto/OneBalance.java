@@ -16,7 +16,7 @@ public class OneBalance extends SequentialCommandGroup {
 /*
     public OneBalance(AutoBuilder autoBuilder) {
      List<PathPlannerTrajectory> pathGroup =
-        PathPlannerPath.fromPathFile("1MidBalance");
+        PathPlanner.fromPathFile("1MidBalance",PathConstraints(1,2));
 
     addCommands(
         Commands.sequence(
