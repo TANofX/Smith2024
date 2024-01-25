@@ -5,19 +5,17 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.util.List;
 
-public class OneBalance extends SequentialCommandGroup {
+public class Test extends SequentialCommandGroup {
+  public Test(AutoBuilder autoBuilder) {
+    PathPlannerPath pathTest =
+        PathPlannerPath.fromPathFile("New Path");
 /*
-    public OneBalance(AutoBuilder autoBuilder) {
-     List<PathPlannerTrajectory> pathGroup =
-        PathPlannerPath.fromPathFile("1MidBalance");
-
     addCommands(
         Commands.sequence(
                 autoBuilder.resetPose(pathGroup.get(0)),
@@ -37,6 +35,6 @@ public class OneBalance extends SequentialCommandGroup {
                 RobotContainer.swerve.autoBalance(Constants.AutoBalance.maxVelAuto))
             .withTimeout(14.9)
             .andThen(Commands.run(RobotContainer.swerve::lockModules, RobotContainer.swerve)));
-  }
 */
+  }
 }

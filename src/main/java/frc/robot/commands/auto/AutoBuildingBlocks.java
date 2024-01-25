@@ -2,17 +2,15 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.lib.vision.limelight.LimelightHelpers;
 import frc.robot.RobotContainer;
-import frc.robot.commands.PointToPositionAutoOnly;
-import frc.robot.subsystems.Jaw;
-import frc.robot.util.ScoringTracker;
 
 public class AutoBuildingBlocks {
-  public static CommandBase scoreStartConeBehindWire() {
+/*  
+public static Command scoreStartConeBehindWire() {
     return Commands.sequence(
         RobotContainer.jaw.setJawStateCommand(Jaw.State.IDLE),
         Commands.runOnce(() -> RobotContainer.jaw.setDesiredPivotAngle(300)),
@@ -34,7 +32,7 @@ public class AutoBuildingBlocks {
             RobotContainer.turret));
   }
 
-  public static CommandBase scoreStartConeBehindLoading() {
+  public static Command scoreStartConeBehindLoading() {
     return Commands.sequence(
         RobotContainer.jaw.setJawStateCommand(Jaw.State.IDLE),
         Commands.runOnce(() -> RobotContainer.jaw.setDesiredPivotAngle(300)),
@@ -56,7 +54,7 @@ public class AutoBuildingBlocks {
             RobotContainer.turret));
   }
 
-  static CommandBase aimTurretToHighCubeLL() {
+  static Command aimTurretToHighCubeLL() {
     return Commands.run(
         () -> {
           DriverStation.Alliance alliance = DriverStation.getAlliance();
@@ -94,7 +92,7 @@ public class AutoBuildingBlocks {
         RobotContainer.turret);
   }
 
-  static CommandBase aimTurretToMidCubeLL() {
+  static Command aimTurretToMidCubeLL() {
     return Commands.run(
         () -> {
           DriverStation.Alliance alliance = DriverStation.getAlliance();
@@ -128,11 +126,11 @@ public class AutoBuildingBlocks {
             RobotContainer.turret.setDesiredAngleFieldRelative(
                 turretAngleFieldRelative, RobotContainer.swerve.getPose());
           }
-        },
+        },  
         RobotContainer.turret);
   }
 
-  static CommandBase pointToPosition(int rowIdx, int redColIdx, int blueColIdx) {
+  static Command pointToPosition(int rowIdx, int redColIdx, int blueColIdx) {
     return Commands.parallel(
         allianceConditionalCommand(
             new PointToPositionAutoOnly(
@@ -146,37 +144,38 @@ public class AutoBuildingBlocks {
         RobotContainer.intake.intakeCommand());
   }
 
-  static CommandBase outtakeGamePiece() {
+  static Command outtakeGamePiece() {
     return outtakeGamePiece(0.25);
   }
 
-  static CommandBase outtakeGamePiece(double outtakeTime) {
+  static Command outtakeGamePiece(double outtakeTime) {
     return RobotContainer.intake
         .outtakeCommand()
         .withTimeout(outtakeTime)
         .andThen(RobotContainer.intake.stopIntakeCommand());
   }
 
-  static CommandBase setIsCubeMode(boolean isCubeMode) {
+  static Command setIsCubeMode(boolean isCubeMode) {
     return Commands.runOnce(() -> RobotContainer.setIsCubeMode(isCubeMode));
   }
 
-  static CommandBase stopAimAtGamePiece() {
+  static Command stopAimAtGamePiece() {
     return Commands.runOnce(
         () -> {
           Autos.aimAtGamePiece = false;
         });
   }
 
-  static CommandBase aimAtGamePiece() {
+  static Command aimAtGamePiece() {
     return Commands.runOnce(
         () -> {
           Autos.aimAtGamePiece = true;
         });
   }
 
-  static CommandBase allianceConditionalCommand(CommandBase redCommand, CommandBase blueCommand) {
+  static Command allianceConditionalCommand(Command redCommand, Command blueCommand) {
     return new ConditionalCommand(
         redCommand, blueCommand, () -> DriverStation.getAlliance() == DriverStation.Alliance.Red);
   }
+*/
 }

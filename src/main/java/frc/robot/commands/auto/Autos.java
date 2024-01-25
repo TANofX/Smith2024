@@ -51,14 +51,9 @@ public final class Autos {
 
     autoBuilder = new AutoBuilder();
 
-/*
     autoChooser.setDefaultOption("None", none());
-    autoChooser.addOption("2 Balance Loading", twoPlusBalanceLoading());
-    autoChooser.addOption("2 Balance Wire", twoPlusBalanceWire());
-    autoChooser.addOption("3 Wire", threeWire());
-    autoChooser.addOption("3 Loading", threeLoading());
-    autoChooser.addOption("1 Balance", new OneBalance(autoBuilder));
-*/
+    autoChooser.addOption("Test",new Test(autoBuilder));
+
     SmartDashboard.putData("Autonomous Mode", autoChooser);
   }
 
