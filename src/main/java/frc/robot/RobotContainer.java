@@ -47,7 +47,7 @@ public class RobotContainer {
     // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
 
     autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser.addOption("Test Path", getAutrsnomousCommand());
+    autoChooser.addOption("Test Path", getAutonomousCommand());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
