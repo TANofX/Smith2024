@@ -4,6 +4,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -41,18 +43,10 @@ public class RobotContainer {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
 
-    // Build an auto chooser
-
-    // Allows us to specify the default auto by its name
-    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
-
-    autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser.addOption("Test Path", getAutonomousCommand());
-
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+   
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return new PathPlannerAuto("Test Path");
   }
 }
