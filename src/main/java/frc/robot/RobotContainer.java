@@ -11,6 +11,7 @@ import frc.lib.input.controllers.XboxControllerWrapper;
 import frc.lib.input.controllers.rumble.RumbleOff;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.lib.util.CycleTracker;
+import frc.robot.commands.IntakeNote;
 import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.subsystems.*;
 
@@ -21,6 +22,7 @@ public class RobotContainer {
 
   // Subsystems
   public static final Swerve swerve = new Swerve();
+  public static final Intake intake = new Intake();
 
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();
@@ -34,8 +36,11 @@ public class RobotContainer {
   public RobotContainer() {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
+    configureButtonBindings();
   }
   
-
+private void configureButtonBindings() {
+  driver.A().whileTrue(new IntakeNote());
+}
   
   }
