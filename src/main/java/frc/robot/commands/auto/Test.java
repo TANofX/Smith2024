@@ -10,9 +10,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 public class Test extends SequentialCommandGroup {
   public Test(AutoBuilder autoBuilder, boolean isBlue) {
     PathPlannerPath pathGroup = 
-        PathPlannerPath.fromPathFile("New Path");
+        PathPlannerPath.fromPathFile("Test Path");
     
-    addCommands(new InstantCommand( () -> RobotContainer.swerve.resetOdometry(pathGroup.getPreviewStartingHolonomicPose()))
+    addCommands(new InstantCommand( () -> RobotContainer.swerve.resetOdometry(pathGroup.getPreviewStartingHolonomicPose())) ///fix later to april tag positions
                 , AutoBuilder.followPath(pathGroup));
   }
 }
