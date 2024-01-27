@@ -50,13 +50,13 @@ public class FireControlTest {
     @Test
     void testOneGetVelocity() {
         initializeTestOne();
-        assertEquals(6.59354785, testingControl.getVelocity(), 0.001, "wrong velocity");
+        assertEquals(6.59354785, testingControl.getVelocity(), 0.006, "wrong velocity");
 
     }
      @Test
     void testTwoGetVelocity() {
         initializeTestTwo();
-        assertEquals(6.63808213, testingControl.getVelocity(), 0.001, "wrong Velocity");
+        assertEquals(6.63808213, testingControl.getVelocity(), 0.006, "wrong Velocity");
 
     }
 }

@@ -21,6 +21,7 @@ public class RobotContainer {
 
   // Subsystems
   public static final Swerve swerve = new Swerve();
+  public static final Elevator elevator = new Elevator();
 
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();

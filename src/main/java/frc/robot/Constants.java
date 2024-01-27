@@ -272,6 +272,15 @@ public final class Constants {
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(6), Units.inchesToMeters(0), Rotation2d.fromDegrees(0));
   }
 
+  public static final class Elevator {
+    public static final int ELEVATORMOTOR_ID = 2;
+    public static final double METERS_PER_REV = .180;
+    public static final int MOTOR_REV_PER_ROTATION = 100;
+    public static final double METERS_PER_MOTOR_REV = METERS_PER_REV/MOTOR_REV_PER_ROTATION;
+    public static final double MAX_HEIGHT = .5;
+    public static final double MIN_HEIGHT = .25;
+    
+  }
   public static final class LEDStrip {
     public static final int numLEDs = 45;
 
