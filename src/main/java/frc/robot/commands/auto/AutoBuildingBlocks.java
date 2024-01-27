@@ -1,5 +1,5 @@
 package frc.robot.commands.auto;
-
+/*
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.lib.vision.limelight.LimelightHelpers;
 import frc.robot.RobotContainer;
-
+*/
 public class AutoBuildingBlocks {
 /*  
 public static Command scoreStartConeBehindWire() {

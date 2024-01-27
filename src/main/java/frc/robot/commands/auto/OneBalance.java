@@ -1,16 +1,17 @@
 package frc.robot.commands.auto;
 
+/*
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.util.List;
+*/
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class OneBalance extends SequentialCommandGroup {
 /*
