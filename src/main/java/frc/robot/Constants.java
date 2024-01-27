@@ -31,16 +31,23 @@ public final class Constants {
   }
 
   public static final Translation2d fieldSize = new Translation2d(16.54, 8.02);
+public static final double noteTransferMetersPerSecond = 0.5;
 
   public static final class Shooter {
     public static final int topCANID = 0;
     public static final int bottomCANID = 0;
     public static final int intakeCANID = 0;
-    public static final double gearRatio = 1/1.333; //Rotations of the motor per rotations of the wheel
+    public static final int elevationCANID = 0;
+    public static final double gearRatioShooterSide = 1/1.333; //Rotations of the motor per rotations of the wheel
     public static final double wheelDiameter = Units.inchesToMeters(3.0);
     public static final double maxRPM = 5700.0;
     public static final double shooterIntakeGearRatio = 100.0/1.0;
-    public static final double shooterIntakeWheelDiamater = 0.0762;
+    public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
+    public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio * shooterIntakeWheelDiamater;
+     public static final double wristGearRatio = 200.0/1.0;
+     public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
+     public static final int noteSensorChannel = 1;
+
   }
 
     public static final class Intake {
