@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.9083112755353213,
-      "y": 7.005404655562788
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,13 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test Path"
+            "pathName": "Auto 1 Piece Top Blue"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "Auto 3 Piece Top Blue"
           }
         }
       ]

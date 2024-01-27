@@ -1,6 +1,9 @@
 package frc.robot.commands.auto;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotContainer;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -9,7 +12,8 @@ public class Test extends SequentialCommandGroup {
     PathPlannerPath pathGroup = 
         PathPlannerPath.fromPathFile("New Path");
     
-    addCommands(AutoBuilder.followPath(pathGroup));
+    addCommands(new InstantCommand( () -> RobotContainer.swerve.resetOdometry(pathGroup.getPreviewStartingHolonomicPose()))
+                , AutoBuilder.followPath(pathGroup));
   }
 }
 
