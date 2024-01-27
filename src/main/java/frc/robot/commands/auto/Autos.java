@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Autos {
-  private static HashMap<String, Command> eventMap;
-  private static AutoBuilder autoBuilder;
+//  private static HashMap<String, Command> eventMap;
+  public static AutoBuilder autoBuilder;
   public static ReplanningConfig replanningConfig;
   public static final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
@@ -49,11 +49,11 @@ public final class Autos {
               },
               RobotContainer.swerve);
 
-    autoBuilder = new AutoBuilder();
+    AutoBuilder autoBuilder = new AutoBuilder();
 
     autoChooser.setDefaultOption("None", none());
-    autoChooser.addOption("Test",new Test(autoBuilder));
-
+    autoChooser.addOption("Test", new Test(autoBuilder));
+    
     SmartDashboard.putData("Autonomous Mode", autoChooser);
   }
 

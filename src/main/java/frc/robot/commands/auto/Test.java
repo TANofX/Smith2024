@@ -10,31 +10,17 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import java.util.List;
+import frc.robot.commands.auto.Autos;
 
 public class Test extends SequentialCommandGroup {
   public Test(AutoBuilder autoBuilder) {
     PathPlannerPath pathTest =
         PathPlannerPath.fromPathFile("New Path");
-/*
-    addCommands(
-        Commands.sequence(
-                autoBuilder.resetPose(pathGroup.get(0)),
-                AutoBuildingBlocks.setIsCubeMode(true),
-                RobotContainer.turret
-                    .setTurretAngleCommand(0)
-                    .raceWith(
-                        Commands.sequence(
-                            RobotContainer.pinkArm.setArmPositionCommand(0.0, 155).withTimeout(1.0),
-                            RobotContainer.pinkArm
-                                .setArmPositionCommand(0.4, 155)
-                                .withTimeout(1.0))),
-                AutoBuildingBlocks.outtakeGamePiece(),
-                RobotContainer.pinkArm.setExtensionLengthCommand(0),
-                Commands.waitSeconds(0.5),
-                autoBuilder.followPathWithEvents(pathGroup.get(0)),
-                RobotContainer.swerve.autoBalance(Constants.AutoBalance.maxVelAuto))
-            .withTimeout(14.9)
-            .andThen(Commands.run(RobotContainer.swerve::lockModules, RobotContainer.swerve)));
-*/
+        addCommands(
+            Commands.sequence(
+//              autoBuilder.resetPose(pathTest.getPoint(0)),
+//              autoBuilder.followPath(pathTest.getPoint(0)));
+                autoBuilder.followPath(pathTest)));
   }
 }
+
