@@ -3,19 +3,14 @@ package frc.robot.commands.auto;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
-//import edu.wpi.first.math.kinematics.ChassisSpeeds;
-//import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-//import frc.lib.vision.limelight.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-//import java.util.HashMap;
-//import java.util.Map;
 
 public final class Autos {
 //  private static HashMap<String, Command> eventMap;
@@ -49,10 +44,8 @@ public final class Autos {
               },
               RobotContainer.swerve);
 
-    AutoBuilder autoBuilder = new AutoBuilder();
-
     autoChooser.setDefaultOption("None", none());
-    autoChooser.addOption("Test", new Test(autoBuilder));
+    autoChooser.addOption("Test", test());
     
     SmartDashboard.putData("Autonomous Mode", autoChooser);
   }
@@ -69,13 +62,13 @@ public final class Autos {
   public static Command none() {
     return Commands.none();
   }
-/*
-  public static Command twoPlusBalanceLoading() {
-    return AutoBuildingBlocks.allianceConditionalCommand(
-        new TwoPlusBalanceLoading(autoBuilder, false),
-        new TwoPlusBalanceLoading(autoBuilder, true));
-  }
 
+  public static Command test() {
+    return AutoBuildingBlocks.allianceConditionalCommand(
+        new Test(autoBuilder, false),
+        new Test(autoBuilder, true));
+  }
+/*
   public static Command twoPlusBalanceWire() {
     return AutoBuildingBlocks.allianceConditionalCommand(
         new TwoPlusBalanceWire(autoBuilder, false), new TwoPlusBalanceWire(autoBuilder, true));

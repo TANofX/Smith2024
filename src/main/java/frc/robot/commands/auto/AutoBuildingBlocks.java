@@ -1,15 +1,12 @@
 package frc.robot.commands.auto;
-/*
-import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import frc.lib.vision.limelight.LimelightHelpers;
-import frc.robot.RobotContainer;
-*/
+import java.util.Optional;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 public class AutoBuildingBlocks {
-/*  
+/*
 public static Command scoreStartConeBehindWire() {
     return Commands.sequence(
         RobotContainer.jaw.setJawStateCommand(Jaw.State.IDLE),
@@ -172,10 +169,10 @@ public static Command scoreStartConeBehindWire() {
           Autos.aimAtGamePiece = true;
         });
   }
+*/
+  Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
 
   static Command allianceConditionalCommand(Command redCommand, Command blueCommand) {
-    return new ConditionalCommand(
-        redCommand, blueCommand, () -> DriverStation.getAlliance() == DriverStation.Alliance.Red);
+    return new ConditionalCommand(redCommand, blueCommand, () -> (DriverStation.getAlliance().isPresent() ? DriverStation.getAlliance().get() : null) == Alliance.Red);
   }
-*/
-}
+} 
