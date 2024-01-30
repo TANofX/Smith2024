@@ -1,16 +1,16 @@
 package frc.lib.subsystem.selfcheck;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.REVLibError;
 import frc.lib.subsystem.SubsystemFault;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelfCheckingSparkMax implements SelfChecking {
+public class SelfCheckingSparkBase implements SelfChecking {
   private final String label;
-  private CANSparkMax spark;
+  private CANSparkBase spark;
 
-  public SelfCheckingSparkMax(String label, CANSparkMax spark) {
+  public SelfCheckingSparkBase(String label, CANSparkBase spark) {
     this.label = label;
     this.spark = spark;
   }
