@@ -28,6 +28,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.subsystem.AdvancedSubsystem;
 
+import com.revrobotics.*;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 /** Implementation for an SDS Mk4 swerve module using Falcon 500s and phoenix pro */
 public class Mk4SwerveModulePro extends AdvancedSubsystem {
   public enum ModuleCode {
@@ -65,7 +68,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
   private final LinearSystemSim<N1, N1, N1> driveSim;
   private final LinearSystemSim<N2, N1, N1> rotationSim;
 
-  private final TalonFX driveMotor;
+  private final CANSparkFlex driveMotor;
   private final TalonFXSimState driveSimState;
   private final StatusSignal<Double> drivePositionSignal;
   private final StatusSignal<Double> driveVelocitySignal;
@@ -73,7 +76,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
   private final StatusSignal<Double> driveVoltageSignal;
   private final StatusSignal<Double> driveTempSignal;
 
-  private final TalonFX rotationMotor;
+  private final CANSparkFlex rotationMotor;
   private final TalonFXSimState rotationSimState;
   private final StatusSignal<Double> rotationPositionSignal;
   private final StatusSignal<Double> rotationVelocitySignal;
@@ -119,7 +122,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
     rotationEncoder.getConfigurator().apply(rotationEncoderConfig);
     rotationEncoderSimState = rotationEncoder.getSimState();
 
-    driveMotor = new TalonFX(driveMotorCanID, canBus);
+    driveMotor = new CANSparkFlex(driveMotorCanID, MotorType.kBrushless);
     TalonFXConfiguration driveConfig = new TalonFXConfiguration();
     driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -130,7 +133,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
     driveMotor.getConfigurator().apply(driveConfig);
     driveSimState = driveMotor.getSimState();
 
-    rotationMotor = new TalonFX(rotationMotorCanID, canBus);
+    rotationMotor = new CANSparkFlex(rotationMotorCanID, MotorType.kBrushless);
     TalonFXConfiguration rotationConfig = new TalonFXConfiguration();
     rotationConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     rotationConfig.Slot0.kP = ROTATION_KP;
