@@ -47,6 +47,9 @@ public static final double noteTransferMetersPerSecond = 0.5;
      public static final double wristGearRatio = 200.0/1.0;
      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
      public static final int noteSensorChannel = 1;
+     public static final double shootInSpeakerAngle = 30.0;
+     public static final double shootInAmpAngle = 320.0;
+     public static final double meetIntake = 80.0;
 
   }
 

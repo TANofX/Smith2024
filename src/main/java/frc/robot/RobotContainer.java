@@ -23,6 +23,7 @@ public class RobotContainer {
   // Subsystems
   public static final Swerve swerve = new Swerve();
   public static final Intake intake = new Intake();
+  public static final Shooter shooter = new Shooter();
 
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();
