@@ -2,6 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
@@ -21,6 +24,8 @@ public class RobotContainer {
   public static final Swerve swerve = new Swerve();
   public static final Elevator elevator = new Elevator();
   public static final Intake intake = new Intake();
+  public static final Shooter shooter = new Shooter();
+  public static final FireControl fireControl = new FireControl(swerve::getPose);
 
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();

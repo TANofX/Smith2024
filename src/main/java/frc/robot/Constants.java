@@ -5,6 +5,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -133,8 +134,8 @@ public static final double noteTransferMetersPerSecond = 0.5;
     public static final double HEIGHT = Units.inchesToMeters(80.13);
     //public static final double SHOOTER_HEIGHT = 24;
     //public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
-    public static final Transform2d BLUE_SPEAKER_POSITION = new Transform2d(Units.inchesToMeters(0), Units.inchesToMeters(218.5), Rotation2d.fromDegrees(0.0));
-    public static final Transform2d RED_SPEAKER_POSITION = new Transform2d(Units.inchesToMeters(apriltagLayout.getFieldLength()), apriltagLayout.getFieldWidth() - Units.inchesToMeters(218.5), Rotation2d.fromDegrees(180));
+    public static final Pose2d BLUE_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(218.5), Rotation2d.fromDegrees(0.0));
+    public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(apriltagLayout.getFieldLength()), apriltagLayout.getFieldWidth() - Units.inchesToMeters(218.5), Rotation2d.fromDegrees(180));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(6), Units.inchesToMeters(0), Rotation2d.fromDegrees(0));
   }
 
