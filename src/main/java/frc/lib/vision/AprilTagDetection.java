@@ -26,7 +26,7 @@ public class AprilTagDetection {
   public Transform3d getCameraToTag() {
     return new Transform3d(this.tag.pose.getTranslation(), this.tag.pose.getRotation());
   }
-  
+
   public Transform3d getRobotToTag(Transform3d cameraToRobot) {
     Transform3d robotToCamera = cameraToRobot.inverse();
     return robotToCamera.plus(getCameraToTag());
@@ -39,6 +39,8 @@ public class AprilTagDetection {
    * @param robotPose Current robot pose on the field
    * @return Pose of the tag on the field
    */
+  public static Transform3d cameraToRobot;
+
   public Pose3d getEstimatedTagPose(Transform3d cameraToRobot, Pose2d robotPose) {
     Transform3d robotToTag = getRobotToTag(cameraToRobot);
     Transform3d fieldToRobot =

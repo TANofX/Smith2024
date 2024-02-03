@@ -1,11 +1,10 @@
 package frc.robot.util;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import java.util.ArrayList;
 
-public class RobotPoseLookup {
-  private final ArrayList<TimestampedPose2d> prevPoses;
+public class RobotPoseLookup<T> {
+  private final ArrayList<Timestamped<T>> prevPoses;
   private final double maxAge;
 
   public RobotPoseLookup() {
@@ -17,37 +16,45 @@ public class RobotPoseLookup {
     maxAge = maxAgeSeconds;
   }
 
-  public void addPose(Pose2d pose) {
+  public void addPose(T pose) {
     double timestamp = Timer.getFPGATimestamp();
 
-    prevPoses.add(new TimestampedPose2d(pose, timestamp));
-    if (prevPoses.get(0).timestamp < timestamp - maxAge) {
+    prevPoses.add(new Timestamped<T>(pose, timestamp));
+    if (prevPoses.get(0).getTimestamp() < timestamp - maxAge) {
       prevPoses.remove(0);
     }
   }
 
-  public Pose2d lookup(double timestamp) {
-    TimestampedPose2d closest = prevPoses.get(prevPoses.size() - 1);
+  public T lookup(double timestamp) {
+    Timestamped<T> closest = prevPoses.get(prevPoses.size() - 1);
 
     for (int i = prevPoses.size() - 2; i >= 0; i--) {
-      if (Math.abs(prevPoses.get(i).timestamp - timestamp)
-          < Math.abs(closest.timestamp - timestamp)) {
+      if (Math.abs(prevPoses.get(i).getTimestamp() - timestamp)
+          < Math.abs(closest.getTimestamp() - timestamp)) {
         closest = prevPoses.get(i);
       } else {
         break;
       }
     }
 
-    return closest.pose;
+    return closest.getValue();
   }
 
-  private static class TimestampedPose2d {
-    private final Pose2d pose;
+  private class Timestamped<E> {
+    private final E pose;
     private final double timestamp;
 
-    private TimestampedPose2d(Pose2d pose, double timestamp) {
-      this.pose = pose;
-      this.timestamp = timestamp;
+    private Timestamped(E inPose, double inTimestamp) {
+      this.pose = inPose;
+      this.timestamp = inTimestamp;
+    }
+
+    public E getValue() {
+      return pose;
+    }
+
+    public double getTimestamp() {
+      return timestamp;
     }
   }
 }

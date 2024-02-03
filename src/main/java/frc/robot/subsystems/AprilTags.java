@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -11,6 +13,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import frc.lib.vision.AprilTagDetection;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.util.RobotPoseLookup;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.Timer;
@@ -29,25 +32,27 @@ public class AprilTags extends SubsystemBase {
   @Override
   public void periodic() {
     final PhotonPipelineResult result = photonCamera.getLatestResult();
-    
+
     if (result.hasTargets()) {
-      //final PhotonTrackedTarget bestTarget = result.getBestTarget();
+      // final PhotonTrackedTarget bestTarget = result.getBestTarget();
       // final int id = bestTarget.getFiducialId();
       double latency = result.getLatencyMillis();
       double startTime = Timer.getFPGATimestamp();
       double timerTime = (Timer.getFPGATimestamp() - startTime) * 1000;
       double timestamp = timerTime - latency;
-      Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-        result.getBestTarget().getBestCameraToTarget(), 
-        Constants.apriltagLayout.getTagPose(result.getBestTarget().getFiducialId()), 
-        AprilTagDetection.cameraToRobot;
-        );
-      
-      AprilTag currentTag = new AprilTag(result.getBestTarget().getFiducialId(), robotPose);
+      double maxAge = 0.0;
 
-      AprilTagDetection decectAprilTag = new AprilTagDetection(currentTag, timestamp);
+      Optional<Pose3d> tagPose = Constants.apriltagLayout.getTagPose(result.getBestTarget().getFiducialId());
+
+      if (tagPose.isPresent()) {
+        Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
+            result.getBestTarget().getBestCameraToTarget(),
+            tagPose.get(),
+            AprilTagDetection.cameraToRobot);
+
+        RobotPoseLookup<Pose3d> AprilTagLookup = new RobotPoseLookup<Pose3d>(maxAge);
+        AprilTagLookup.addPose(robotPose);
+      }
     }
   }
-
 }
-
