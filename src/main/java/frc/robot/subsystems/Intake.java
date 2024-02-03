@@ -54,17 +54,16 @@ public class Intake extends AdvancedSubsystem {
   public void intakeGamePiece() {
   intakeController.setReference(25, ControlType.kVelocity);
   }
-  public void passGamePiece(double metersPerSecond) {
-    double setPoint = (metersPerSecond / Constants.Intake.upperDistancePerMotorRotation) * 60.0;
-    intakeController.setReference(setPoint, ControlType.kVelocity);
+  public void passGamePiece(double speedMetersPerSecond) {
+    double speedInRPM = speedMetersPerSecond/(Math.PI * Constants.Intake.intakeWheelDiameter)*60.0*Constants.Intake.intakeGearRatio;
+
+    intakeController.setReference(speedInRPM, ControlType.kVelocity);
   }
   public void angleIntakeDown() {
-    double setPosition = (Constants.Intake.downPositionDegrees);
-    setElevation(setPosition);
+    setElevation(Rotation2d.fromDegrees(Constants.Intake.downPositionDegrees));
   }
   public void angleIntakeBack() {
-    double setPosition = (Constants.Intake.upPositionDegrees);
-    pivotController.setReference(10, ControlType.kPosition);
+    setElevation(Rotation2d.fromDegrees(Constants.Intake.upPositionDegrees));
   }
   public void stopIntakeMotor () {
 intakeMotor.stopMotor();
@@ -72,14 +71,15 @@ intakeController.setReference(0, ControlType.kVelocity);
   }
  public boolean hasNote () {
   return intakeBeamBreakSensor.isTriggered();
- }
+}
+
  public boolean isBack () {
-  return pivotIntakeMotor.getEncoder().getPosition();
+  return getAbsoluteRotationDegrees() - Constants.Intake.upPositionDegrees < Constants.Intake.allowedAngleErrorInDegrees;
  }
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
     pivotController.setReference(angleOfElevation,ControlType.kPosition);
-  }
+ }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

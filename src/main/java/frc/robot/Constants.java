@@ -47,9 +47,9 @@ public static final double noteTransferMetersPerSecond = 0.5;
      public static final double wristGearRatio = 200.0/1.0;
      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
      public static final int noteSensorChannel = 1;
-     public static final double shootInSpeakerAngle = 30.0;
      public static final double shootInAmpAngle = 320.0;
-     public static final double meetIntake = 80.0;
+     public static final double meetIntakeAngle = 80.0;
+     public static final double allowedErrorInDegreesForAngle = 1.0;
 
   }
 
@@ -67,11 +67,11 @@ public static final double noteTransferMetersPerSecond = 0.5;
       public static final double degreesPerRevolution = 360.0;
       public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
       public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-      public static final double upperGearRatio = 50/1;
-      public static final double upperWheelDiameter = Units.inchesToMeters(1.0);
-      public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
+      public static final double intakeGearRatio = 50/1;
+      public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
       public static final double upPositionDegrees = 90;
       public static final double downPositionDegrees = 0;
+      public static final double allowedAngleErrorInDegrees = 1; 
 
     
       
