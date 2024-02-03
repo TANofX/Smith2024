@@ -16,8 +16,6 @@ import frc.robot.util.FieldCalibration;
 import frc.robot.util.Util;
 import java.io.IOException;
 
-
-
 public final class Constants {
   public static final String canivoreBusName = "rio";
   public static final AprilTagFieldLayout apriltagLayout;
@@ -36,8 +34,8 @@ public final class Constants {
   public static final Translation2d fieldSize = new Translation2d(16.54, 8.02);
 
   public static final class CameraInfo {
-    public static final double armLLToCone = Units.inchesToMeters(11.0);
-    public static final double armJointToLL = Units.inchesToMeters(16.0);
+    public static final double cameraHeight = Units.inchesToMeters(0.0); //?????
+    public static final double cameraPitch = Units.degreesToRadians(0); //?????
   }
 
   public static final class PointToPosition {
