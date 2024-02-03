@@ -7,14 +7,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-/*
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import frc.lib.vision.limelight.LimelightHelpers;
-import java.util.Optional;
-*/
 
 public class SwerveDriveWithGamepad extends Command {
   private final SlewRateLimiter xVelLimiter;
