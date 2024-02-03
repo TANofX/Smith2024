@@ -29,7 +29,7 @@ public class Shooter extends AdvancedSubsystem {
   private final CANSparkFlex topMotor = new CANSparkFlex(Constants.Shooter.topCANID, MotorType.kBrushless);
   private final CANSparkMax shooterIntakeMotor = new CANSparkMax(Constants.Shooter.intakeCANID, MotorType.kBrushless);
   private final SparkPIDController topController = topMotor.getPIDController();
-  private final SparkPIDController shooterIntakeController = shooterIntakeMotor.getPIDController();
+  public final SparkPIDController shooterIntakeController = shooterIntakeMotor.getPIDController();
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);
   private final SparkPIDController elevationController = elevationMotor.getPIDController();
   public final CANcoder elevationEncoder = new CANcoder(0);
@@ -59,10 +59,7 @@ public class Shooter extends AdvancedSubsystem {
     topMotor.getEncoder().getVelocity();
   }
 
-    public void receiveGamePiece() {
-      shooterIntakeController.setReference(Constants.noteTransferMetersPerSecond / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION * 60, ControlType.kVelocity);
-
-    }
+    
     public void stopIntakeMotor() {
       shooterIntakeMotor.set(0);
     }
@@ -96,9 +93,8 @@ public class Shooter extends AdvancedSubsystem {
     return rotationAbsoluteSignal.getValueAsDouble() * 360; 
   }
   public void setElevation(Rotation2d elevation) {
-    double angleOfElevation = elevation.getDegrees() / ROTATION_DEGREES_PER_ROTATION;
+    double angleOfElevation = elevation.getDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     elevationController.setReference(angleOfElevation,ControlType.kPosition);
-
   }
 
   public boolean hasNote () {

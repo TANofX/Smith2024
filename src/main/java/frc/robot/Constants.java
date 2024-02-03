@@ -67,6 +67,12 @@ public static final double noteTransferMetersPerSecond = 0.5;
       public static final double degreesPerRevolution = 360.0;
       public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
       public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
+      public static final double upperGearRatio = 50/1;
+      public static final double upperWheelDiameter = Units.inchesToMeters(1.0);
+      public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
+      public static final double upPositionDegrees = 90;
+      public static final double downPositionDegrees = 0;
+
     
       
     }
