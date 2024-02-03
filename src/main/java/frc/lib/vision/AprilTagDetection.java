@@ -26,7 +26,7 @@ public class AprilTagDetection {
   public Transform3d getCameraToTag() {
     return new Transform3d(this.tag.pose.getTranslation(), this.tag.pose.getRotation());
   }
-
+  
   public Transform3d getRobotToTag(Transform3d cameraToRobot) {
     Transform3d robotToCamera = cameraToRobot.inverse();
     return robotToCamera.plus(getCameraToTag());

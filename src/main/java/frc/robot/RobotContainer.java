@@ -28,6 +28,7 @@ public class RobotContainer {
   public static final Shooter shooter = new Shooter();
   public static final FireControl fireControl = new FireControl(swerve::getPose, DriverStation::getAlliance);
 
+
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();
 
