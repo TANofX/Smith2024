@@ -15,18 +15,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.subsystem.selfcheck.SelfChecking;
-<<<<<<< HEAD
-//import frc.lib.subsystem.selfcheck.SelfCheckingCANCoder;
-=======
->>>>>>> origin/jexuan
 import frc.lib.subsystem.selfcheck.SelfCheckingCANCoderPro;
 import frc.lib.subsystem.selfcheck.SelfCheckingPigeon2;
 import frc.lib.subsystem.selfcheck.SelfCheckingSparkBase;
 import frc.lib.subsystem.selfcheck.SelfCheckingTalonFXPro;
-<<<<<<< HEAD
-//import frc.robot.Robot;
-=======
->>>>>>> origin/jexuan
 
 public abstract class AdvancedSubsystem extends SubsystemBase {
   public enum SystemStatus {
