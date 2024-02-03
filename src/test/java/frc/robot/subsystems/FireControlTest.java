@@ -51,6 +51,9 @@ public class FireControlTest {
             poseList.add(new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(200), Rotation2d.fromDegrees(180)));
             poseList.add(new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(200), Rotation2d.fromDegrees(180+45)));
             
+            poseList.add(new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(200), Rotation2d.fromDegrees(180)));
+            poseList.add(new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(200), Rotation2d.fromDegrees(180+45)));
+
             reset();
         }
 
@@ -90,12 +93,17 @@ public class FireControlTest {
     }
     @Test
     void testGetDesiredAngle() {
+        AllianceSupplier.makeBlue();
         testingControl.periodic();
         assertEquals(Rotation2d.fromRadians(2.743578338).getRadians(), testingControl.getDesiredRobotAngle().getRadians(), 0.001, "wrong target angle");
-        assertEquals(Rotation2d.fromDegrees(176.2097573).getRadians(), testingControl.getDesiredRobotAngle().getRadians(), 0.001, "wrong target angle");
         testingControl.periodic();
         assertEquals(Rotation2d.fromDegrees(108.5713854).getRadians(), testingControl.getDesiredRobotAngle().getRadians(), 0.001, "wrong target angle");
-        assertEquals(Rotation2d.fromDegrees(-138.7902427).getRadians(), testingControl.getDesiredRobotAngle().getRadians(), 0.001, "wrong target angle");
+        
+        AllianceSupplier.makeRed();
+        testingControl.periodic();
+        assertEquals(Rotation2d.fromDegrees(3.7902427).getRadians(), testingControl.getDesiredRobotAngle().getRadians(), 0.001, "wrong target angle");
+        testingControl.periodic();
+        assertEquals(Rotation2d.fromDegrees(-40.31464526).getRadians(), testingControl.getDesiredRobotAngle().getRadians(), 0.001, "wrong target angle");
 
     }
 }

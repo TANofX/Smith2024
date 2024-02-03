@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,6 +15,7 @@ public class SwerveDriveWithGamepad extends Command {
   private final SlewRateLimiter xVelLimiter;
   private final SlewRateLimiter yVelLimiter;
   private final SlewRateLimiter angularVelLimiter;
+  private final PIDController speakerController;
 
   private Rotation2d rotationTarget = null;
   private final double rotationHoldFactor;
@@ -25,7 +28,7 @@ public class SwerveDriveWithGamepad extends Command {
     this.angularVelLimiter = new SlewRateLimiter(Constants.Swerve.maxAngularAccelTele);
     this.rotationHoldFactor = Constants.Swerve.teleAngleHoldFactor;
     this.aimAtGamePiece = aimAtGamePiece;
-
+    this.speakerController = new PIDController(1.0, 0, 0.01); //MAKE CONSTANTS
     addRequirements(RobotContainer.swerve);
   }
 
@@ -52,9 +55,15 @@ public class SwerveDriveWithGamepad extends Command {
     x = Math.copySign(x * x, x);
     double y = -RobotContainer.driver.getLeftX();
     y = Math.copySign(y * y, y);
-    double rot = -RobotContainer.driver.getRightX();
+    double rot;
+    if (RobotContainer.fireControl.trackingTarget()) {
+      rot = speakerController.calculate(RobotContainer.swerve.getPose().getRotation().getRadians(), RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
+      rot = MathUtil.clamp(rot, -1, 1);
+    }
+    else {
+    rot = -RobotContainer.driver.getRightX();
     rot = Math.copySign(rot * rot, rot);
-
+    }
     double targetAngularVel = rot * Constants.Swerve.maxAngularVelTele;
     boolean targeting = false;
     boolean stop = x == 0 && y == 0 && rot == 0;

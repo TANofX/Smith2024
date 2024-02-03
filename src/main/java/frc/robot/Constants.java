@@ -130,6 +130,7 @@ public static final double noteTransferMetersPerSecond = 0.5;
     public static final double maxVelTele = 0.3;
   }
   public static final class FireControl {
+    public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
     public static final double HEIGHT = Units.inchesToMeters(80.13);
     //public static final double SHOOTER_HEIGHT = 24;
