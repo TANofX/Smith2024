@@ -10,16 +10,18 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class FireControl extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier;
+  private Supplier<Optional<Alliance>> allianceSupplier;
 
   /** Creates a new FireControl. */
-  public FireControl(Supplier<Pose2d> poseSupplier) {
+  public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
     this.poseSupplier = poseSupplier;
+    this.allianceSupplier = allianceSupplier;
   }
 
   @Override
@@ -34,11 +36,11 @@ public class FireControl extends SubsystemBase {
 
     double distanceFromSpeaker;
 //    Rotation2d robotDesiredAngle;
-    Optional<DriverStation.Alliance> currentAlliance = DriverStation.getAlliance();
+    Optional<Alliance> currentAlliance = allianceSupplier.get();
 
     Transform2d shooterToSpeaker;
 
-    if (currentAlliance.isPresent() && DriverStation.Alliance.Red == DriverStation.getAlliance().get()) {
+    if (currentAlliance.isPresent() && Alliance.Red == currentAlliance.get()) {
       shooterToSpeaker = new Transform2d(shooterPose, Constants.FireControl.RED_SPEAKER_POSITION);
     } else {
       shooterToSpeaker = new Transform2d(shooterPose, Constants.FireControl.BLUE_SPEAKER_POSITION);
