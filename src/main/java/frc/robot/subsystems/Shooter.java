@@ -18,7 +18,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
-import elevationMotor.getPIDController;
+//import elevationMotor.getPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
 import frc.robot.util.NoteSensor;
