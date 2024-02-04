@@ -1,25 +1,34 @@
 package frc.lib.swerve;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
+import com.ctre.phoenix6.sim.CANcoderSimState;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.LinearSystemSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.subsystem.AdvancedSubsystem;
 
-import com.revrobotics.*;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-/** Implementation for an SDS Mk4 swerve module using RevNeo Vortex with SparkFlex controller */
+/** Implementation for an SDS Mk4 swerve module using Falcon 500s and phoenix pro */
 public class Mk4SwerveModulePro extends AdvancedSubsystem {
   public enum ModuleCode {
     FL,
@@ -40,7 +49,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
 
   private static final double DRIVE_GEARING = 1.0 / 6.75;
   private static final double DRIVE_METERS_PER_ROTATION =
-      DRIVE_GEARING * Math.PI * Units.inchesToMeters(4.0);
+      DRIVE_GEARING * Units.inchesToMeters(12.375); //Math.PI * Units.inchesToMeters(4);
   private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 / 12.8) * 360.0;
 
   // M/s - Tune (Apply full output and measure max vel. Adjust KV/KA for sim if needed)
@@ -53,18 +62,28 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
   private static final double ROTATION_KD = 0.0;
 
   public final ModuleCode moduleCode;
-  // private final LinearSystemSim<N1, N1, N1> driveSim;
-  // private final LinearSystemSim<N2, N1, N1> rotationSim;
+  private final LinearSystemSim<N1, N1, N1> driveSim;
+  private final LinearSystemSim<N2, N1, N1> rotationSim;
 
-  private final CANSparkFlex driveMotor;
-  // private final REVPhysicsSim driveSimState;
-  
-  private final CANSparkFlex rotationMotor;
-  // private final REVPhysicsSim rotationSimState;
+  private final TalonFX driveMotor;
+  private final TalonFXSimState driveSimState;
+  private final StatusSignal<Double> drivePositionSignal;
+  private final StatusSignal<Double> driveVelocitySignal;
+  private final StatusSignal<Double> driveCurrentSignal;
+  private final StatusSignal<Double> driveVoltageSignal;
+  private final StatusSignal<Double> driveTempSignal;
+
+  private final TalonFX rotationMotor;
+  private final TalonFXSimState rotationSimState;
+  private final StatusSignal<Double> rotationPositionSignal;
+  private final StatusSignal<Double> rotationVelocitySignal;
+  private final StatusSignal<Double> rotationCurrentSignal;
+  private final StatusSignal<Double> rotationVoltageSignal;
+  private final StatusSignal<Double> rotationTempSignal;
 
   private final CANcoder rotationEncoder;
   private final CANcoderConfiguration rotationEncoderConfig;
-  // private final CANcoderSimState rotationEncoderSimState;
+  private final CANcoderSimState rotationEncoderSimState;
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private final StatusSignal<Double> rotationAbsoluteVelSignal;
 
@@ -98,29 +117,45 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
     rotationEncoderConfig.MagnetSensor.MagnetOffset =
         Preferences.getDouble(getName() + "RotationOffset", 0.0) / 360.0;
     rotationEncoder.getConfigurator().apply(rotationEncoderConfig);
-    // rotationEncoderSimState = rotationEncoder.getSimState();
+    rotationEncoderSimState = rotationEncoder.getSimState();
 
-    driveMotor = new CANSparkFlex(driveMotorCanID, MotorType.kBrushless);
-    driveMotor.setInverted(false);
-    driveMotor.setIdleMode(IdleMode.kCoast);
-    driveMotor.getPIDController().setP(DRIVE_KP, 0);
-    driveMotor.getPIDController().setD(DRIVE_KD, 0);
-    driveMotor.getPIDController().setFF(DRIVE_MAX_VEL / DRIVE_METERS_PER_ROTATION * 60.0, 0);
-    // driveSimState.addSparkMax(driveMotor, 8.0f, 5500.0f);
+    driveMotor = new TalonFX(driveMotorCanID, canBus);
+    TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+    driveConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    driveConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    driveConfig.Slot0.kP = DRIVE_KP;
+    driveConfig.Slot0.kD = DRIVE_KD;
+    driveConfig.Slot0.kV = 12.0 / (DRIVE_MAX_VEL / DRIVE_METERS_PER_ROTATION);
+    driveMotor.getConfigurator().apply(driveConfig);
+    driveSimState = driveMotor.getSimState();
 
-    rotationMotor = new CANSparkFlex(rotationMotorCanID, MotorType.kBrushless);
-    rotationMotor.setInverted(false);
-    rotationMotor.setIdleMode(IdleMode.kBrake);
-    rotationMotor.getPIDController().setP(ROTATION_KP);
-    rotationMotor.getPIDController().setD(ROTATION_KD);
-    // rotationSimState.addSparkMax(rotationMotor, 8.0, 5500.0);
+    rotationMotor = new TalonFX(rotationMotorCanID, canBus);
+    TalonFXConfiguration rotationConfig = new TalonFXConfiguration();
+    rotationConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    rotationConfig.Slot0.kP = ROTATION_KP;
+    rotationConfig.Slot0.kD = ROTATION_KD;
+    rotationMotor.getConfigurator().apply(rotationConfig);
+    rotationSimState = rotationMotor.getSimState();
+
+    drivePositionSignal = driveMotor.getPosition();
+    driveVelocitySignal = driveMotor.getVelocity();
+    driveCurrentSignal = driveMotor.getSupplyCurrent();
+    driveVoltageSignal = driveMotor.getSupplyVoltage();
+    driveTempSignal = driveMotor.getDeviceTemp();
+
+    rotationPositionSignal = rotationMotor.getPosition();
+    rotationVelocitySignal = rotationMotor.getVelocity();
+    rotationCurrentSignal = rotationMotor.getSupplyCurrent();
+    rotationVoltageSignal = rotationMotor.getSupplyVoltage();
+    rotationTempSignal = rotationMotor.getDeviceTemp();
 
     rotationAbsoluteSignal = rotationEncoder.getAbsolutePosition();
     rotationAbsoluteVelSignal = rotationEncoder.getVelocity();
 
-    // driveSim = new LinearSystemSim<>(LinearSystemId.identifyVelocitySystem(DRIVE_KV, DRIVE_KA));
-    // rotationSim =
-    //     new LinearSystemSim<>(LinearSystemId.identifyPositionSystem(ROTATION_KV, ROTATION_KA));
+    driveSim = new LinearSystemSim<>(LinearSystemId.identifyVelocitySystem(DRIVE_KV, DRIVE_KA));
+    rotationSim =
+        new LinearSystemSim<>(LinearSystemId.identifyPositionSystem(ROTATION_KV, ROTATION_KA));
 
     registerHardware("Drive Motor", driveMotor);
     registerHardware("Rotation Motor", rotationMotor);
@@ -129,38 +164,48 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(getName() + "/DriveTemp", driveMotor.getMotorTemperature());
-    SmartDashboard.putNumber(getName() + "/RotationTemp", rotationMotor.getMotorTemperature());
+    SmartDashboard.putNumber(getName() + "/DriveTemp", driveMotor.getDeviceTemp().getValue());
+    SmartDashboard.putNumber(getName() + "/RotationTemp", rotationMotor.getDeviceTemp().getValue());
 
     // Refresh cached values in background
     StatusSignal.waitForAll(
         0,
+        drivePositionSignal,
+        driveVelocitySignal,
+        driveCurrentSignal,
+        driveVoltageSignal,
+        driveTempSignal,
+        rotationPositionSignal,
+        rotationVelocitySignal,
+        rotationCurrentSignal,
+        rotationVoltageSignal,
+        rotationTempSignal,
         rotationAbsoluteSignal,
         rotationAbsoluteVelSignal);
   }
 
   @Override
   public void simulationPeriodic() {
-    // driveSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
-    // rotationSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
-    // rotationEncoderSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+    driveSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+    rotationSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
+    rotationEncoderSimState.setSupplyVoltage(RobotController.getBatteryVoltage());
 
-    // driveSim.setInput(driveSimState.getMotorVoltage());
-    // rotationSim.setInput(rotationSimState.getMotorVoltage());
+    driveSim.setInput(driveSimState.getMotorVoltage());
+    rotationSim.setInput(rotationSimState.getMotorVoltage());
 
-    // driveSim.update(0.02);
-    // rotationSim.update(0.02);
+    driveSim.update(0.02);
+    rotationSim.update(0.02);
 
-    // double driveVel = driveSim.getOutput(0) / DRIVE_METERS_PER_ROTATION;
-    // driveSimState.setRotorVelocity(driveVel);
-    // driveSimState.addRotorPosition(driveVel * 0.02);
+    double driveVel = driveSim.getOutput(0) / DRIVE_METERS_PER_ROTATION;
+    driveSimState.setRotorVelocity(driveVel);
+    driveSimState.addRotorPosition(driveVel * 0.02);
 
-    // double rotationPos = rotationSim.getOutput(0) / ROTATION_DEGREES_PER_ROTATION;
-    // double rotationDeltaPos = rotationPos - rotationPositionSignal.getValue();
-    // rotationSimState.addRotorPosition(rotationDeltaPos);
-    // rotationSimState.setRotorVelocity(rotationDeltaPos / 0.02);
-    // rotationEncoderSimState.setRawPosition(rotationSim.getOutput(0) / 360.0);
-    // rotationEncoderSimState.setVelocity(getRotationVelocityDegreesPerSecond() / 360.0);
+    double rotationPos = rotationSim.getOutput(0) / ROTATION_DEGREES_PER_ROTATION;
+    double rotationDeltaPos = rotationPos - rotationPositionSignal.getValue();
+    rotationSimState.addRotorPosition(rotationDeltaPos);
+    rotationSimState.setRotorVelocity(rotationDeltaPos / 0.02);
+    rotationEncoderSimState.setRawPosition(rotationSim.getOutput(0) / 360.0);
+    rotationEncoderSimState.setVelocity(getRotationVelocityDegreesPerSecond() / 360.0);
   }
 
   /**
@@ -169,7 +214,6 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
    * @param desiredState Desired state of the module
    */
   public void setDesiredState(SwerveModuleState desiredState) {
-    driveMotor.setIdleMode(IdleMode.kCoast);
     this.targetState = SwerveModuleState.optimize(desiredState, getState().angle);
 
     // Don't run the motors if the desired speed is less than 5% of the max
@@ -186,30 +230,35 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
     }
     double targetAngle = getRelativeRotationDegrees() + deltaRot;
 
-    REVLibError driveError = 
-      driveMotor.getPIDController().setReference(targetState.speedMetersPerSecond / DRIVE_METERS_PER_ROTATION, ControlType.kSmartVelocity, 0);
-    if (driveError != REVLibError.kOk) {
+    StatusCode driveStatus =
+        driveMotor.setControl(
+            new VelocityVoltage(targetState.speedMetersPerSecond / DRIVE_METERS_PER_ROTATION));
+    if (!driveStatus.isOK()) {
       addFault(
-        "[Drive Motor]: Status code: "
-        + driveError.name()
-      );
+          "[Drive Motor]: Status code: "
+              + driveStatus.getName()
+              + ". "
+              + driveStatus.getDescription(),
+          driveStatus.isWarning());
     }
 
-    REVLibError rotationError =
-      rotationMotor.getPIDController().setReference(targetAngle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition, 0);
-    if (rotationError != REVLibError.kOk) {
+    StatusCode rotationStatus =
+        rotationMotor.setControl(new PositionVoltage(targetAngle / ROTATION_DEGREES_PER_ROTATION));
+    if (!rotationStatus.isOK()) {
       addFault(
-        "[Rotation Motor]: Status code: "
-          + rotationError.name()
-      );
+          "[Rotation Motor]: Status code: "
+              + rotationStatus.getName()
+              + ". "
+              + rotationStatus.getDescription(),
+          rotationStatus.isWarning());
     }
   }
 
   /** Stop all motors */
   public void stopMotors() {
     // NeutralOut request for coast mode
-    driveMotor.stopMotor();
-    rotationMotor.stopMotor();
+    driveMotor.setControl(new NeutralOut());
+    rotationMotor.setControl(new NeutralOut());
   }
 
   /**
@@ -218,7 +267,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
    * @return How far this module has driven in meters
    */
   public double getDrivePositionMeters() {
-    return driveMotor.getEncoder().getPosition() * DRIVE_METERS_PER_ROTATION;
+    return drivePositionSignal.getValue() * DRIVE_METERS_PER_ROTATION;
   }
 
   /**
@@ -227,7 +276,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
    * @return Relative rotation
    */
   public double getRelativeRotationDegrees() {
-    return rotationMotor.getEncoder().getPosition() * ROTATION_DEGREES_PER_ROTATION;
+    return rotationPositionSignal.getValue() * ROTATION_DEGREES_PER_ROTATION;
   }
 
   /**
@@ -245,7 +294,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
    * @return Drive motor velocity
    */
   public double getDriveVelocityMetersPerSecond() {
-    return driveMotor.getEncoder().getVelocity() * DRIVE_METERS_PER_ROTATION;
+    return driveVelocitySignal.getValue() * DRIVE_METERS_PER_ROTATION;
   }
 
   /**
@@ -254,7 +303,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
    * @return Rotation motor velocity
    */
   public double getRotationVelocityDegreesPerSecond() {
-    return rotationMotor.getEncoder().getVelocity() * ROTATION_DEGREES_PER_ROTATION;
+    return rotationVelocitySignal.getValue() * ROTATION_DEGREES_PER_ROTATION;
   }
 
   /**
@@ -299,7 +348,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
 
   /** Sync the relative rotation encoder (falcon) to the value of the absolute encoder (CANCoder) */
   public void syncRotationEncoders() {
-    rotationMotor.getEncoder().setPosition(getAbsoluteRotationDegrees() / ROTATION_DEGREES_PER_ROTATION);
+    rotationMotor.setPosition(getAbsoluteRotationDegrees() / ROTATION_DEGREES_PER_ROTATION);
   }
 
   public void lockModule() {
@@ -321,9 +370,8 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
 
 
     //MAYBE? .setRotorControl
-    driveMotor.setIdleMode(IdleMode.kBrake);
-    driveMotor.stopMotor();
-    rotationMotor.getPIDController().setReference(angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition);
+    driveMotor.setControl(new StaticBrake());
+    rotationMotor.setControl(new PositionVoltage(angle / ROTATION_DEGREES_PER_ROTATION));
   }
 
   public SwerveModuleState getTargetState() {
@@ -364,8 +412,8 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
                         deltaRot += 360;
                       }
                       double angle = getRelativeRotationDegrees() + deltaRot;
-                      rotationMotor.getPIDController().setReference(
-                        angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition);
+                      rotationMotor.setControl(
+                          new PositionVoltage(angle / ROTATION_DEGREES_PER_ROTATION));
                     },
                     this)
                 .withTimeout(1.0),
@@ -379,9 +427,8 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
                 this),
             Commands.runOnce(
                 () -> {
-                  driveMotor.setIdleMode(IdleMode.kCoast);
                   driveMotor.set(0.1);
-                  rotationMotor.stopMotor();
+                  rotationMotor.setControl(new StaticBrake());
                 },
                 this),
             Commands.waitSeconds(0.5),
@@ -390,8 +437,7 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
                   if (getDriveVelocityMetersPerSecond() < 0.25) {
                     addFault("[System Check] Drive motor encoder velocity too slow", false, true);
                   }
-                  driveMotor.setIdleMode(IdleMode.kBrake);
-                  driveMotor.stopMotor();
+                  driveMotor.setControl(new StaticBrake());
                 },
                 this),
             Commands.waitSeconds(0.25),
@@ -404,8 +450,8 @@ public class Mk4SwerveModulePro extends AdvancedSubsystem {
                         deltaRot += 360;
                       }
                       double angle = getRelativeRotationDegrees() + deltaRot;
-                      rotationMotor.getPIDController().setReference(
-                        angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition);
+                      rotationMotor.setControl(
+                          new PositionVoltage(angle / ROTATION_DEGREES_PER_ROTATION));
                     },
                     this)
                 .withTimeout(1.0),
