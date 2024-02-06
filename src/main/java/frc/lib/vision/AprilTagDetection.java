@@ -1,4 +1,4 @@
-package frc.lib.vision.jetson;
+package frc.lib.vision;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -39,6 +39,8 @@ public class AprilTagDetection {
    * @param robotPose Current robot pose on the field
    * @return Pose of the tag on the field
    */
+  public static Transform3d cameraToRobot;
+
   public Pose3d getEstimatedTagPose(Transform3d cameraToRobot, Pose2d robotPose) {
     Transform3d robotToTag = getRobotToTag(cameraToRobot);
     Transform3d fieldToRobot =
@@ -56,4 +58,32 @@ public class AprilTagDetection {
     return fieldToTarget.map(
         pose3d -> ComputerVisionUtil.objectToRobotPose(pose3d, getCameraToTag(), robotToCamera));
   }
+
+
+  //   // PID constants should be tuned per robot
+  // final double LINEAR_P = 0.1;
+  // final double LINEAR_D = 0.0;
+  // PIDController forwardController = new PIDController(LINEAR_P, 0, LINEAR_D);
+  
+  // final double ANGULAR_P = 0.1;
+  // final double ANGULAR_D = 0.0;
+  // PIDController turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+
+  // PhotonCamera photonCamera = new PhotonCamera("photonCamera");
+
+  // public PhotonPipelineResult result = photonCamera.getLatestResult();
+  // public PhotonTrackedTarget bestTarget = result.getBestTarget();
+  // public final int id = bestTarget.getFiducialId();
+  // public final Optional<Pose3d> aprilTag = Constants.apriltagLayout.getTagPose(id);
+  // final double goalRange = Units.feetToMeters(3); //?????
+    
+  // Pose3d aprilTagPose = aprilTag.get();
+  // double aprilTagZ = aprilTagPose.getZ();
+  // double distance =
+  //   PhotonUtils.calculateDistanceToTargetMeters(
+  //                         Constants.CameraInfo.cameraHeight,
+  //                         aprilTagZ,
+  //                         Constants.CameraInfo.cameraPitch,
+  //                         Units.degreesToRadians(result.getBestTarget().getPitch()));
+
 }

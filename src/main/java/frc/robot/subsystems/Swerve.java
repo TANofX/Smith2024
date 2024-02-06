@@ -26,7 +26,6 @@ import frc.lib.swerve.Mk4SwerveModulePro;
 import frc.lib.util.Vector3;
 //import frc.lib.vision.limelight.LimelightHelpers;
 import frc.robot.Constants;
-//import frc.robot.RobotContainer;
 import frc.robot.util.RobotPoseLookup;
 
 public class Swerve extends AdvancedSubsystem {
@@ -44,15 +43,18 @@ public class Swerve extends AdvancedSubsystem {
   //  protected final StatusSignalValue<Double> imuAccelYSignal;
   protected final StatusSignal<Double> imuAccelZSignal;
 
-  private final RobotPoseLookup poseLookup;
+  private final RobotPoseLookup<Pose2d> poseLookup;
 
   protected double teleopVelConstraint;
   protected double teleopAngularVelConstraint;
 
+    
+   
+
   protected final Field2d field2d = new Field2d();
 
   public Swerve() {
-    poseLookup = new RobotPoseLookup();
+    poseLookup = new RobotPoseLookup<Pose2d>();
 
     imu = new Pigeon2(Constants.Swerve.imuCanID, Constants.canivoreBusName);
     Pigeon2Configuration imuConfig = new Pigeon2Configuration();
@@ -123,6 +125,8 @@ public class Swerve extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
+
+
     double startTime = Timer.getFPGATimestamp();
 
     Pose2d currentPose = odometry.update(getYaw(), getPositions());
