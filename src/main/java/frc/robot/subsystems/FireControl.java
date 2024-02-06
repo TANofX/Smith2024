@@ -13,10 +13,12 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class FireControl extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier;
   private Supplier<Optional<Alliance>> allianceSupplier;
+  private boolean trackTarget = false;
 
   /** Creates a new FireControl. */
   public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
@@ -63,6 +65,11 @@ public class FireControl extends SubsystemBase {
                                                                                                              // shooter's
                                                                                                              // velocity
 
+
+     //double yShooterVelocity = Math.sqrt(Math.pow(Constants.FireControl.FINAL_Y_VELOCITY, 2) - 2*Constants.FireControl.ACCELERATION*Constants.FireControl.HEIGHT);
+     //double xShootervelocity = (Constants.FireControl.ACCELERATION*distanceFromSpeaker)/(Constants.FireControl.FINAL_Y_VELOCITY - yShooterVelocity);
+     //shooterVelocity = Math
+       // .sqrt(Math.pow(yShooterVelocity, 2) + Math.pow(xShootervelocity, 2));  
     shooterVelocity = Math
         .sqrt((2 * Constants.FireControl.ACCELERATION * Constants.FireControl.HEIGHT) + Math.pow(xShootervelocity, 2)); // vector
                                                                                                                         // sum
@@ -71,23 +78,20 @@ public class FireControl extends SubsystemBase {
                                                                                                                         // overall
                                                                                                                         // shooter
                                                                                                                         // velocity
+      //shooterAngle = Rotation2d.fromRadians(Math.atan(yShooterVelocity/xShootervelocity));                                                                                                                  
     shooterAngle = Rotation2d.fromRadians(Math.atan(Constants.FireControl.ACCELERATION * distanceFromSpeaker)); // Finding the angle the shooter
                                                                                         // needs to shoot into the
                                                                                         // speaker from its current
                                                                                         // position
-
-    // SmartDashboard.getNumber("shooterAngle", shooterAngle);
-    // SmartDashboard.getNumber("ShooterVelocity",
-    // Units.radiansToDegrees(shooterVelocity));
-    // SmartDashboard.getNumber("distanceFromSpeaker", distanceFromSpeaker);
-
-    // This method will be called once per scheduler run
+    altShooterAngle = Rotation2d.fromRadians(Constants.FireControl.HEIGHT/distanceFromSpeaker);
+    
 
   }
 
   private double shooterVelocity;
   private Rotation2d shooterAngle;
   private Rotation2d robotDesiredAngle;
+  private Rotation2d altShooterAngle;
 
   public double getVelocity() {
     return shooterVelocity;
@@ -96,9 +100,23 @@ public class FireControl extends SubsystemBase {
   public Rotation2d getAngle() {
     return shooterAngle;
   }
+  public Rotation2d getAltAngle() {
+    return altShooterAngle;
+  }
 
   public Rotation2d getDesiredRobotAngle() {
     return robotDesiredAngle;
+  }
+  public void setTargetMode(boolean track) {
+    if (RobotContainer.shooter.hasNote()) {
+    this.trackTarget = track;
+    }
+    else {
+      this.trackTarget = false;
+    }
+  }
+  public boolean trackingTarget() {
+    return trackTarget;
   }
 
 
