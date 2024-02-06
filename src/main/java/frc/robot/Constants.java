@@ -62,7 +62,9 @@ public final class Constants {
   }
   public static final class Intake {
 
-  
+      public static final int intakeCANID = 0;
+      public static final int pivotIntakeCANID = 0;
+      public static final int intakeAngleSensor = 0;
       public static final double gearRatio = 80/1;
       public static final double countsPerMotorRevolution =  42;
       public static final double countsPerRevolution = (gearRatio)*(countsPerMotorRevolution);
@@ -75,10 +77,13 @@ public final class Constants {
       public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
       public static final double upPositionDegrees = 90;
       public static final double downPositionDegrees = 0;
+      public static final int intakeNoteSensorChannel = 0;
+      public static final double intakeGearRatio = 50/1;
+      public static final double allowedAngleErrorInDegrees = 1;
 
     
   }
-    }
+    
 
   public static final class Swerve {
     public static final int imuCanID = 3;

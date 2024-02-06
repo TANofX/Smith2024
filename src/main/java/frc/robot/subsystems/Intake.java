@@ -59,13 +59,14 @@ public class Intake extends AdvancedSubsystem {
     intakeController.setReference(setPoint, ControlType.kVelocity);
   }
   public void angleIntakeDown() {
-    double setPosition = (Constants.Intake.downPositionDegrees);
-    setElevation(setPosition);
+    
+    setElevation(Rotation2d.fromDegrees(Constants.Intake.downPositionDegrees));
   }
   public void angleIntakeBack() {
-    double setPosition = (Constants.Intake.upPositionDegrees);
-    pivotController.setReference(10, ControlType.kPosition);
+    
+   setElevation(Rotation2d.fromDegrees(Constants.Intake.upPositionDegrees));
   }
+  
   public void stopIntakeMotor () {
 intakeMotor.stopMotor();
 intakeController.setReference(0, ControlType.kVelocity);
@@ -74,7 +75,7 @@ intakeController.setReference(0, ControlType.kVelocity);
   return intakeBeamBreakSensor.isTriggered();
  }
  public boolean isBack () {
-  return pivotIntakeMotor.getEncoder().getPosition();
+  return getAbsoluteRotationDegrees() - Constants.Intake.upPositionDegrees < Constants.Intake.allowedAngleErrorInDegrees;
  }
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
