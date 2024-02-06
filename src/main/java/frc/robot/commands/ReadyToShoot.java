@@ -25,7 +25,7 @@ public class ReadyToShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.shooter.shootGamePiece(RobotContainer.fireControl.getVelocity(), 0);
+    RobotContainer.shooter.shootGamePiece(RobotContainer.fireControl.getVelocity());
     RobotContainer.shooter.setElevation(Rotation2d.fromRadians(RobotContainer.fireControl.getAngle().getRadians())); //If calculated Angle not accurate, use the simple one (getAltAngle())
   }
 
