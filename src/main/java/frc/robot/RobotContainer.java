@@ -37,24 +37,20 @@ public class RobotContainer {
   public static final Shooter shooter = new Shooter();
   public static final FireControl fireControl = new FireControl(swerve::getPose, DriverStation::getAlliance);
 
-
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();
 
   // Vision clients
-  //  public static final JetsonClient jetson = new JetsonClient();
-
-  
-
+  // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
   }
-  
-private void configureButtonBindings() {
-  driver.A().whileTrue(new IntakeNote());
-}
-  
+
+  private void configureButtonBindings() {
+    driver.A().whileTrue(new IntakeNote());
   }
+
+}

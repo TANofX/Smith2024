@@ -32,7 +32,7 @@ public class Shooter extends AdvancedSubsystem {
   public final SparkPIDController shooterIntakeController = shooterIntakeMotor.getPIDController();
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);
   private final SparkPIDController elevationController = elevationMotor.getPIDController();
-  public final CANcoder elevationEncoder = new CANcoder(0);
+  public final CANcoder elevationEncoder = new CANcoder(Constants.Shooter.elevationEncoderCANID);
   private final CANcoderConfiguration shooterEncoderConfiguration;
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private final NoteSensor shooterBeamBreakSensor = new NoteSensor(Constants.Shooter.noteSensorChannel);
