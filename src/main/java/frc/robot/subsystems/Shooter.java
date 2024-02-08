@@ -63,7 +63,7 @@ public class Shooter extends AdvancedSubsystem {
     public void stopIntakeMotor() {
       shooterIntakeMotor.set(0);
     }
-    public void shootGamePiece(double speedInMps) {
+    public void startMotorsForShooter(double speedInMps) {
       speedInRPM = speedInMps/(Math.PI * Constants.Shooter.wheelDiameter)*60.0*Constants.Shooter.gearRatioShooterSide;
       topController.setReference(speedInRPM , ControlType.kVelocity);
     }
@@ -91,6 +91,7 @@ public class Shooter extends AdvancedSubsystem {
   }
   public double getAbsoluteRotationDegrees() {
     return rotationAbsoluteSignal.getValueAsDouble() * 360; 
+    //tells us what angle we are at
   }
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
@@ -103,12 +104,20 @@ public class Shooter extends AdvancedSubsystem {
   public double getShooterSpeed () {
     return topMotor.getEncoder().getVelocity();
   }
+  //Uses encoder on motor to get the speed
   public double getTargetShooterSpeed () {
     return speedInRPM;
   }
-  public boolean readyToShoot () {
+  public boolean atSpeed () {
     double error = Math.abs(getTargetShooterSpeed() - getShooterSpeed());
     return error <= Math.abs(getTargetShooterSpeed() * 0.01);
+    
+  }
+  public boolean isAtElevation () {
+    return getAbsoluteRotationDegrees() - Constants.Shooter.meetIntakeAngle <= Constants.Shooter.allowedErrorInDegreesForAngle;
+  }
+  public boolean readyToShoot () {
+    return isAtElevation() && atSpeed();
     
   }
   

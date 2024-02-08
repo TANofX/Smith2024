@@ -13,6 +13,7 @@ import frc.lib.subsystem.AdvancedSubsystem;
 import frc.lib.util.CycleTracker;
 import frc.robot.commands.IntakeNote;
 import frc.robot.commands.SwerveDriveWithGamepad;
+import frc.robot.commands.TransferNote;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
@@ -42,6 +43,8 @@ public class RobotContainer {
   
 private void configureButtonBindings() {
   driver.A().whileTrue(new IntakeNote());
+  driver.B().whileTrue(new TransferNote());
+  
 }
   
   }

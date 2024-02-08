@@ -74,7 +74,7 @@ intakeController.setReference(0, ControlType.kVelocity);
 }
 
  public boolean isBack () {
-  return getAbsoluteRotationDegrees() - Constants.Intake.upPositionDegrees < Constants.Intake.allowedAngleErrorInDegrees;
+  return Math.abs(getAbsoluteRotationDegrees() - Constants.Intake.upPositionDegrees) < Constants.Intake.allowedAngleErrorInDegrees;
  }
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
