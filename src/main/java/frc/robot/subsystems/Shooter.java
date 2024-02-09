@@ -18,6 +18,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 //import elevationMotor.getPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
@@ -130,10 +131,13 @@ public class Shooter extends AdvancedSubsystem {
     // This method will be called once per scheduler run
   }
 
-  @Override
-  protected Command systemCheckCommand() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
+ 
 
+  
+  @Override
+  public Command systemCheckCommand() {
+    return Commands.sequence(
+        Commands.runOnce(() -> {
+    }
   }
 }
