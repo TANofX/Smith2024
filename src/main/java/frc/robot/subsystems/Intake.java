@@ -17,14 +17,13 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+//import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
 import frc.robot.util.NoteSensor;
 
-
 public class Intake extends AdvancedSubsystem {
-  
+
   private final CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.intakeCANID, MotorType.kBrushless);
   private final CANSparkMax pivotIntakeMotor = new CANSparkMax(Constants.Intake.pivotIntakeCANID, MotorType.kBrushless);
   private final SparkPIDController pivotController = pivotIntakeMotor.getPIDController();
@@ -33,53 +32,60 @@ public class Intake extends AdvancedSubsystem {
   private final CANcoder intakeAngleSensor = new CANcoder(Constants.Intake.intakeAngleSensor);
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private final CANcoderConfiguration intakeEncoderConfiguration;
+
   /** Creates a new Intake. */
   public Intake() {
-     intakeEncoderConfiguration = new CANcoderConfiguration();
-    intakeEncoderConfiguration.MagnetSensor.AbsoluteSensorRange =
-        AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    intakeEncoderConfiguration.MagnetSensor.SensorDirection =
-        SensorDirectionValue.CounterClockwise_Positive;
-    intakeEncoderConfiguration.MagnetSensor.MagnetOffset =
-        Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
+    intakeEncoderConfiguration = new CANcoderConfiguration();
+    intakeEncoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    intakeEncoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    intakeEncoderConfiguration.MagnetSensor.MagnetOffset = Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
     intakeAngleSensor.getConfigurator().apply(intakeEncoderConfiguration);
     registerHardware("Intake Motor", intakeMotor);
     registerHardware("Pivot Intake Motor", pivotIntakeMotor);
     registerHardware("Intake Angle Sensor", intakeAngleSensor);
     rotationAbsoluteSignal = intakeAngleSensor.getAbsolutePosition();
     syncRotationEncoders();
-    
 
   }
+
   public void intakeGamePiece() {
-  intakeController.setReference(25, ControlType.kVelocity);
+    intakeController.setReference(25, ControlType.kVelocity);
   }
+
   public void passGamePiece(double speedMetersPerSecond) {
-    double speedInRPM = speedMetersPerSecond/(Math.PI * Constants.Intake.intakeWheelDiameter)*60.0*Constants.Intake.intakeGearRatio;
+    double speedInRPM = speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
+        * Constants.Intake.intakeGearRatio;
 
     intakeController.setReference(speedInRPM, ControlType.kVelocity);
   }
+
   public void angleIntakeDown() {
     setElevation(Rotation2d.fromDegrees(Constants.Intake.downPositionDegrees));
   }
+
   public void angleIntakeBack() {
     setElevation(Rotation2d.fromDegrees(Constants.Intake.upPositionDegrees));
   }
-  public void stopIntakeMotor () {
-intakeMotor.stopMotor();
-intakeController.setReference(0, ControlType.kVelocity);
-  }
- public boolean hasNote () {
-  return intakeBeamBreakSensor.isTriggered();
-}
 
- public boolean isBack () {
-  return Math.abs(getAbsoluteRotationDegrees() - Constants.Intake.upPositionDegrees) < Constants.Intake.allowedAngleErrorInDegrees;
- }
+  public void stopIntakeMotor() {
+    intakeMotor.stopMotor();
+    intakeController.setReference(0, ControlType.kVelocity);
+  }
+
+  public boolean hasNote() {
+    return intakeBeamBreakSensor.isTriggered();
+  }
+
+  public boolean isBack() {
+    return Math.abs(getAbsoluteRotationDegrees()
+        - Constants.Intake.upPositionDegrees) < Constants.Intake.allowedAngleErrorInDegrees;
+  }
+
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
-    pivotController.setReference(angleOfElevation,ControlType.kPosition);
- }
+    pivotController.setReference(angleOfElevation, ControlType.kPosition);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -90,6 +96,7 @@ intakeController.setReference(0, ControlType.kVelocity);
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
   }
+
   public void updateRotationOffset() {
     double currentOffset = intakeEncoderConfiguration.MagnetSensor.MagnetOffset;
     double offset = (currentOffset - rotationAbsoluteSignal.getValue()) % 1.0;
@@ -99,11 +106,15 @@ intakeController.setReference(0, ControlType.kVelocity);
     syncRotationEncoders();
   }
 
-  /** Sync the relative rotation encoder (falcon) to the value of the absolute encoder (CANCoder) */
+  /**
+   * Sync the relative rotation encoder (falcon) to the value of the absolute
+   * encoder (CANCoder)
+   */
   public void syncRotationEncoders() {
     intakeMotor.getEncoder().setPosition(getAbsoluteRotationDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION);
   }
+
   public double getAbsoluteRotationDegrees() {
-    return rotationAbsoluteSignal.getValueAsDouble() * 360; 
+    return rotationAbsoluteSignal.getValueAsDouble() * 360;
   }
 }
