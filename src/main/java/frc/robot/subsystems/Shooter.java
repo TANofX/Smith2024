@@ -18,6 +18,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 //import elevationMotor.getPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
@@ -32,7 +33,7 @@ public class Shooter extends AdvancedSubsystem {
   public final SparkPIDController shooterIntakeController = shooterIntakeMotor.getPIDController();
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);
   private final SparkPIDController elevationController = elevationMotor.getPIDController();
-  public final CANcoder elevationEncoder = new CANcoder(0);
+  public final CANcoder elevationEncoder = new CANcoder(Constants.Shooter.elevationEncoderCANID);
   private final CANcoderConfiguration shooterEncoderConfiguration;
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private final NoteSensor shooterBeamBreakSensor = new NoteSensor(Constants.Shooter.noteSensorChannel);
@@ -63,7 +64,7 @@ public class Shooter extends AdvancedSubsystem {
     public void stopIntakeMotor() {
       shooterIntakeMotor.set(0);
     }
-    public void shootGamePiece(double speedInMps) {
+    public void startMotorsForShooter(double speedInMps) {
       speedInRPM = speedInMps/(Math.PI * Constants.Shooter.wheelDiameter)*60.0*Constants.Shooter.gearRatioShooterSide;
       topController.setReference(speedInRPM , ControlType.kVelocity);
     }
@@ -91,6 +92,7 @@ public class Shooter extends AdvancedSubsystem {
   }
   public double getAbsoluteRotationDegrees() {
     return rotationAbsoluteSignal.getValueAsDouble() * 360; 
+    //tells us what angle we are at
   }
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
@@ -102,12 +104,20 @@ public class Shooter extends AdvancedSubsystem {
   public double getShooterSpeed () {
     return topMotor.getEncoder().getVelocity();
   }
+  //Uses encoder on motor to get the speed
   public double getTargetShooterSpeed () {
     return speedInRPM;
   }
-  public boolean readyToShoot () {
+  public boolean atSpeed () {
     double error = Math.abs(getTargetShooterSpeed() - getShooterSpeed());
     return error <= Math.abs(getTargetShooterSpeed() * 0.01);
+    
+  }
+  public boolean isAtElevation () {
+    return getAbsoluteRotationDegrees() - Constants.Shooter.meetIntakeAngle <= Constants.Shooter.allowedErrorInDegreesForAngle;
+  }
+  public boolean readyToShoot () {
+    return isAtElevation() && atSpeed();
     
   }
   
@@ -120,10 +130,13 @@ public class Shooter extends AdvancedSubsystem {
     // This method will be called once per scheduler run
   }
 
-  @Override
-  protected Command systemCheckCommand() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
+ 
 
+  
+  @Override
+  public Command systemCheckCommand() {
+    return Commands.sequence(
+        Commands.runOnce(() -> {
+    }, this));
   }
 }

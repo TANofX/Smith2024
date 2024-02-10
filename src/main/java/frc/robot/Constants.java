@@ -37,22 +37,24 @@ public final class Constants {
   public static final double noteTransferMetersPerSecond = 0.5;
 
   public static final class Shooter {
-    public static final int topCANID = 0;
-    public static final int bottomCANID = 0;
-    public static final int intakeCANID = 0;
-    public static final int elevationCANID = 0;
+    public static final int topCANID = 41;
+    public static final int bottomCANID = 42;
+    public static final int intakeCANID = 40;
+    public static final int elevationCANID = 40;
     public static final double gearRatioShooterSide = 1 / 1.333; // Rotations of the motor per rotations of the wheel
     public static final double wheelDiameter = Units.inchesToMeters(3.0);
     public static final double maxRPM = 5700.0;
-    public static final double shooterIntakeGearRatio = 100.0 / 1.0;
+    public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio * shooterIntakeWheelDiamater;
      public static final double wristGearRatio = 200.0/1.0;
      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
      public static final int noteSensorChannel = 1;
-     public static final double shootInSpeakerAngle = 30.0;
      public static final double shootInAmpAngle = 320.0;
+     public static final double meetIntakeAngle = 80.0;
+     public static final double allowedErrorInDegreesForAngle = 1.0;
      public static final double meetIntake = 80.0;
+    public static final int elevationEncoderCANID = 40;
 
   }
 
@@ -62,9 +64,9 @@ public final class Constants {
   }
   public static final class Intake {
 
-      public static final int intakeCANID = 0;
-      public static final int pivotIntakeCANID = 0;
-      public static final int intakeAngleSensor = 0;
+      public static final int intakeCANID = 21;
+      public static final int pivotIntakeCANID = 20;
+      public static final int intakeAngleSensor = 20;
       public static final double gearRatio = 80/1;
       public static final double countsPerMotorRevolution =  42;
       public static final double countsPerRevolution = (gearRatio)*(countsPerMotorRevolution);
@@ -72,13 +74,11 @@ public final class Constants {
       public static final double degreesPerRevolution = 360.0;
       public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
       public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-      public static final double upperGearRatio = 50/1;
-      public static final double upperWheelDiameter = Units.inchesToMeters(1.0);
-      public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
+      public static final double intakeGearRatio = 50/1;
+      public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
       public static final double upPositionDegrees = 90;
       public static final double downPositionDegrees = 0;
       public static final int intakeNoteSensorChannel = 0;
-      public static final double intakeGearRatio = 50/1;
       public static final double allowedAngleErrorInDegrees = 1;
 
     
@@ -105,33 +105,33 @@ public final class Constants {
     }
 
     public static final class FrontLeftModule {
-      public static final int driveMotorCanID = 11;
-      public static final int rotationMotorCanID = 15;
-      public static final int rotationEncoderCanID = 15;
+      public static final int driveMotorCanID = 14;
+      public static final int rotationMotorCanID = 10;
+      public static final int rotationEncoderCanID = 10;
       public static Translation2d moduleOffset = new Translation2d(Units.inchesToMeters(11.25),
           Units.inchesToMeters(12.25));
     }
 
     public static final class FrontRightModule {
-      public static final int driveMotorCanID = 14;
-      public static final int rotationMotorCanID = 18;
-      public static final int rotationEncoderCanID = 18;
+      public static final int driveMotorCanID = 17;
+      public static final int rotationMotorCanID = 13;
+      public static final int rotationEncoderCanID = 13;
       public static Translation2d moduleOffset = new Translation2d(Units.inchesToMeters(11.25),
           -Units.inchesToMeters(12.25));
     }
 
     public static final class BackLeftModule {
-      public static final int driveMotorCanID = 12;
-      public static final int rotationMotorCanID = 16;
-      public static final int rotationEncoderCanID = 16;
+      public static final int driveMotorCanID = 15;
+      public static final int rotationMotorCanID = 11;
+      public static final int rotationEncoderCanID = 11;
       public static Translation2d moduleOffset = new Translation2d(-Units.inchesToMeters(11.25),
           Units.inchesToMeters(12.25));
     }
 
     public static final class BackRightModule {
-      public static final int driveMotorCanID = 13;
-      public static final int rotationMotorCanID = 17;
-      public static final int rotationEncoderCanID = 17;
+      public static final int driveMotorCanID = 16;
+      public static final int rotationMotorCanID = 12;
+      public static final int rotationEncoderCanID = 12;
       public static Translation2d moduleOffset = new Translation2d(-Units.inchesToMeters(11.25),
           -Units.inchesToMeters(12.25));
     }
@@ -158,7 +158,7 @@ public final class Constants {
   }
 
   public static final class Elevator {
-    public static final int ELEVATORMOTOR_ID = 2;
+    public static final int ELEVATORMOTOR_ID = 30;
     public static final double METERS_PER_REV = .180;
     public static final int MOTOR_REV_PER_ROTATION = 100;
     public static final double METERS_PER_MOTOR_REV = METERS_PER_REV / MOTOR_REV_PER_ROTATION;

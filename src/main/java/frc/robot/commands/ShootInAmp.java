@@ -23,7 +23,7 @@ public class ShootInAmp extends Command {
 
     if (RobotContainer.shooter.hasNote()) {
       RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(Constants.Shooter.shootInAmpAngle));
-      RobotContainer.shooter.shootGamePiece(.75);
+      RobotContainer.shooter.startMotorsForShooter(.75);
     }
   }
 
