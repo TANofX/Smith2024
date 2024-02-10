@@ -138,6 +138,6 @@ public class Shooter extends AdvancedSubsystem {
   public Command systemCheckCommand() {
     return Commands.sequence(
         Commands.runOnce(() -> {
-    }
+    }, this));
   }
 }

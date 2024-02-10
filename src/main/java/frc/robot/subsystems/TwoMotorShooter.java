@@ -60,7 +60,7 @@ public class TwoMotorShooter extends Shooter {
   }
 
   @Override
-  protected Command systemCheckCommand() {
+  public Command systemCheckCommand() {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
 
