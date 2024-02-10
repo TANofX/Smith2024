@@ -4,46 +4,38 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.FireControl;
 
-public class ReadyToShoot extends Command {
-  /** Creates a new ReadyToShoot. */
-  public ReadyToShoot() {
+public class TransferNote extends Command {
+  /** Creates a new TransferNote. */
+  public TransferNote() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.intake);
+    addRequirements(RobotContainer.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    RobotContainer.intake.passGamePiece(0.5);
+    RobotContainer.shooter.intakeAtSpeed(0.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    RobotContainer.shooter.shootGamePiece(RobotContainer.fireControl.getVelocity());
-    RobotContainer.shooter.setElevation(Rotation2d.fromRadians(RobotContainer.fireControl.getAngle().getRadians())); //If calculated Angle not accurate, use the simple one (getAltAngle())
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    RobotContainer.shooter.stopIntakeMotor();
+    RobotContainer.intake.stopIntakeMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (true ) { //need shooter getShooterSpeed
-    return false;
-  }
-  else {
-    return true;
-
-  }
+   return RobotContainer.shooter.hasNote();
   }
 }

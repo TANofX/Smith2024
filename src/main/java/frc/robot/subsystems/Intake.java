@@ -14,6 +14,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -53,15 +54,19 @@ public class Intake extends AdvancedSubsystem {
   public void intakeGamePiece() {
   intakeController.setReference(25, ControlType.kVelocity);
   }
-  public void passGamePiece() {
-    intakeController.setReference(100, ControlType.kVelocity);
+  public void passGamePiece(double metersPerSecond) {
+    double setPoint = (metersPerSecond / Constants.Intake.upperDistancePerMotorRotation) * 60.0;
+    intakeController.setReference(setPoint, ControlType.kVelocity);
   }
   public void angleIntakeDown() {
-    pivotController.setReference(180, ControlType.kPosition);
+    
+    setElevation(Rotation2d.fromDegrees(Constants.Intake.downPositionDegrees));
   }
   public void angleIntakeBack() {
-    pivotController.setReference(10, ControlType.kPosition);
+    
+   setElevation(Rotation2d.fromDegrees(Constants.Intake.upPositionDegrees));
   }
+  
   public void stopIntakeMotor () {
 intakeMotor.stopMotor();
 intakeController.setReference(0, ControlType.kVelocity);
@@ -69,6 +74,13 @@ intakeController.setReference(0, ControlType.kVelocity);
  public boolean hasNote () {
   return intakeBeamBreakSensor.isTriggered();
  }
+ public boolean isBack () {
+  return getAbsoluteRotationDegrees() - Constants.Intake.upPositionDegrees < Constants.Intake.allowedAngleErrorInDegrees;
+ }
+  public void setElevation(Rotation2d elevation) {
+    double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
+    pivotController.setReference(angleOfElevation,ControlType.kPosition);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
