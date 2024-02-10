@@ -5,11 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-public class PrepareToShootInSpeaker extends Command {
+public class ShootInSpeaker extends Command {
   /** Creates a new PassNoteFromIntakeToSpeaker. */
-  public PrepareToShootInSpeaker() {
+  public ShootInSpeaker() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -18,8 +19,7 @@ public class PrepareToShootInSpeaker extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-RobotContainer.shooter.receiveGamePiece();
-RobotContainer.intake.passGamePiece();
+    RobotContainer.intake.passGamePiece(Constants.FireControl.FINAL_Y_VELOCITY);
 
   }
 

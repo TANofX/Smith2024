@@ -33,6 +33,7 @@ public class Intake extends AdvancedSubsystem {
   private final CANcoder intakeAngleSensor = new CANcoder(Constants.Intake.intakeAngleSensor);
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private final CANcoderConfiguration intakeEncoderConfiguration;
+  public double angleOfElevation;
   /** Creates a new Intake. */
   public Intake() {
      intakeEncoderConfiguration = new CANcoderConfiguration();
@@ -53,6 +54,9 @@ public class Intake extends AdvancedSubsystem {
   }
   public void intakeGamePiece() {
   intakeController.setReference(25, ControlType.kVelocity);
+  }
+  public void reverseIntake() {
+    intakeController.setReference(-25, ControlType.kVelocity);
   }
   public void passGamePiece(double metersPerSecond) {
     double setPoint = (metersPerSecond / Constants.Intake.upperDistancePerMotorRotation) * 60.0;
@@ -77,9 +81,10 @@ intakeController.setReference(0, ControlType.kVelocity);
  public boolean isBack () {
   return getAbsoluteRotationDegrees() - Constants.Intake.upPositionDegrees < Constants.Intake.allowedAngleErrorInDegrees;
  }
-  public void setElevation(Rotation2d elevation) {
-    double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
+  public double setElevation(Rotation2d elevation) {
+    angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
     pivotController.setReference(angleOfElevation,ControlType.kPosition);
+    return angleOfElevation;
   }
   @Override
   public void periodic() {
