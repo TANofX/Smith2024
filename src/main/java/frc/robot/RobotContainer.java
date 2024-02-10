@@ -82,6 +82,5 @@ public class RobotContainer {
     coDriver.DDown().whileTrue(new RetractElevator());
     coDriver.RT().onTrue(new ShootInAmp());
     coDriver.LT().onTrue(new ShootInSpeaker());
-    coDriver.LT().onTrue(new ShootInSpeaker());
+    }
   }
-}

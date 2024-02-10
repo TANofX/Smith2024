@@ -54,7 +54,9 @@ public class Intake extends AdvancedSubsystem {
     syncRotationEncoders();
 
   }
-
+  public void reverseIntake() {
+    intakeController.setReference(-25, ControlType.kVelocity);
+  }
   public void intakeGamePiece() {
     intakeController.setReference(25, ControlType.kVelocity);
   }
