@@ -26,7 +26,6 @@ import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.commands.IntakeNote;
-import frc.robot.commands.ManualIntakePivot;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.RunIntake;
@@ -71,15 +70,14 @@ public class RobotContainer {
 
     coDriver.X().onTrue(new ElevatorToMin());
     coDriver.A().onTrue(new ElevatorToMax());
-    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {shooter.stopMotors();}, shooter))));
+    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+      shooter.stopMotors();
+    }, shooter))));
     coDriver.LB().onTrue(new CalibrateElevator());
     coDriver.DUp().whileTrue(new ExtendElevator());
     coDriver.DDown().whileTrue(new RetractElevator());
     coDriver.RT().onTrue(new ShootInAmp());
     coDriver.LT().onTrue(new ShootInSpeaker());
     coDriver.LT().onTrue(new ShootInSpeaker());
-    if (coDriver.START().equals(true)) {
-     new ManualIntakePivot(coDriver.getLeftX());
-    }
   }
 }
