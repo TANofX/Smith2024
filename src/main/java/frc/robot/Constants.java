@@ -76,7 +76,7 @@ public final class Constants {
       public static final double degreesPerRevolution = 360.0;
       public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
       public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-      public static final double intakeGearRatio = 50/1;
+      public static final double intakeGearRatio = 5/1;
       public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
       public static final double upPositionDegrees = 90;
       public static final double downPositionDegrees = 0;

@@ -26,6 +26,7 @@ import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.commands.IntakeNote;
+import frc.robot.commands.ManualShooterElevation;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.RunIntake;
@@ -82,5 +83,6 @@ public class RobotContainer {
     coDriver.DDown().whileTrue(new RetractElevator());
     coDriver.RT().onTrue(new ShootInAmp());
     coDriver.LT().onTrue(new ShootInSpeaker());
+    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
     }
   }
