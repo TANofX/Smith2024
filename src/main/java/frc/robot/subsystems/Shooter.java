@@ -98,6 +98,12 @@ public class Shooter extends AdvancedSubsystem {
     double angleOfElevation = elevation.getDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     elevationController.setReference(angleOfElevation,ControlType.kPosition);
   }
+  public void raiseShooterManually() {
+    elevationMotor.set(speedInRPM);
+  }
+  public void lowerShooterManually() {
+    elevationMotor.set;
+  }
   public boolean hasNote () {
     return shooterBeamBreakSensor.isTriggered();
   }
@@ -130,13 +136,17 @@ public class Shooter extends AdvancedSubsystem {
     // This method will be called once per scheduler run
   }
 
+
+  @Override
+  protected Command systemCheckCommand() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
+  }
+
  
 
   
-  @Override
-  public Command systemCheckCommand() {
-    return Commands.sequence(
-        Commands.runOnce(() -> {
-    }, this));
-  }
+
+    
+  
 }
