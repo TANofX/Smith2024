@@ -48,6 +48,10 @@ public class RobotContainer {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
+
+    SmartDashboard.putData(intake.getIntakePivotTuner());
+    SmartDashboard.putData(intake.getIntakeTuner());
+    SmartDashboard.putData(Commands.runOnce(() -> { intake.updateRotationOffset();}, intake));
   }
 
   private void configureButtonBindings() {
