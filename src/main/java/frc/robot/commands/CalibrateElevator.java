@@ -16,7 +16,7 @@ public class CalibrateElevator extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (!RobotContainer.elevator.isLimitSwitchPressed()) {
+    if (!RobotContainer.elevator.isLowerLimitSwitchPressed()) {
           RobotContainer.elevator.retractElevator();  
     }
   }
@@ -35,6 +35,6 @@ public class CalibrateElevator extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.elevator.isLimitSwitchPressed();
+    return RobotContainer.elevator.isLowerLimitSwitchPressed();
   }
 }
