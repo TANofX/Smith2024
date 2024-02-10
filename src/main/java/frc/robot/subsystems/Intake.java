@@ -197,7 +197,7 @@ public class Intake extends AdvancedSubsystem {
                     "[System Check] The intake is not angled in the correct range for the backward position :(",
                     false,
                     true);
-              }}, this),
+              }}, this)
             
         
             )
