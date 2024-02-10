@@ -20,6 +20,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.pid.TuneSmartMotionControl;
+import frc.lib.pid.TuneVelocitySparkPIDController;
 //import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
@@ -203,5 +205,13 @@ public class Intake extends AdvancedSubsystem {
             )
         .until(() -> getFaults().size() > 0);
 
+  }
+
+  public Command getIntakeTuner() {
+    return new TuneVelocitySparkPIDController("Intake", intakeMotor, this);
+  }
+
+  public Command getIntakePivotTuner() {
+    return new TuneSmartMotionControl("Intake Pivot", pivotIntakeMotor, this);
   }
 }

@@ -98,7 +98,6 @@ public class Shooter extends AdvancedSubsystem {
     double angleOfElevation = elevation.getDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     elevationController.setReference(angleOfElevation,ControlType.kPosition);
   }
-
   public boolean hasNote () {
     return shooterBeamBreakSensor.isTriggered();
   }
@@ -138,6 +137,6 @@ public class Shooter extends AdvancedSubsystem {
   public Command systemCheckCommand() {
     return Commands.sequence(
         Commands.runOnce(() -> {
-    }
+    }, this));
   }
 }

@@ -16,7 +16,8 @@ import frc.robot.Constants;
 public class Elevator extends SubsystemBase {
   private final CANSparkFlex elevatorMotor = new CANSparkFlex(Constants.Elevator.ELEVATORMOTOR_ID, MotorType.kBrushless);
   private final SparkPIDController elevatorController = elevatorMotor.getPIDController();
-  private final SparkLimitSwitch reverseLimitSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyClosed);
+  private final SparkLimitSwitch upperLimitSwitch = elevatorMotor.getForwardLimitSwitch(Type.kNormallyClosed);
+  private final SparkLimitSwitch lowerLimitSwitch = elevatorMotor.getReverseLimitSwitch(Type.kNormallyClosed);
   
   /** Creates a new Elevator. */
   public Elevator() {
@@ -37,8 +38,11 @@ public class Elevator extends SubsystemBase {
   public void elevatorToMaxHeight() {
     elevatorController.setReference(Constants.Elevator.MAX_HEIGHT/Constants.Elevator.METERS_PER_MOTOR_REV, ControlType.kPosition);
   }
-  public boolean isLimitSwitchPressed() {
-    return reverseLimitSwitch.isPressed();
+  public boolean isUpperLimitSwitchPressed() {
+    return upperLimitSwitch.isPressed();
+  }
+  public boolean isLowerLimitSwitchPressed() {
+    return lowerLimitSwitch.isPressed();
   }
   public void zeroElevator() {
     elevatorMotor.getEncoder().setPosition(0);
