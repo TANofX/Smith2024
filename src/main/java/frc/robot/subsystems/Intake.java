@@ -17,6 +17,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.pid.TuneSmartMotionControl;
+import frc.lib.pid.TuneVelocitySparkPIDController;
 //import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
@@ -106,5 +108,13 @@ intakeController.setReference(0, ControlType.kVelocity);
   }
   public double getAbsoluteRotationDegrees() {
     return rotationAbsoluteSignal.getValueAsDouble() * 360; 
+  }
+
+  public Command getIntakeTuner() {
+    return new TuneVelocitySparkPIDController("Intake", intakeMotor, this);
+  }
+
+  public Command getIntakePivotTuner() {
+    return new TuneSmartMotionControl("Intake Pivot", pivotIntakeMotor, this);
   }
 }
