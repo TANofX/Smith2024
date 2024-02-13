@@ -216,6 +216,312 @@
         }
       },
       {
+        "title": "Shooter",
+        "autoPopulate": true,
+        "autoPopulatePrefix": "SmartDashboard/",
+        "widgetPane": {
+          "gridSize": 128.0,
+          "showGrid": true,
+          "hgap": 16.0,
+          "vgap": 16.0,
+          "tiles": {
+            "3,0": {
+              "size": [2, 4],
+              "content": {
+                "_type": "List Layout",
+                "_title": "PID Control",
+                "Layout/Label position": "LEFT",
+                "_children": [
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter P Gain",
+                    "_title": "P Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter I Gain",
+                    "_title": "I Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter D Gain",
+                    "_title": "D Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter I Zone",
+                    "_title": "I Zone"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Feed Forward",
+                    "_title": "Feed Forward"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Min Output",
+                    "_title": "Min Output"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Max Output",
+                    "_title": "Max Output"
+                  }
+                ]
+              }
+            },
+            "0,0": {
+              "size": [3, 3],
+              "content": {
+                "_type": "Graph",
+                "_source0": "network_table:///SmartDashboard/Shooter Current Velocity",
+                "_source1": "network_table:///SmartDashboard/Shooter Target Velocity",
+                "_title": "Process Variable",
+                "Graph/Visible time": 30.0,
+                "Visible data/SmartDashboard/Shooter Current Velocity": true,
+                "Visible data/SmartDashboard/Shooter Target Velocity": true
+              }
+            },
+            "0,3": {
+              "size": [3, 2],
+              "content": {
+                "_type": "Graph",
+                "_source0": "network_table:///SmartDashboard/Shooter Output Voltage",
+                "_title": "Output",
+                "Graph/Visible time": 30.0,
+                "Visible data/SmartDashboard/Shooter Output Voltage": true
+              }
+            },
+            "5,0": {
+              "size": [4, 1],
+              "content": {
+                "_type": "Number Slider",
+                "_source0": "network_table:///SmartDashboard/Shooter Target Velocity",
+                "_title": "Set Velocity",
+                "Slider Settings/Min": -6700.0,
+                "Slider Settings/Max": 6700.0,
+                "Slider Settings/Block increment": 100.0
+              }
+            }
+          }
+        }
+      },
+      {
+        "title": "Shooter Intake",
+        "autoPopulate": true,
+        "autoPopulatePrefix": "SmartDashboard/",
+        "widgetPane": {
+          "gridSize": 128.0,
+          "showGrid": true,
+          "hgap": 16.0,
+          "vgap": 16.0,
+          "tiles": {
+            "3,0": {
+              "size": [2, 4],
+              "content": {
+                "_type": "List Layout",
+                "_title": "PID Control",
+                "Layout/Label position": "LEFT",
+                "_children": [
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Intake P Gain",
+                    "_title": "P Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Intake I Gain",
+                    "_title": "I Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Intake D Gain",
+                    "_title": "D Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Intake I Zone",
+                    "_title": "I Zone"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Intake Feed Forward",
+                    "_title": "Feed Forward"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Intake Min Output",
+                    "_title": "Min Output"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Intake Max Output",
+                    "_title": "Max Output"
+                  }
+                ]
+              }
+            },
+            "0,0": {
+              "size": [3, 3],
+              "content": {
+                "_type": "Graph",
+                "_source0": "network_table:///SmartDashboard/Shooter Intake Current Velocity",
+                "_source1": "network_table:///SmartDashboard/Shooter Intake Target Velocity",
+                "_title": "Process Variable",
+                "Graph/Visible time": 30.0,
+                "Visible data/SmartDashboard/Shooter Intake Current Velocity": true,
+                "Visible data/SmartDashboard/Shooter Intake Target Velocity": true
+              }
+            },
+            "0,3": {
+              "size": [3, 2],
+              "content": {
+                "_type": "Graph",
+                "_source0": "network_table:///SmartDashboard/Shooter Intake Output Voltage",
+                "_title": "Output",
+                "Graph/Visible time": 30.0,
+                "Visible data/SmartDashboard/Shooter Intake Output Voltage": true
+              }
+            },
+            "5,0": {
+              "size": [4, 1],
+              "content": {
+                "_type": "Number Slider",
+                "_source0": "network_table:///SmartDashboard/Shooter Intake Target Velocity",
+                "_title": "Set Velocity",
+                "Slider Settings/Min": -11000.0,
+                "Slider Settings/Max": 11000.0,
+                "Slider Settings/Block increment": 100.0
+              }
+            }
+          }
+        }
+      },
+      {
+        "title": "Shooter Elevation",
+        "autoPopulate": true,
+        "autoPopulatePrefix": "SmartDashboard/",
+        "widgetPane": {
+          "gridSize": 128.0,
+          "showGrid": true,
+          "hgap": 16.0,
+          "vgap": 16.0,
+          "tiles": {
+            "3,0": {
+              "size": [2, 4],
+              "content": {
+                "_type": "List Layout",
+                "_title": "PID Control",
+                "Layout/Label position": "LEFT",
+                "_children": [
+                  {
+                    "_type": "Toggle Switch",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Mode",
+                    "_title": "Position/Velocity Control"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation P Gain",
+                    "_title": "P Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation I Gain",
+                    "_title": "I Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation D Gain",
+                    "_title": "D Gain"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation I Zone",
+                    "_title": "I Zone"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Feed Forward",
+                    "_title": "Feed Forward"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Min Output",
+                    "_title": "Min Output"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Max Output",
+                    "_title": "Max Output"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Min Velocity",
+                    "_title": "Min Velocity"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Max Velocity",
+                    "_title": "Max Velocity"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Max Acceleration",
+                    "_title": "Max Acceleration"
+                  },
+                  {
+                    "_type": "Text View",
+                    "_source0": "network_table:///SmartDashboard/Shooter Elevation Allowed Closed Loop Error",
+                    "_title": "Allowed Closed Loop Error"
+                  }
+                ]
+              }
+            },
+            "0,0": {
+              "size": [3, 3],
+              "content": {
+                "_type": "Graph",
+                "_source0": "network_table:///SmartDashboard/Shooter Elevation Process Variable",
+                "_source1": "network_table:///SmartDashboard/Shooter Elevation SetPoint",
+                "_title": "Process Variable",
+                "Graph/Visible time": 30.0,
+                "Visible data/SmartDashboard/Shooter Elevation Process Variable": true,
+                "Visible data/SmartDashboard/Shooter Elevation SetPoint": true
+              }
+            },
+            "0,3": {
+              "size": [3, 2],
+              "content": {
+                "_type": "Graph",
+                "_source0": "network_table:///SmartDashboard/Shooter Elevation Output",
+                "_title": "Output",
+                "Graph/Visible time": 30.0,
+                "Visible data/SmartDashboard/Shooter Elevation Output": true
+              }
+            },
+            "5,1": {
+              "size": [1, 1],
+              "content": {
+                "_type": "Text View",
+                "_source0": "network_table:///SmartDashboard/Shooter Elevation Set Position",
+                "_title": "Set Position"
+              }
+            },
+            "5,0": {
+              "size": [4, 1],
+              "content": {
+                "_type": "Number Slider",
+                "_source0": "network_table:///SmartDashboard/Shooter Elevation Set Velocity",
+                "_title": "Set Velocity",
+                "Slider Settings/Min": -5700.0,
+                "Slider Settings/Max": 5700.0,
+                "Slider Settings/Block increment": 100.0
+              }
+            }
+          }
+        }
+      },
+      {
         "title": "LiveWindow",
         "autoPopulate": true,
         "autoPopulatePrefix": "LiveWindow/",

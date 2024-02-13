@@ -19,6 +19,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.pid.TuneSmartMotionControl;
+import frc.lib.pid.TuneSparkPIDController;
+import frc.lib.pid.TuneVelocitySparkPIDController;
 //import elevationMotor.getPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
@@ -134,12 +137,21 @@ public class Shooter extends AdvancedSubsystem {
   @Override
   protected Command systemCheckCommand() {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
+    //throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
+    return Commands.runOnce(() -> {}, this);
   }
 
- 
+  public Command getIntakeTunerCommand() {
+    return new TuneVelocitySparkPIDController("Shooter Intake", shooterIntakeMotor, this);
+  }
 
-  
+  public Command getShooterTunerCommand() {
+    return new TuneVelocitySparkPIDController("Shooter", topMotor, this);
+  }
+
+  public Command getElevationTunerCommand() {
+    return new TuneSmartMotionControl("Shooter Elevation", elevationMotor, this);
+  }
 
     
   

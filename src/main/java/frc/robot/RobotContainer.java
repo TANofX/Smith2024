@@ -44,11 +44,11 @@ public class RobotContainer {
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
 
   // Subsystems
-  public static final Swerve swerve = new Swerve();
-  public static final Elevator elevator = new Elevator();
-  public static final Intake intake = new Intake();
+  public static final Swerve swerve = null;//new Swerve();
+  public static final Elevator elevator = null;//new Elevator();
+  public static final Intake intake = null;//new Intake();
   public static final Shooter shooter = new Shooter();
-  public static final FireControl fireControl = new FireControl(swerve::getPose, DriverStation::getAlliance);
+  public static final FireControl fireControl = null;//new FireControl(swerve::getPose, DriverStation::getAlliance);
 
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();
@@ -57,13 +57,16 @@ public class RobotContainer {
   // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
-    swerve.setDefaultCommand(new SwerveDriveWithGamepad());
-    SmartDashboard.putData(swerve.zeroModulesCommand());
-    configureButtonBindings();
+    //swerve.setDefaultCommand(new SwerveDriveWithGamepad());
+    //SmartDashboard.putData(swerve.zeroModulesCommand());
+    //configureButtonBindings();
 
-    SmartDashboard.putData(intake.getIntakePivotTuner());
-    SmartDashboard.putData(intake.getIntakeTuner());
-    SmartDashboard.putData(Commands.runOnce(() -> { intake.updateRotationOffset();}, intake));
+    //SmartDashboard.putData(intake.getIntakePivotTuner());
+    //SmartDashboard.putData(intake.getIntakeTuner());
+    SmartDashboard.putData("Tune Elevation", shooter.getElevationTunerCommand());
+    SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
+    SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
+    //SmartDashboard.putData(Commands.runOnce(() -> { intake.updateRotationOffset();}, intake));
   }
 
   private void configureButtonBindings() {

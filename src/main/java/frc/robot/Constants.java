@@ -37,8 +37,8 @@ public final class Constants {
   public static final double noteTransferMetersPerSecond = 0.5;
 
   public static final class Shooter {
-    public static final int topCANID = 41;
-    public static final int bottomCANID = 42;
+    public static final int topCANID = 42;
+    public static final int bottomCANID = 43;
     public static final int intakeCANID = 40;
     public static final int elevationCANID = 41;
     public static final double gearRatioShooterSide = 1 / 1.333; // Rotations of the motor per rotations of the wheel
@@ -56,7 +56,7 @@ public final class Constants {
      public static final double meetIntakeAngle = 80.0;
      public static final double allowedErrorInDegreesForAngle = 1.0;
      public static final double meetIntake = 80.0;
-    public static final int elevationEncoderCANID = 40;
+    public static final int elevationEncoderCANID = 41;
 
   }
 
