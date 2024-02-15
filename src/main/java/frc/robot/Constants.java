@@ -47,43 +47,47 @@ public final class Constants {
     public static final double shooterIntakeGearRatio = 100.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio * shooterIntakeWheelDiamater;
-     public static final double wristGearRatio = 200.0/1.0;
-     public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
-     public static final int noteSensorChannel = 1;
-     public static final double shootInSpeakerAngle = 30.0;
-     public static final double shootInAmpAngle = 320.0;
-     public static final double meetIntake = 80.0;
-
+    public static final double wristGearRatio = 200.0 / 1.0;
+    public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
+    public static final int noteSensorChannel = 1;
+    public static final double shootInSpeakerAngle = 30.0;
+    public static final double shootInAmpAngle = 320.0;
+    public static final double meetIntake = 80.0;
+    public static final double shooterMotorP = 0.0012;
+    public static final double shooterMotorI = 0.0000005;
+    public static final double shooterMotorD = 0.0005;
+    public static final double shooterIntakeMotorP = 0.00015;
+    public static final double shooterIntakeMotorI = 0.00000001;
+    public static final double shooterIntakeMotorD = 0.00005;
   }
 
   public static final class CameraInfo {
     public static final double cameraHeight = Units.inchesToMeters(0.0); // ?????
     public static final double cameraPitch = Units.degreesToRadians(0); // ?????
   }
+
   public static final class Intake {
 
-      public static final int intakeCANID = 0;
-      public static final int pivotIntakeCANID = 0;
-      public static final int intakeAngleSensor = 0;
-      public static final double gearRatio = 80/1;
-      public static final double countsPerMotorRevolution =  42;
-      public static final double countsPerRevolution = (gearRatio)*(countsPerMotorRevolution);
-      public static final double intakeAcceleration = 20.2;
-      public static final double degreesPerRevolution = 360.0;
-      public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
-      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-      public static final double upperGearRatio = 50/1;
-      public static final double upperWheelDiameter = Units.inchesToMeters(1.0);
-      public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
-      public static final double upPositionDegrees = 90;
-      public static final double downPositionDegrees = 0;
-      public static final int intakeNoteSensorChannel = 0;
-      public static final double intakeGearRatio = 50/1;
-      public static final double allowedAngleErrorInDegrees = 1;
+    public static final int intakeCANID = 0;
+    public static final int pivotIntakeCANID = 0;
+    public static final int intakeAngleSensor = 0;
+    public static final double gearRatio = 80 / 1;
+    public static final double countsPerMotorRevolution = 42;
+    public static final double countsPerRevolution = (gearRatio) * (countsPerMotorRevolution);
+    public static final double intakeAcceleration = 20.2;
+    public static final double degreesPerRevolution = 360.0;
+    public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
+    public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
+    public static final double upperGearRatio = 50 / 1;
+    public static final double upperWheelDiameter = Units.inchesToMeters(1.0);
+    public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
+    public static final double upPositionDegrees = 90;
+    public static final double downPositionDegrees = 0;
+    public static final int intakeNoteSensorChannel = 0;
+    public static final double intakeGearRatio = 50 / 1;
+    public static final double allowedAngleErrorInDegrees = 1;
 
-    
   }
-    
 
   public static final class Swerve {
     public static final int imuCanID = 3;
@@ -92,7 +96,7 @@ public final class Constants {
     public static final double maxAngularVelTele = Units.degreesToRadians(180);
     public static final double maxAngularAccelTele = Units.degreesToRadians(540);
     public static final double teleAngleHoldFactor = 3.0;
-  
+
     public static final class Odometry {
       public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);
       public static final Matrix<N3, N1> visionStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
