@@ -57,6 +57,11 @@ public final class Constants {
      public static final double allowedErrorInDegreesForAngle = 1.0;
      public static final double meetIntake = 80.0;
     public static final int elevationEncoderCANID = 40;
+    public static final double elevationMotorP = 0.000;
+    public static final double elevationMotorI = 0.0000;
+    public static final double elevationMotorD = 0.0000;
+
+
 
   }
 

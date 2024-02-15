@@ -30,7 +30,6 @@ public class ManualShooterElevation extends Command {
   public void execute() {
     double degreesPerExecution = Constants.Shooter.maxElevationDegreesPerSecond * .05;
     RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(RobotContainer.shooter.getAbsoluteRotationDegrees() + degreesPerExecution * this.control.get()));
-  
   }
 
   // Called once the command ends or is interrupted.
