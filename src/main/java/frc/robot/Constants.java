@@ -57,7 +57,7 @@ public final class Constants {
      public static final double allowedErrorInDegreesForAngle = 1.0;
      public static final double meetIntake = 80.0;
     public static final int elevationEncoderCANID = 40;
-    public static final double elevationMotorP = 0.000;
+    public static final double elevationMotorP = 0.00005;
     public static final double elevationMotorI = 0.0000;
     public static final double elevationMotorD = 0.0000;
 
@@ -72,8 +72,6 @@ public final class Constants {
   public static final class Intake {
 
       public static final int intakeCANID = 21;
-      public static final int pivotIntakeCANID = 20;
-      public static final int intakeAngleSensor = 20;
       public static final double gearRatio = 80/1;
       public static final double countsPerMotorRevolution =  42;
       public static final double countsPerRevolution = (gearRatio)*(countsPerMotorRevolution);
@@ -83,10 +81,8 @@ public final class Constants {
       public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
       public static final double intakeGearRatio = 50/1;
       public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
-      public static final double upPositionDegrees = 90;
-      public static final double downPositionDegrees = 0;
       public static final int intakeNoteSensorChannel = 0;
-      public static final double allowedAngleErrorInDegrees = 1;
+     
 
     
   }
