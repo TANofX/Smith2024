@@ -17,21 +17,20 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
+//import edu.wpi.first.math.numbers.N1;
+//import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.subsystem.AdvancedSubsystem;
-import frc.lib.subsystem.SubsystemFault;
+//import frc.lib.subsystem.SubsystemFault;
 import frc.lib.swerve.Mk4SwerveModulePro;
 import frc.lib.util.Vector3;
-import frc.lib.vision.limelight.LimelightHelpers;
+//import frc.lib.vision.limelight.LimelightHelpers;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.util.RobotPoseLookup;
 
 public class Swerve extends AdvancedSubsystem {
@@ -49,15 +48,18 @@ public class Swerve extends AdvancedSubsystem {
   //  protected final StatusSignalValue<Double> imuAccelYSignal;
   protected final StatusSignal<Double> imuAccelZSignal;
 
-  private final RobotPoseLookup poseLookup;
+  private final RobotPoseLookup<Pose2d> poseLookup;
 
   protected double teleopVelConstraint;
   protected double teleopAngularVelConstraint;
 
+    
+   
+
   protected final Field2d field2d = new Field2d();
 
   public Swerve() {
-    poseLookup = new RobotPoseLookup();
+    poseLookup = new RobotPoseLookup<Pose2d>();
 
     imu = new Pigeon2(Constants.Swerve.imuCanID, Constants.canivoreBusName);
     Pigeon2Configuration imuConfig = new Pigeon2Configuration();
@@ -155,6 +157,8 @@ public class Swerve extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
+
+
     double startTime = Timer.getFPGATimestamp();
 
     Pose2d currentPose = odometry.update(getYaw(), getPositions());
