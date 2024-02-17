@@ -19,7 +19,12 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.pid.TuneSmartMotionControl;
+import frc.lib.pid.TuneSparkPIDController;
+import frc.lib.pid.TuneVelocitySparkPIDController;
 //import elevationMotor.getPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
@@ -27,14 +32,13 @@ import frc.robot.util.NoteSensor;
 
 public class Shooter extends AdvancedSubsystem {
   private static final int Rotation2d = 0;
-  private static final int ROTATION_DEGREES_PER_ROTATION = 0;
   private final CANSparkFlex topMotor = new CANSparkFlex(Constants.Shooter.topCANID, MotorType.kBrushless);
   private final CANSparkMax shooterIntakeMotor = new CANSparkMax(Constants.Shooter.intakeCANID, MotorType.kBrushless);
   private final SparkPIDController topController = topMotor.getPIDController();
   public final SparkPIDController shooterIntakeController = shooterIntakeMotor.getPIDController();
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);
   private final SparkPIDController elevationController = elevationMotor.getPIDController();
-  public final CANcoder elevationEncoder = new CANcoder(0);
+  public final CANcoder elevationEncoder = new CANcoder(Constants.Shooter.elevationEncoderCANID);
   private final CANcoderConfiguration shooterEncoderConfiguration;
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private final NoteSensor shooterBeamBreakSensor = new NoteSensor(Constants.Shooter.noteSensorChannel);
@@ -52,7 +56,7 @@ public class Shooter extends AdvancedSubsystem {
     shooterEncoderConfiguration.MagnetSensor.AbsoluteSensorRange =
         AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     shooterEncoderConfiguration.MagnetSensor.SensorDirection =
-        SensorDirectionValue.CounterClockwise_Positive;
+        SensorDirectionValue.Clockwise_Positive;
     shooterEncoderConfiguration.MagnetSensor.MagnetOffset =
         Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
     elevationEncoder.getConfigurator().apply(shooterEncoderConfiguration);
@@ -71,7 +75,7 @@ public class Shooter extends AdvancedSubsystem {
     public void stopIntakeMotor() {
       shooterIntakeMotor.set(0);
     }
-    public void shootGamePiece(double speedInMps) {
+    public void startMotorsForShooter(double speedInMps) {
       speedInRPM = speedInMps/(Math.PI * Constants.Shooter.wheelDiameter)*60.0*Constants.Shooter.gearRatioShooterSide;
       topController.setReference(speedInRPM , ControlType.kVelocity);
     }
@@ -98,25 +102,33 @@ public class Shooter extends AdvancedSubsystem {
     elevationMotor.getEncoder().setPosition(getAbsoluteRotationDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
   }
   public double getAbsoluteRotationDegrees() {
-    return rotationAbsoluteSignal.getValueAsDouble() * 360; 
+    return rotationAbsoluteSignal.getValue() * 360; 
+    //tells us what angle we are at
   }
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     elevationController.setReference(angleOfElevation,ControlType.kPosition);
   }
-
   public boolean hasNote () {
     return shooterBeamBreakSensor.isTriggered();
   }
   public double getShooterSpeed () {
     return topMotor.getEncoder().getVelocity();
   }
+  //Uses encoder on motor to get the speed
   public double getTargetShooterSpeed () {
     return speedInRPM;
   }
-  public boolean readyToShoot () {
+  public boolean atSpeed () {
     double error = Math.abs(getTargetShooterSpeed() - getShooterSpeed());
     return error <= Math.abs(getTargetShooterSpeed() * 0.01);
+    
+  }
+  public boolean isAtElevation () {
+    return getAbsoluteRotationDegrees() - Constants.Shooter.meetIntakeAngle <= Constants.Shooter.allowedErrorInDegreesForAngle;
+  }
+  public boolean readyToShoot () {
+    return isAtElevation() && atSpeed();
     
   }
   
@@ -126,13 +138,32 @@ public class Shooter extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
+    rotationAbsoluteSignal.waitForUpdate(0.005);
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Shooter Absolute Angle", getAbsoluteRotationDegrees());
+    SmartDashboard.putNumber("Shooter Angle from Motor", elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
   }
+
 
   @Override
   protected Command systemCheckCommand() {
     // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
-
+    //throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
+    return Commands.runOnce(() -> {}, this);
   }
+
+  public Command getIntakeTunerCommand() {
+    return new TuneVelocitySparkPIDController("Shooter Intake", shooterIntakeMotor, this);
+  }
+
+  public Command getShooterTunerCommand() {
+    return new TuneVelocitySparkPIDController("Shooter", topMotor, this);
+  }
+
+  public Command getElevationTunerCommand() {
+    return new TuneSmartMotionControl("Shooter Elevation", elevationMotor, this);
+  }
+
+    
+  
 }

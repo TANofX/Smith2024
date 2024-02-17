@@ -39,7 +39,7 @@ public class TwoMotorShooter extends Shooter {
      double speedInRPM = speedInMps/(Math.PI * Constants.Shooter.wheelDiameter)*60.0*Constants.Shooter.gearRatioShooterSide;
      double topAdjustment = 1 + 0.5 * spin;
      double bottomAdjustment = 1- 0.5 * spin;
-    super.shootGamePiece(speedInMps * topAdjustment);
+    super.startMotorsForShooter(speedInMps * topAdjustment);
       bottomController.setReference(speedInRPM * bottomAdjustment, ControlType.kVelocity);
     }
 
@@ -60,7 +60,7 @@ public class TwoMotorShooter extends Shooter {
   }
 
   @Override
-  protected Command systemCheckCommand() {
+  public Command systemCheckCommand() {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
 

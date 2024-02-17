@@ -7,6 +7,7 @@ package frc.robot;
 //import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
 //import frc.lib.input.controllers.rumble.RumbleOff;
@@ -20,9 +21,22 @@ import frc.lib.util.CycleTracker;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
-
+import frc.robot.commands.CalibrateElevator;
+import frc.robot.commands.ElevatorToMax;
+import frc.robot.commands.ElevatorToMin;
+import frc.robot.commands.ExtendElevator;
+import frc.robot.commands.FindMotorExtents;
 import frc.robot.commands.IntakeNote;
+import frc.robot.commands.ManualShooterElevation;
+import frc.robot.commands.RetractElevator;
+import frc.robot.commands.ReverseIntake;
+import frc.robot.commands.RunIntake;
+import frc.robot.commands.SafePosition;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.ShootInAmp;
+import frc.robot.commands.ShootInSpeaker;
 import frc.robot.commands.SwerveDriveWithGamepad;
+import frc.robot.commands.TransferNote;
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
@@ -31,30 +45,52 @@ public class RobotContainer {
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
 
   // Subsystems
-  public static final Swerve swerve = new Swerve();
+  public static final Swerve swerve = new Swerve();//new Swerve();
   public static final Elevator elevator = new Elevator();
-  public static final Intake intake = new Intake();
+  public static final Intake intake = null;//new Intake();
   public static final Shooter shooter = new Shooter();
   public static final FireControl fireControl = new FireControl(swerve::getPose, DriverStation::getAlliance);
-
 
   // Other Hardware
   public static final PowerDistribution powerDistribution = new PowerDistribution();
 
   // Vision clients
-  //  public static final JetsonClient jetson = new JetsonClient();
-
-  
-
+  // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
-    configureButtonBindings();
+    //configureButtonBindings();
+
+    //SmartDashboard.putData(intake.getIntakePivotTuner());
+    //SmartDashboard.putData(intake.getIntakeTuner());
+    SmartDashboard.putData("Zero Shooter Elevation", Commands.runOnce(() -> { shooter.updateRotationOffset();}, shooter));
+    SmartDashboard.putData("Tune Elevation", shooter.getElevationTunerCommand());
+    SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
+    SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
+    //SmartDashboard.putData(Commands.runOnce(() -> { intake.updateRotationOffset();}, intake));
+
+    SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
+    SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
   }
-  
-private void configureButtonBindings() {
-  driver.A().whileTrue(new IntakeNote());
-}
-  
+
+  private void configureButtonBindings() {
+    driver.B().onTrue(new TransferNote());
+    driver.LT().whileTrue(new RunIntake());
+    driver.RT().whileTrue(new IntakeNote());
+    driver.LB().whileTrue(new ReverseIntake());
+    driver.Y().onTrue(new SafePosition());
+
+    coDriver.X().onTrue(new ElevatorToMin());
+    coDriver.A().onTrue(new ElevatorToMax());
+    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+      shooter.stopMotors();
+    }, shooter))));
+    coDriver.LB().onTrue(new CalibrateElevator());
+    coDriver.DUp().whileTrue(new ExtendElevator());
+    coDriver.DDown().whileTrue(new RetractElevator());
+    coDriver.RT().onTrue(new ShootInAmp());
+    coDriver.LT().onTrue(new ShootInSpeaker());
+    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    }
   }
