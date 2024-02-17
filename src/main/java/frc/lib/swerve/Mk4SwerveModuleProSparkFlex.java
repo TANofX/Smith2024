@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.pid.TuneSmartMotionControl;
+import frc.lib.pid.TuneVelocitySparkPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 
 import com.revrobotics.*;
@@ -41,7 +43,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   private static final double DRIVE_GEARING = 1.0 / 6.12;
   private static final double DRIVE_METERS_PER_ROTATION =
       DRIVE_GEARING * Math.PI * Units.inchesToMeters(4.0);
-  private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 / 12.8) * 360.0;
+  private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 /(150/7)) * 360.0;
 
   // M/s - Tune (Apply full output and measure max vel. Adjust KV/KA for sim if needed)
   public static final double DRIVE_MAX_VEL = 4.65;
@@ -418,5 +420,11 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
                 this))
         .until(() -> getFaults().size() > 0)
         .andThen(Commands.runOnce(this::stopMotors, this));
+  }
+  public Command getDriveTunerCommand() {
+    return new TuneVelocitySparkPIDController("Drive Motors", driveMotor, this);
+  }
+  public Command getSteerTunerCommand() {
+   return new TuneSmartMotionControl("Steer Motors", rotationMotor, this);
   }
 }
