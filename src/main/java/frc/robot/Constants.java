@@ -58,11 +58,11 @@ public final class Constants {
      public static final double meetIntake = 80.0;
     public static final int elevationEncoderCANID = 41;
     public static final double shooterMotorP = 0.0012;
-    public static final double shooterMotorI = 0.0012;
-    public static final double shooterMotorD = 0.0012;
-    public static final double shooterIntakeMotorP = 0.0012;
-    public static final double shooterIntakeMotorI = 0.0012;
-    public static final double shooterIntakeMotorD = 0.0012;
+    public static final double shooterMotorI = 0.0000005;
+    public static final double shooterMotorD = 0.0005;
+    public static final double shooterIntakeMotorP = 0.0025;
+    public static final double shooterIntakeMotorI = 0.0000005;
+    public static final double shooterIntakeMotorD = 0.000005;
   }
 
   public static final class CameraInfo {
