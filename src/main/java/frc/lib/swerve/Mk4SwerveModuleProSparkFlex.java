@@ -38,7 +38,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   // Volts to deg/sec^2
   private static final double ROTATION_KA = 0.00006;
 
-  private static final double DRIVE_GEARING = 1.0 / 6.75;
+  private static final double DRIVE_GEARING = 1.0 / 6.12;
   private static final double DRIVE_METERS_PER_ROTATION =
       DRIVE_GEARING * Math.PI * Units.inchesToMeters(4.0);
   private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 / 12.8) * 360.0;
@@ -46,10 +46,10 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   // M/s - Tune (Apply full output and measure max vel. Adjust KV/KA for sim if needed)
   public static final double DRIVE_MAX_VEL = 4.65;
 
-  private static final double DRIVE_KP = 0.3;
+  private static final double DRIVE_KP = 0.1;
   private static final double DRIVE_KD = 0.0;
 
-  private static final double ROTATION_KP = 4.0;
+  private static final double ROTATION_KP = .005;
   private static final double ROTATION_KD = 0.0;
 
   public final ModuleCode moduleCode;
