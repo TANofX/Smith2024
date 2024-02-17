@@ -57,7 +57,12 @@ public final class Constants {
      public static final double allowedErrorInDegreesForAngle = 1.0;
      public static final double meetIntake = 80.0;
     public static final int elevationEncoderCANID = 41;
-
+    public static final double shooterMotorP = 0.0012;
+    public static final double shooterMotorI = 0.0012;
+    public static final double shooterMotorD = 0.0012;
+    public static final double shooterIntakeMotorP = 0.0012;
+    public static final double shooterIntakeMotorI = 0.0012;
+    public static final double shooterIntakeMotorD = 0.0012;
   }
 
   public static final class CameraInfo {
@@ -77,12 +82,14 @@ public final class Constants {
     public static final double degreesPerRevolution = 360.0;
     public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
     public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
+    public static final double intakeGearRatio = 5/1;
     public static final double upperGearRatio = 50 / 1;
     public static final double upperWheelDiameter = Units.inchesToMeters(1.0);
     public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
     public static final double upPositionDegrees = 90;
-      public static final double allowedAngleErrorInDegrees = 1;
-
+    public static final int downPositionDegrees = 0;
+    public static final int intakeNoteSensorChannel = 0;
+    public static final double allowedAngleErrorInDegrees = 1;
   }
 
   public static final class Swerve {
