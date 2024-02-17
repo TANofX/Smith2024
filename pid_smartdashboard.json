@@ -2737,6 +2737,221 @@
       }
     },
     {
+      "title": "Steer Motor",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "3,0": {
+            "size": [2, 4],
+            "content": {
+              "_type": "List Layout",
+              "_title": "PID Control",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Mode",
+                  "_title": "Position/Velocity Control"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors P Gain",
+                  "_title": "P Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors I Gain",
+                  "_title": "I Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors D Gain",
+                  "_title": "D Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors I Zone",
+                  "_title": "I Zone"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Feed Forward",
+                  "_title": "Feed Forward"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Min Output",
+                  "_title": "Min Output"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Max Output",
+                  "_title": "Max Output"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Min Velocity",
+                  "_title": "Min Velocity"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Max Velocity",
+                  "_title": "Max Velocity"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Max Acceleration",
+                  "_title": "Max Acceleration"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Steer Motors Allowed Closed Loop Error",
+                  "_title": "Allowed Closed Loop Error"
+                }
+              ]
+            }
+          },
+          "0,0": {
+            "size": [3, 3],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Steer Motors Process Variable",
+              "_source1": "network_table:///SmartDashboard/Steer Motors SetPoint",
+              "_title": "Process Variable",
+              "Graph/Visible time": 30.0,
+              "Visible data/SmartDashboard/Steer Motors Process Variable": true,
+              "Visible data/SmartDashboard/Steer Motors SetPoint": true
+            }
+          },
+          "0,3": {
+            "size": [3, 2],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Steer Motors Output",
+              "_title": "Output",
+              "Graph/Visible time": 30.0,
+              "Visible data/SmartDashboard/Steer Motors Output": true
+            }
+          },
+          "5,1": {
+            "size": [1, 1],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Steer Motors Set Position",
+              "_title": "Set Position"
+            }
+          },
+          "5,0": {
+            "size": [4, 1],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Steer Motors Set Velocity",
+              "_title": "Set Velocity",
+              "Slider Settings/Min": -5700.0,
+              "Slider Settings/Max": 5700.0,
+              "Slider Settings/Block increment": 100.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Drive Motor",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "3,0": {
+            "size": [2, 4],
+            "content": {
+              "_type": "List Layout",
+              "_title": "PID Control",
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motors P Gain",
+                  "_title": "P Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motors I Gain",
+                  "_title": "I Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motors D Gain",
+                  "_title": "D Gain"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motors I Zone",
+                  "_title": "I Zone"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motors Feed Forward",
+                  "_title": "Feed Forward"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motors Min Output",
+                  "_title": "Min Output"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Drive Motors Max Output",
+                  "_title": "Max Output"
+                }
+              ]
+            }
+          },
+          "0,0": {
+            "size": [3, 3],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Drive Motors Current Velocity",
+              "_source1": "network_table:///SmartDashboard/Drive Motors Target Velocity",
+              "_title": "Process Variable",
+              "Graph/Visible time": 30.0,
+              "Visible data/SmartDashboard/Drive Motors Current Velocity": true,
+              "Visible data/SmartDashboard/Drive Motors Target Velocity": true
+            }
+          },
+          "0,3": {
+            "size": [3, 2],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Drive Motors Output Voltage",
+              "_title": "Output",
+              "Graph/Visible time": 30.0,
+              "Visible data/SmartDashboard/Drive Motors Output Voltage": true
+            }
+          },
+          "5,0": {
+            "size": [4, 1],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Drive Motors Target Velocity",
+              "_title": "Set Velocity",
+              "Slider Settings/Min": -5700.0,
+              "Slider Settings/Max": 5700.0,
+              "Slider Settings/Block increment": 100.0
+            }
+          }
+        }
+      }
+    },    
+    {
       "title": "LiveWindow",
       "autoPopulate": true,
       "autoPopulatePrefix": "LiveWindow/",

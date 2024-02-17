@@ -102,6 +102,9 @@ public class Swerve extends AdvancedSubsystem {
               Constants.canivoreBusName) // BR
         };
 
+    SmartDashboard.putData("Tune Drive Motor", modules[0].getDriveTunerCommand());
+    SmartDashboard.putData("Tune Steer Motor", modules[0].getSteerTunerCommand());
+
     kinematics =
         new SwerveDriveKinematics(
             Constants.Swerve.FrontLeftModule.moduleOffset,
