@@ -10,7 +10,64 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RobotFaceSpeaker"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ReadyToShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootInSpeaker"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B to piece 3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Piece 3 to shoot pose"
+          }
+        }
+      ]
     }
   },
   "folder": null,

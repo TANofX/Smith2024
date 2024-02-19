@@ -10,7 +10,20 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "C to piece 8"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Piece 8 to piece 7"
+          }
+        }
+      ]
     }
   },
   "folder": null,
