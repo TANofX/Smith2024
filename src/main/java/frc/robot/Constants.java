@@ -63,6 +63,12 @@ public final class Constants {
     public static final double shooterIntakeMotorP = 0.0025;
     public static final double shooterIntakeMotorI = 0.0000005;
     public static final double shooterIntakeMotorD = 0.000005;
+    public static final double elevationMotorP = 0.00005;
+    public static final double elevationMotorI = 0.0000;
+    public static final double elevationMotorD = 0.0000;
+
+
+
   }
 
   public static final class CameraInfo {
@@ -72,7 +78,7 @@ public final class Constants {
 
   public static final class Intake {
 
-    public static final int intakeCANID = 0;
+    public static final int intakeCANID = 21;
     public static final int pivotIntakeCANID = 0;
     public static final int intakeAngleSensor = 0;
     public static final double gearRatio = 80 / 1;

@@ -44,6 +44,7 @@ public class Shooter extends AdvancedSubsystem {
   private final NoteSensor shooterBeamBreakSensor = new NoteSensor(Constants.Shooter.noteSensorChannel);
   private double speedInRPM;
 
+
   /** Creates a new Shooter. */
   public Shooter() {
 
@@ -69,6 +70,9 @@ public class Shooter extends AdvancedSubsystem {
     shooterIntakeController.setP(Constants.Shooter.shooterIntakeMotorP);
     shooterIntakeController.setI(Constants.Shooter.shooterIntakeMotorI);  
     shooterIntakeController.setD(Constants.Shooter.shooterIntakeMotorD);
+    elevationController.setP(Constants.Shooter.elevationMotorP);
+    elevationController.setI(Constants.Shooter.elevationMotorI);
+    elevationController.setD(Constants.Shooter.elevationMotorD);
   }
 
     
@@ -109,6 +113,10 @@ public class Shooter extends AdvancedSubsystem {
     double angleOfElevation = elevation.getDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     elevationController.setReference(angleOfElevation,ControlType.kPosition);
   }
+  public void raiseShooterManually() {
+    elevationMotor.set(speedInRPM);
+  }
+
   public boolean hasNote () {
     return shooterBeamBreakSensor.isTriggered();
   }

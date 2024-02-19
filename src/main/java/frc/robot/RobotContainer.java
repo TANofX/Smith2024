@@ -30,6 +30,7 @@ import frc.robot.commands.IntakeNote;
 import frc.robot.commands.ManualShooterElevation;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
+import frc.robot.commands.RobotFaceSpeaker;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SafePosition;
 import frc.robot.commands.Shoot;
@@ -80,6 +81,7 @@ public class RobotContainer {
     driver.RT().whileTrue(new IntakeNote());
     driver.LB().whileTrue(new ReverseIntake());
     driver.Y().onTrue(new SafePosition());
+    driver.A().whileTrue(new RobotFaceSpeaker());
 
     coDriver.X().onTrue(new ElevatorToMin());
     coDriver.A().onTrue(new ElevatorToMax());
