@@ -108,12 +108,12 @@ public class FireControl extends SubsystemBase {
     return robotDesiredAngle;
   }
   public void setTargetMode(boolean track) {
-    if (RobotContainer.shooter.hasNote()) {
+    //if (RobotContainer.shooter.hasNote()) {
     this.trackTarget = track;
-    }
-    else {
-      this.trackTarget = false;
-    }
+    //}
+    //else {
+      //this.trackTarget = false;
+    //}
   }
   public boolean trackingTarget() {
     return trackTarget;

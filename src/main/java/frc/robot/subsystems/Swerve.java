@@ -101,9 +101,12 @@ public class Swerve extends AdvancedSubsystem {
               Constants.Swerve.BackRightModule.rotationEncoderCanID,
               Constants.canivoreBusName) // BR
         };
-
-    SmartDashboard.putData("Tune Drive Motor", modules[0].getDriveTunerCommand());
-    SmartDashboard.putData("Tune Steer Motor", modules[0].getSteerTunerCommand());
+     Command DriveTuner =  modules[1].getDriveTunerCommand();
+     DriveTuner.addRequirements(this);
+     Command SteerTuner = modules[1].getSteerTunerCommand();
+     SteerTuner.addRequirements(this);
+     SmartDashboard.putData("Tune Drive Motor", DriveTuner);
+     SmartDashboard.putData("Tune Steer Motor", SteerTuner);
 
     kinematics =
         new SwerveDriveKinematics(
@@ -154,31 +157,31 @@ public class Swerve extends AdvancedSubsystem {
     SmartDashboard.putNumber("BL", modules[2].getDriveVelocityMetersPerSecond());
     SmartDashboard.putNumber("BR", modules[3].getDriveVelocityMetersPerSecond());
     
-    //    SmartDashboard.putNumberArray(
-    //        "Swerve/ModuleStates",
-    //        new double[] {
-    //          modules[0].getAbsoluteRotationDegrees(),
-    // modules[0].getDriveVelocityMetersPerSecond(),
-    //          modules[1].getAbsoluteRotationDegrees(),
-    // modules[1].getDriveVelocityMetersPerSecond(),
-    //          modules[2].getAbsoluteRotationDegrees(),
-    // modules[2].getDriveVelocityMetersPerSecond(),
-    //          modules[3].getAbsoluteRotationDegrees(),
-    // modules[3].getDriveVelocityMetersPerSecond(),
-    //        });
+       SmartDashboard.putNumberArray(
+           "Swerve/ModuleStates",
+           new double[] {
+             modules[0].getAbsoluteRotationDegrees(),
+    modules[0].getDriveVelocityMetersPerSecond(),
+             modules[1].getAbsoluteRotationDegrees(),
+    modules[1].getDriveVelocityMetersPerSecond(),
+             modules[2].getAbsoluteRotationDegrees(),
+    modules[2].getDriveVelocityMetersPerSecond(),
+             modules[3].getAbsoluteRotationDegrees(),
+    modules[3].getDriveVelocityMetersPerSecond(),
+           });
 
-    //    SmartDashboard.putNumberArray(
-    //        "Swerve/TargetModuleStates",
-    //        new double[] {
-    //          modules[0].getTargetState().angle.getDegrees(),
-    //              modules[0].getTargetState().speedMetersPerSecond,
-    //          modules[1].getTargetState().angle.getDegrees(),
-    //              modules[1].getTargetState().speedMetersPerSecond,
-    //          modules[2].getTargetState().angle.getDegrees(),
-    //              modules[2].getTargetState().speedMetersPerSecond,
-    //          modules[3].getTargetState().angle.getDegrees(),
-    //              modules[3].getTargetState().speedMetersPerSecond,
-    //        });
+       SmartDashboard.putNumberArray(
+           "Swerve/TargetModuleStates",
+           new double[] {
+             modules[0].getTargetState().angle.getDegrees(),
+                 modules[0].getTargetState().speedMetersPerSecond,
+             modules[1].getTargetState().angle.getDegrees(),
+                 modules[1].getTargetState().speedMetersPerSecond,
+             modules[2].getTargetState().angle.getDegrees(),
+                 modules[2].getTargetState().speedMetersPerSecond,
+             modules[3].getTargetState().angle.getDegrees(),
+                 modules[3].getTargetState().speedMetersPerSecond,
+           });
 
     //    Rotation3d orientation = getOrientation();
     //    SmartDashboard.putNumberArray(
