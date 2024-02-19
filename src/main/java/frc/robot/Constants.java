@@ -37,8 +37,8 @@ public final class Constants {
   public static final double noteTransferMetersPerSecond = 0.5;
 
   public static final class Shooter {
-    public static final int topCANID = 41;
-    public static final int bottomCANID = 42;
+    public static final int topCANID = 42;
+    public static final int bottomCANID = 43;
     public static final int intakeCANID = 40;
     public static final int elevationCANID = 41;
     public static final double gearRatioShooterSide = 1 / 1.333; // Rotations of the motor per rotations of the wheel
@@ -47,7 +47,7 @@ public final class Constants {
     public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio * shooterIntakeWheelDiamater;
-     public static final double wristGearRatio = 400.0/1.0;
+     public static final double wristGearRatio = 47.0/18.0*100;
      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
      public static final int maxWristMotorRPM = 6700;
      public static final double maxElevationDegreesPerSecond = maxWristMotorRPM * ROTATION_DEGREES_PER_ROTATION / 60;
@@ -56,7 +56,7 @@ public final class Constants {
      public static final double meetIntakeAngle = 80.0;
      public static final double allowedErrorInDegreesForAngle = 1.0;
      public static final double meetIntake = 80.0;
-    public static final int elevationEncoderCANID = 40;
+    public static final int elevationEncoderCANID = 41;
     public static final double elevationMotorP = 0.00005;
     public static final double elevationMotorI = 0.0000;
     public static final double elevationMotorD = 0.0000;
@@ -79,7 +79,7 @@ public final class Constants {
       public static final double degreesPerRevolution = 360.0;
       public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
       public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-      public static final double intakeGearRatio = 50/1;
+      public static final double intakeGearRatio = 5/1;
       public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
       public static final int intakeNoteSensorChannel = 0;
      

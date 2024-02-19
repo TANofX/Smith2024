@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.lib.subsystem.AdvancedSubsystem;
 //import frc.lib.subsystem.SubsystemFault;
 import frc.lib.swerve.Mk4SwerveModulePro;
+import frc.lib.swerve.Mk4SwerveModuleProSparkFlex;
 import frc.lib.util.Vector3;
 //import frc.lib.vision.limelight.LimelightHelpers;
 import frc.robot.Constants;
@@ -32,7 +33,7 @@ public class Swerve extends AdvancedSubsystem {
   protected final SwerveDrivePoseEstimator odometry;
   public final SwerveDriveKinematics kinematics;
 
-  protected final Mk4SwerveModulePro[] modules;
+  protected final Mk4SwerveModuleProSparkFlex[] modules;
 
   protected final Pigeon2 imu;
   protected final Pigeon2SimState imuSim;
@@ -74,32 +75,38 @@ public class Swerve extends AdvancedSubsystem {
     imuAccelZSignal = imu.getAccelerationZ();
 
     modules =
-        new Mk4SwerveModulePro[] {
-          new Mk4SwerveModulePro(
-              Mk4SwerveModulePro.ModuleCode.FL,
+        new Mk4SwerveModuleProSparkFlex[] {
+          new Mk4SwerveModuleProSparkFlex(
+              Mk4SwerveModuleProSparkFlex.ModuleCode.FL,
               Constants.Swerve.FrontLeftModule.driveMotorCanID,
               Constants.Swerve.FrontLeftModule.rotationMotorCanID,
               Constants.Swerve.FrontLeftModule.rotationEncoderCanID,
               Constants.canivoreBusName), // FL
-          new Mk4SwerveModulePro(
-              Mk4SwerveModulePro.ModuleCode.FR,
+          new Mk4SwerveModuleProSparkFlex(
+              Mk4SwerveModuleProSparkFlex.ModuleCode.FR,
               Constants.Swerve.FrontRightModule.driveMotorCanID,
               Constants.Swerve.FrontRightModule.rotationMotorCanID,
               Constants.Swerve.FrontRightModule.rotationEncoderCanID,
               Constants.canivoreBusName), // FR
-          new Mk4SwerveModulePro(
-              Mk4SwerveModulePro.ModuleCode.BL,
+          new Mk4SwerveModuleProSparkFlex(
+              Mk4SwerveModuleProSparkFlex.ModuleCode.BL,
               Constants.Swerve.BackLeftModule.driveMotorCanID,
               Constants.Swerve.BackLeftModule.rotationMotorCanID,
               Constants.Swerve.BackLeftModule.rotationEncoderCanID,
               Constants.canivoreBusName), // BL
-          new Mk4SwerveModulePro(
-              Mk4SwerveModulePro.ModuleCode.BR,
+          new Mk4SwerveModuleProSparkFlex(
+              Mk4SwerveModuleProSparkFlex.ModuleCode.BR,
               Constants.Swerve.BackRightModule.driveMotorCanID,
               Constants.Swerve.BackRightModule.rotationMotorCanID,
               Constants.Swerve.BackRightModule.rotationEncoderCanID,
               Constants.canivoreBusName) // BR
         };
+     Command DriveTuner =  modules[1].getDriveTunerCommand();
+     DriveTuner.addRequirements(this);
+     Command SteerTuner = modules[1].getSteerTunerCommand();
+     SteerTuner.addRequirements(this);
+     SmartDashboard.putData("Tune Drive Motor", DriveTuner);
+     SmartDashboard.putData("Tune Steer Motor", SteerTuner);
 
     kinematics =
         new SwerveDriveKinematics(
@@ -150,31 +157,31 @@ public class Swerve extends AdvancedSubsystem {
     SmartDashboard.putNumber("BL", modules[2].getDriveVelocityMetersPerSecond());
     SmartDashboard.putNumber("BR", modules[3].getDriveVelocityMetersPerSecond());
     
-    //    SmartDashboard.putNumberArray(
-    //        "Swerve/ModuleStates",
-    //        new double[] {
-    //          modules[0].getAbsoluteRotationDegrees(),
-    // modules[0].getDriveVelocityMetersPerSecond(),
-    //          modules[1].getAbsoluteRotationDegrees(),
-    // modules[1].getDriveVelocityMetersPerSecond(),
-    //          modules[2].getAbsoluteRotationDegrees(),
-    // modules[2].getDriveVelocityMetersPerSecond(),
-    //          modules[3].getAbsoluteRotationDegrees(),
-    // modules[3].getDriveVelocityMetersPerSecond(),
-    //        });
+       SmartDashboard.putNumberArray(
+           "Swerve/ModuleStates",
+           new double[] {
+             modules[0].getAbsoluteRotationDegrees(),
+    modules[0].getDriveVelocityMetersPerSecond(),
+             modules[1].getAbsoluteRotationDegrees(),
+    modules[1].getDriveVelocityMetersPerSecond(),
+             modules[2].getAbsoluteRotationDegrees(),
+    modules[2].getDriveVelocityMetersPerSecond(),
+             modules[3].getAbsoluteRotationDegrees(),
+    modules[3].getDriveVelocityMetersPerSecond(),
+           });
 
-    //    SmartDashboard.putNumberArray(
-    //        "Swerve/TargetModuleStates",
-    //        new double[] {
-    //          modules[0].getTargetState().angle.getDegrees(),
-    //              modules[0].getTargetState().speedMetersPerSecond,
-    //          modules[1].getTargetState().angle.getDegrees(),
-    //              modules[1].getTargetState().speedMetersPerSecond,
-    //          modules[2].getTargetState().angle.getDegrees(),
-    //              modules[2].getTargetState().speedMetersPerSecond,
-    //          modules[3].getTargetState().angle.getDegrees(),
-    //              modules[3].getTargetState().speedMetersPerSecond,
-    //        });
+       SmartDashboard.putNumberArray(
+           "Swerve/TargetModuleStates",
+           new double[] {
+             modules[0].getTargetState().angle.getDegrees(),
+                 modules[0].getTargetState().speedMetersPerSecond,
+             modules[1].getTargetState().angle.getDegrees(),
+                 modules[1].getTargetState().speedMetersPerSecond,
+             modules[2].getTargetState().angle.getDegrees(),
+                 modules[2].getTargetState().speedMetersPerSecond,
+             modules[3].getTargetState().angle.getDegrees(),
+                 modules[3].getTargetState().speedMetersPerSecond,
+           });
 
     //    Rotation3d orientation = getOrientation();
     //    SmartDashboard.putNumberArray(
@@ -379,7 +386,7 @@ public class Swerve extends AdvancedSubsystem {
   }
 
   public void lockModules() {
-    for (Mk4SwerveModulePro module : modules) {
+    for (Mk4SwerveModuleProSparkFlex module : modules) {
       module.lockModule();
     }
   }
@@ -392,7 +399,7 @@ public class Swerve extends AdvancedSubsystem {
   public Command zeroModulesCommand() {
     return Commands.runOnce(
             () -> {
-              for (Mk4SwerveModulePro module : modules) {
+              for (Mk4SwerveModuleProSparkFlex module : modules) {
                 module.updateRotationOffset();
               }
             })

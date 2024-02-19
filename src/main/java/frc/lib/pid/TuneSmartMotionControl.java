@@ -64,6 +64,7 @@ public class TuneSmartMotionControl extends TuneSparkPIDController {
         SmartDashboard.putNumber(name + " SetPoint", setPoint);
         SmartDashboard.putNumber(name + " Process Variable", processVariable);
         SmartDashboard.putNumber(name + " Output", tuningController.getAppliedOutput());
+        SmartDashboard.putNumber(name + " Current Position", encoder.getPosition());
 
     }
 
@@ -94,6 +95,8 @@ public class TuneSmartMotionControl extends TuneSparkPIDController {
         pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
         pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
         pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+
+        //encoder.setPosition(0.0);
 
         // display Smart Motion coefficients
         SmartDashboard.putNumber(name + " Max Velocity", maxVel);

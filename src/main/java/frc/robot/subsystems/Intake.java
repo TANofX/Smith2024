@@ -30,15 +30,15 @@ import frc.robot.util.NoteSensor;
 public class Intake extends AdvancedSubsystem {
 
   private final CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.intakeCANID, MotorType.kBrushless);
-  private final CANSparkMax pivotIntakeMotor = new CANSparkMax(Constants.Intake.pivotIntakeCANID, MotorType.kBrushless);
-  private final SparkPIDController pivotController = pivotIntakeMotor.getPIDController();
+  //private final CANSparkMax pivotIntakeMotor = new CANSparkMax(Constants.Intake.pivotIntakeCANID, MotorType.kBrushless);
+ // private final SparkPIDController pivotController = pivotIntakeMotor.getPIDController();
   private final SparkPIDController intakeController = intakeMotor.getPIDController();
   private final NoteSensor intakeBeamBreakSensor = new NoteSensor(Constants.Intake.intakeNoteSensorChannel);
   private final CANcoder intakeAngleSensor = new CANcoder(Constants.Intake.intakeAngleSensor);
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private final CANcoderConfiguration intakeEncoderConfiguration;
-  private final SparkLimitSwitch downLimitSwitch = pivotIntakeMotor.getReverseLimitSwitch(Type.kNormallyOpen);
-  private final SparkLimitSwitch upLimitSwitch = pivotIntakeMotor.getForwardLimitSwitch(Type.kNormallyClosed);
+  //private final SparkLimitSwitch downLimitSwitch = pivotIntakeMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+  //private final SparkLimitSwitch upLimitSwitch = pivotIntakeMotor.getForwardLimitSwitch(Type.kNormallyClosed);
 
   /** Creates a new Intake. */
   public Intake() {
@@ -48,10 +48,11 @@ public class Intake extends AdvancedSubsystem {
     intakeEncoderConfiguration.MagnetSensor.MagnetOffset = Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
     intakeAngleSensor.getConfigurator().apply(intakeEncoderConfiguration);
     registerHardware("Intake Motor", intakeMotor);
-    registerHardware("Pivot Intake Motor", pivotIntakeMotor);
+   // registerHardware("Pivot Intake Motor", pivotIntakeMotor);
     registerHardware("Intake Angle Sensor", intakeAngleSensor);
     rotationAbsoluteSignal = intakeAngleSensor.getAbsolutePosition();
     syncRotationEncoders();
+    intakeController.setFF(1/6700, 0);
 
   }
   public void reverseIntake() {
@@ -86,7 +87,7 @@ public class Intake extends AdvancedSubsystem {
   }
 
   public void runIntakeElevationMotor(double percentVoltage) {
-    pivotIntakeMotor.set(percentVoltage);
+    //pivotIntakeMotor.set(percentVoltage);
   }
 
   public void runIntakeMotor(double percentVoltage) {
@@ -109,7 +110,7 @@ public class Intake extends AdvancedSubsystem {
 
   public void setElevation(Rotation2d elevation) {
     double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
-    pivotController.setReference(angleOfElevation, ControlType.kPosition);
+   // pivotController.setReference(angleOfElevation, ControlType.kPosition);
   }
 
   @Override
@@ -138,13 +139,13 @@ public class Intake extends AdvancedSubsystem {
     return rotationAbsoluteSignal.getValueAsDouble() * 360;
   }
 
-  public boolean onDownLimitSwitch() {
-    return downLimitSwitch.isPressed();
-  }
+  //public boolean onDownLimitSwitch() {
+   // return downLimitSwitch.isPressed();
+  //}
 
-  public boolean onUpLimitSwitch() {
-    return upLimitSwitch.isPressed();
-  }
+  //public boolean onUpLimitSwitch() {
+    //return upLimitSwitch.isPressed();
+  //}
 
   @Override
   public Command systemCheckCommand() {
@@ -213,7 +214,7 @@ public class Intake extends AdvancedSubsystem {
     return new TuneVelocitySparkPIDController("Intake", intakeMotor, this);
   }
 
-  public Command getIntakePivotTuner() {
-    return new TuneSmartMotionControl("Intake Pivot", pivotIntakeMotor, this);
-  }
+//  public Command getIntakePivotTuner() {
+  //  return new TuneSmartMotionControl("Intake Pivot", pivotIntakeMotor, this);
+  //}
 }
