@@ -54,9 +54,26 @@ public final class Constants {
      public static final int noteSensorChannel = 1;
      public static final double shootInAmpAngle = 320.0;
      public static final double meetIntakeAngle = 80.0;
-     public static final double allowedErrorInDegreesForAngle = 1.0;
+     public static final double allowedErrorInDegreesForAngle = 2.0;
      public static final double meetIntake = 80.0;
     public static final int elevationEncoderCANID = 41;
+    public static final Rotation2d stowAngle = Rotation2d.fromDegrees(-179.5);
+    public static final Rotation2d intakeAngle = Rotation2d.fromDegrees(42.0);
+    public static final double shooterIntakeMotorP = 0.00015;
+    public static final double shooterIntakeMotorI = 0.00000001;
+    public static final double shooterIntakeMotorD = 0.00005;
+    public static final double shooterIntakeMotorFeedForward = 0.0001;
+    public static final double shooterMotorP = 0.0012;
+    public static final double shooterMotorI = 0.0000005;
+    public static final double shooterMotorD = 0.0005;
+    public static final double shooterMotorFeedForward = 0.000212; 
+    public static final double elevationMotorP = 0.00025;
+    public static final double elevationMotorI = 0.0000005;
+    public static final double elevationMotorD = 0.000005;
+    public static final double elevationMotorFeedForward = 0.0001;
+    public static final double elevationMaxVelocity = 2000;
+    public static final double elevationMaxAcceleration = 1500;
+    public static final double elevationAllowedClosedLoopError = 1 / ROTATION_DEGREES_PER_ROTATION;
 
   }
 
@@ -66,9 +83,9 @@ public final class Constants {
   }
   public static final class Intake {
 
-      public static final int intakeCANID = 21;
-      public static final int pivotIntakeCANID = 20;
-      public static final int intakeAngleSensor = 20;
+      public static final int intakeCANID = 20;
+      // public static final int pivotIntakeCANID = 20;
+      // public static final int intakeAngleSensor = 20;
       public static final double gearRatio = 80/1;
       public static final double countsPerMotorRevolution =  42;
       public static final double countsPerRevolution = (gearRatio)*(countsPerMotorRevolution);

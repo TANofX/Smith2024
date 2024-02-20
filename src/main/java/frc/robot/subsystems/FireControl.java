@@ -48,7 +48,7 @@ public class FireControl extends SubsystemBase {
       shooterToSpeaker = new Transform2d(shooterPose, Constants.FireControl.BLUE_SPEAKER_POSITION);
     }
 
-    System.out.println(shooterToSpeaker);
+    //System.out.println(shooterToSpeaker);
     distanceFromSpeaker = shooterToSpeaker.getTranslation().getNorm();
     robotDesiredAngle = shooterToSpeaker.getTranslation().getAngle().minus(angleOffset);
 

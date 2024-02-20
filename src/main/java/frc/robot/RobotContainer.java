@@ -28,6 +28,7 @@ import frc.robot.commands.ExtendElevator;
 import frc.robot.commands.FindMotorExtents;
 import frc.robot.commands.IntakeNote;
 import frc.robot.commands.ManualShooterElevation;
+import frc.robot.commands.ReadyToPassNote;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.RobotFaceSpeaker;
@@ -48,7 +49,7 @@ public class RobotContainer {
   // Subsystems
   public static final Swerve swerve = new Swerve();//new Swerve();
   public static final Elevator elevator = new Elevator();
-  public static final Intake intake = null;//new Intake();
+  public static final Intake intake = new Intake();
   public static final Shooter shooter = new Shooter();
   public static final FireControl fireControl = new FireControl(swerve::getPose, DriverStation::getAlliance);
 
@@ -61,7 +62,7 @@ public class RobotContainer {
   public RobotContainer() {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
-    //configureButtonBindings();
+    configureButtonBindings();
 
     //SmartDashboard.putData(intake.getIntakePivotTuner());
     //SmartDashboard.putData(intake.getIntakeTuner());
@@ -69,6 +70,7 @@ public class RobotContainer {
     SmartDashboard.putData("Tune Elevation", shooter.getElevationTunerCommand());
     SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
     SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
+    SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
     //SmartDashboard.putData(Commands.runOnce(() -> { intake.updateRotationOffset();}, intake));
 
     SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
@@ -76,23 +78,24 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    driver.B().onTrue(new TransferNote());
+
+    driver.B().onTrue((new ReadyToPassNote()).andThen(new TransferNote()));
     driver.LT().whileTrue(new RunIntake());
     driver.RT().whileTrue(new IntakeNote());
     driver.LB().whileTrue(new ReverseIntake());
     driver.Y().onTrue(new SafePosition());
     driver.A().whileTrue(new RobotFaceSpeaker());
 
-    coDriver.X().onTrue(new ElevatorToMin());
-    coDriver.A().onTrue(new ElevatorToMax());
-    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-      shooter.stopMotors();
-    }, shooter))));
-    coDriver.LB().onTrue(new CalibrateElevator());
-    coDriver.DUp().whileTrue(new ExtendElevator());
-    coDriver.DDown().whileTrue(new RetractElevator());
-    coDriver.RT().onTrue(new ShootInAmp());
-    coDriver.LT().onTrue(new ShootInSpeaker());
-    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    // coDriver.X().onTrue(new ElevatorToMin());
+    // coDriver.A().onTrue(new ElevatorToMax());
+    // coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+    //   shooter.stopMotors();
+    // }, shooter))));
+    // coDriver.LB().onTrue(new CalibrateElevator());
+    // coDriver.DUp().whileTrue(new ExtendElevator());
+    // coDriver.DDown().whileTrue(new RetractElevator());
+    // coDriver.RT().onTrue(new ShootInAmp());
+    // coDriver.LT().onTrue(new ShootInSpeaker());
+    // coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
     }
   }

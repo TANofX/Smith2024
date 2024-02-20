@@ -34,32 +34,21 @@ public class Intake extends AdvancedSubsystem {
  // private final SparkPIDController pivotController = pivotIntakeMotor.getPIDController();
   private final SparkPIDController intakeController = intakeMotor.getPIDController();
   private final NoteSensor intakeBeamBreakSensor = new NoteSensor(Constants.Intake.intakeNoteSensorChannel);
-  private final CANcoder intakeAngleSensor = new CANcoder(Constants.Intake.intakeAngleSensor);
-  private final StatusSignal<Double> rotationAbsoluteSignal;
-  private final CANcoderConfiguration intakeEncoderConfiguration;
-  //private final SparkLimitSwitch downLimitSwitch = pivotIntakeMotor.getReverseLimitSwitch(Type.kNormallyOpen);
-  //private final SparkLimitSwitch upLimitSwitch = pivotIntakeMotor.getForwardLimitSwitch(Type.kNormallyClosed);
 
   /** Creates a new Intake. */
   public Intake() {
-    intakeEncoderConfiguration = new CANcoderConfiguration();
-    intakeEncoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    intakeEncoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    intakeEncoderConfiguration.MagnetSensor.MagnetOffset = Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
-    intakeAngleSensor.getConfigurator().apply(intakeEncoderConfiguration);
     registerHardware("Intake Motor", intakeMotor);
    // registerHardware("Pivot Intake Motor", pivotIntakeMotor);
-    registerHardware("Intake Angle Sensor", intakeAngleSensor);
-    rotationAbsoluteSignal = intakeAngleSensor.getAbsolutePosition();
-    syncRotationEncoders();
     intakeController.setFF(1/6700, 0);
 
   }
   public void reverseIntake() {
-    intakeController.setReference(-25, ControlType.kVelocity);
+    //intakeController.setReference(-2500, ControlType.kVelocity);
+    runIntakeMotor(-1.0);
   }
   public void intakeGamePiece() {
-    intakeController.setReference(25, ControlType.kVelocity);
+    //intakeController.setReference(2500, ControlType.kVelocity);
+    runIntakeMotor(1.0);
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
@@ -69,25 +58,13 @@ public class Intake extends AdvancedSubsystem {
     intakeController.setReference(speedInRPM, ControlType.kVelocity);
   }
 
-  public void angleIntakeDown() {
-    setElevation(Rotation2d.fromDegrees(Constants.Intake.downPositionDegrees));
-  }
-
   public double getIntakeSpeed() {
     return (Constants.Intake.upperDistancePerMotorRotation * intakeMotor.getEncoder().getVelocity()) * 60;
   }
 
-  public void angleIntakeBack() {
-    setElevation(Rotation2d.fromDegrees(Constants.Intake.upPositionDegrees));
-  }
-
   public void stopIntakeMotor() {
-    intakeMotor.stopMotor();
     intakeController.setReference(0, ControlType.kVelocity);
-  }
-
-  public void runIntakeElevationMotor(double percentVoltage) {
-    //pivotIntakeMotor.set(percentVoltage);
+    intakeMotor.stopMotor();
   }
 
   public void runIntakeMotor(double percentVoltage) {
@@ -98,85 +75,14 @@ public class Intake extends AdvancedSubsystem {
     return intakeBeamBreakSensor.isTriggered();
   }
 
-  public boolean isBack() {
-    return Math.abs(getAbsoluteRotationDegrees()
-        - Constants.Intake.upPositionDegrees) < Constants.Intake.allowedAngleErrorInDegrees;
-  }
-
-  public boolean isDown() {
-    return Math.abs(getAbsoluteRotationDegrees())
-        - Constants.Intake.upPositionDegrees < Constants.Intake.allowedAngleErrorInDegrees;
-  }
-
-  public void setElevation(Rotation2d elevation) {
-    double angleOfElevation = elevation.getDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION;
-   // pivotController.setReference(angleOfElevation, ControlType.kPosition);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 
-  public void updateRotationOffset() {
-    double currentOffset = intakeEncoderConfiguration.MagnetSensor.MagnetOffset;
-    double offset = (currentOffset - rotationAbsoluteSignal.getValue()) % 1.0;
-    Preferences.setDouble("intakeRotationOffset", offset * 360.0);
-    intakeEncoderConfiguration.MagnetSensor.MagnetOffset = offset;
-    intakeAngleSensor.getConfigurator().apply(intakeEncoderConfiguration);
-    syncRotationEncoders();
-  }
-
-  /**
-   * Sync the relative rotation encoder (falcon) to the value of the absolute
-   * encoder (CANCoder)
-   */
-  public void syncRotationEncoders() {
-    intakeMotor.getEncoder().setPosition(getAbsoluteRotationDegrees() / Constants.Intake.ROTATION_DEGREES_PER_ROTATION);
-  }
-
-  public double getAbsoluteRotationDegrees() {
-    return rotationAbsoluteSignal.getValueAsDouble() * 360;
-  }
-
-  //public boolean onDownLimitSwitch() {
-   // return downLimitSwitch.isPressed();
-  //}
-
-  //public boolean onUpLimitSwitch() {
-    //return upLimitSwitch.isPressed();
-  //}
-
   @Override
   public Command systemCheckCommand() {
     return Commands.sequence(
-        Commands.runOnce(() -> {
-          setElevation(Rotation2d.fromDegrees(45));
-        }, this),
-        Commands.waitSeconds(1.0),
-        Commands.runOnce(
-            () -> {
-              if (Math.abs(getAbsoluteRotationDegrees() - 45) > 2) {
-                addFault(
-                    "[System Check] Intake angle not in expected range :(",
-                    false,
-                    true);
-              }
-
-            }, this),
-        Commands.runOnce(() -> {
-          angleIntakeDown();
-        }, this),
-        Commands.waitSeconds(1.0),
-        Commands.runOnce(
-            () -> {
-              if (!isDown()) {
-                addFault(
-                    "[System Check] The intake is not angled in the correct range for the downward position :(",
-                    false,
-                    true);
-              }
-            }, this),
         Commands.runOnce(() -> {
           runIntakeMotor(3);
         }, this),
@@ -190,21 +96,7 @@ public class Intake extends AdvancedSubsystem {
                     true);
               }
               stopIntakeMotor();
-            }, this),
-        Commands.runOnce(() -> {
-          angleIntakeBack();
-        }, this),
-        Commands.waitSeconds(2.0),
-        Commands.runOnce(
-          () -> {
-              if (!isBack()) {
-                addFault(
-                    "[System Check] The intake is not angled in the correct range for the backward position :(",
-                    false,
-                    true);
-              }}, this)
-            
-        
+            }, this)
             )
         .until(() -> getFaults().size() > 0);
 
