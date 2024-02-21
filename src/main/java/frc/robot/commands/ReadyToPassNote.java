@@ -22,8 +22,8 @@ public class ReadyToPassNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.intake.angleIntakeBack();
-    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(Constants.Shooter.meetIntakeAngle));
+    System.out.println("Moving Intake");
+    RobotContainer.shooter.setElevation(Constants.Shooter.intakeAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,6 +39,6 @@ public class ReadyToPassNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.shooter.isAtElevation() && RobotContainer.intake.isBack();
+    return RobotContainer.shooter.isAtElevation();
   }
 }

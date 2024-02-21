@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class SafePosition extends Command {
@@ -17,7 +18,7 @@ public class SafePosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(180));
+    RobotContainer.shooter.setElevation(Constants.Shooter.stowAngle);
     RobotContainer.elevator.elevatorToMinHeight();
   }
 
@@ -32,6 +33,6 @@ public class SafePosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+   return RobotContainer.shooter.isAtElevation();
   }
 }
