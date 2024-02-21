@@ -168,15 +168,16 @@ public final class Constants {
     public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
     public static final double HEIGHT = Units.inchesToMeters(80.13);
+    public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
     public static final Pose2d BLUE_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(0),
         Units.inchesToMeters(218.5), Rotation2d.fromDegrees(0.0));
-    // public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(323.25),
-    //     Units.inchesToMeters(218.5), Rotation2d.fromDegrees(180));
-    public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(8.3,4.1, Rotation2d.fromDegrees(0));
-    public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(6), Units.inchesToMeters(0),
-        Rotation2d.fromDegrees(0));
+    public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(323.25),
+        Units.inchesToMeters(218.5), Rotation2d.fromDegrees(180));
+    // public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(8.3,4.1, Rotation2d.fromDegrees(0));
+    public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
+        Rotation2d.fromDegrees(180));
   }
 
   public static final class Elevator {
