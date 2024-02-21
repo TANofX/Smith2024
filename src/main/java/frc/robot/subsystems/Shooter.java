@@ -83,22 +83,21 @@ public class Shooter extends AdvancedSubsystem {
     topController.setI(Constants.Shooter.shooterMotorI, 0);
     topController.setD(Constants.Shooter.shooterMotorD, 0);
     topController.setFF(Constants.Shooter.shooterMotorFeedForward, 0);    
-
+    topController.setIZone(Constants.Shooter.shooterMotorIZone, 0);
   }
-
-
     
     public void stopIntakeMotor() {
       shooterIntakeMotor.set(0);
     }
     public void startMotorsForShooter(double speedInMps) {
-      speedInRPM = speedInMps/(Math.PI * Constants.Shooter.wheelDiameter)*60.0*Constants.Shooter.gearRatioShooterSide;
+      speedInRPM = -1*speedInMps/(Math.PI * Constants.Shooter.wheelDiameter)*60.0*Constants.Shooter.gearRatioShooterSide;
       topController.setReference(speedInRPM , ControlType.kVelocity, 0);
     }
 
     public void stopMotors() {
       topMotor.set(0);
-   
+      elevationMotor.set(0);
+      shooterIntakeMotor.set(0);
     }
     public void intakeAtSpeed(double metersPerSecond) {
       double setPoint = (metersPerSecond / Constants.Shooter.intakeDistancePerMotorRotation) * 60.0;
@@ -138,7 +137,7 @@ public class Shooter extends AdvancedSubsystem {
   }
   public boolean atSpeed () {
     double error = Math.abs(getTargetShooterSpeed() - getShooterSpeed());
-    return error <= Math.abs(getTargetShooterSpeed() * 0.01);
+    return error <= Math.abs(getTargetShooterSpeed() * 0.05);
     
   }
   public boolean isAtElevation () {
@@ -146,7 +145,6 @@ public class Shooter extends AdvancedSubsystem {
   }
   public boolean readyToShoot () {
     return isAtElevation() && atSpeed();
-    
   }
   
   /*public double angleToShootInAmp () {
@@ -159,12 +157,17 @@ public class Shooter extends AdvancedSubsystem {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shooter Absolute Angle", rotationAbsoluteSignal.getValue() * 360);
     SmartDashboard.putNumber("Shooter Angle from Motor", elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
+    SmartDashboard.putNumber("Shooter Target Elevation", targetElevation);
+    SmartDashboard.putBoolean("Ready to Shoot", readyToShoot());
+    SmartDashboard.putBoolean("Is at Elevation", isAtElevation());
+    SmartDashboard.putBoolean("Is at Speed", atSpeed());
+    SmartDashboard.putNumber("Target Shooter Speed", getTargetShooterSpeed());
+    SmartDashboard.putNumber("Actual Shooter Speed", getShooterSpeed());
   }
-
 
   @Override
   protected Command systemCheckCommand() {
-    // TODO Auto-generated method stub
+
     //throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
     return Commands.runOnce(() -> {}, this);
   }
@@ -180,7 +183,5 @@ public class Shooter extends AdvancedSubsystem {
   public Command getElevationTunerCommand() {
     return new TuneSmartMotionControl("Shooter Elevation", elevationMotor, this);
   }
-
-    
   
 }

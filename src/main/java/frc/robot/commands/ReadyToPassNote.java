@@ -22,6 +22,7 @@ public class ReadyToPassNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("Moving Intake");
     RobotContainer.shooter.setElevation(Constants.Shooter.intakeAngle);
   }
 

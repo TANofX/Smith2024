@@ -19,8 +19,8 @@ public class TransferNote extends Command {
   @Override
   public void initialize() {
     //RobotContainer.intake.passGamePiece(0.5);
-    RobotContainer.intake.runIntakeMotor(0.25);
-    RobotContainer.shooter.intakeAtSpeed(0.125);
+    RobotContainer.intake.passGamePiece(0.5);
+    RobotContainer.shooter.intakeAtSpeed(0.2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

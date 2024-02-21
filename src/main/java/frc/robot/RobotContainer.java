@@ -4,6 +4,9 @@
 package frc.robot;
 //import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -75,6 +78,9 @@ public class RobotContainer {
 
     SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
     SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
+
+    SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));}, swerve));
+
   }
 
   private void configureButtonBindings() {
@@ -86,16 +92,16 @@ public class RobotContainer {
     driver.Y().onTrue(new SafePosition());
     driver.A().whileTrue(new RobotFaceSpeaker());
 
-    // coDriver.X().onTrue(new ElevatorToMin());
-    // coDriver.A().onTrue(new ElevatorToMax());
-    // coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-    //   shooter.stopMotors();
-    // }, shooter))));
-    // coDriver.LB().onTrue(new CalibrateElevator());
-    // coDriver.DUp().whileTrue(new ExtendElevator());
-    // coDriver.DDown().whileTrue(new RetractElevator());
-    // coDriver.RT().onTrue(new ShootInAmp());
-    // coDriver.LT().onTrue(new ShootInSpeaker());
-    // coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    coDriver.X().onTrue(new ElevatorToMin());
+    coDriver.A().onTrue(new ElevatorToMax());
+    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+       shooter.stopMotors();
+      }, shooter))));
+     coDriver.LB().onTrue(new CalibrateElevator());
+     coDriver.DUp().whileTrue(new ExtendElevator());
+     coDriver.DDown().whileTrue(new RetractElevator());
+    coDriver.LT().onTrue(new ShootInAmp());
+    coDriver.RT().onTrue(new ShootInSpeaker());
+    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
     }
   }

@@ -24,7 +24,7 @@ public class Shoot extends Command {
   @Override
   public void execute() {
     if (RobotContainer.shooter.readyToShoot())
-    RobotContainer.shooter.intakeAtSpeed(RobotContainer.shooter.getShooterSpeed());
+    RobotContainer.shooter.intakeAtSpeed(-1*RobotContainer.shooter.getShooterSpeed());
   }
 
   // Called once the command ends or is interrupted.

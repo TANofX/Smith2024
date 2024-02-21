@@ -17,7 +17,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.pid.TuneSmartMotionControl;
@@ -39,16 +41,19 @@ public class Intake extends AdvancedSubsystem {
   public Intake() {
     registerHardware("Intake Motor", intakeMotor);
    // registerHardware("Pivot Intake Motor", pivotIntakeMotor);
-    intakeController.setFF(1/6700, 0);
-
+    //intakeController.setFF(1/6700, 0);
+    intakeController.setP(Constants.Intake.intakeMotorP);
+    intakeController.setI(Constants.Intake.intakeMotorI);
+    intakeController.setD(Constants.Intake.intakeMotorD);
+    intakeController.setFF(Constants.Intake.intakeMotorPFeedForward);
   }
   public void reverseIntake() {
-    //intakeController.setReference(-2500, ControlType.kVelocity);
-    runIntakeMotor(-1.0);
+    intakeController.setReference(-6000, ControlType.kVelocity);
+    //runIntakeMotor(-1.0);
   }
   public void intakeGamePiece() {
-    //intakeController.setReference(2500, ControlType.kVelocity);
-    runIntakeMotor(1.0);
+    intakeController.setReference(6000, ControlType.kVelocity);
+    //runIntakeMotor(1.0);
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
@@ -77,6 +82,7 @@ public class Intake extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Intake Sensor", hasNote());
     // This method will be called once per scheduler run
   }
 
