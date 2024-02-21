@@ -56,7 +56,16 @@ public class SwerveDriveWithGamepad extends Command {
     y = Math.copySign(y * y, y);
     double rot;
     if (RobotContainer.fireControl.trackingTarget()) {
-      rot = speakerController.calculate(RobotContainer.swerve.getPose().getRotation().getRadians(), RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
+      double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());
+      double target = MathUtil.angleModulus(RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
+      if (Math.abs(target - measurement) > Math.PI) {
+        if (measurement < (-Math.PI / 2.0)) {
+          target -= 2 * Math.PI;
+        } else {
+          target += 2 * Math.PI;
+        }
+      }
+      rot = speakerController.calculate(measurement, target);
       rot = MathUtil.clamp(rot, -1, 1);
     }
     else {
