@@ -17,8 +17,8 @@ public class IntakeNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //RobotContainer.intake.intakeGamePiece();
-    RobotContainer.intake.runIntakeMotor(1.0);
+
+    RobotContainer.intake.intakeGamePiece();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,9 +31,8 @@ public class IntakeNote extends Command {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.intake.stopIntakeMotor();
+  
   }
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return RobotContainer.intake.hasNote();

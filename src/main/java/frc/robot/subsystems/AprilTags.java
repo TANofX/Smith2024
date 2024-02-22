@@ -15,8 +15,11 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.util.RobotPoseLookup;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.apriltag.AprilTag;
 
@@ -32,6 +35,7 @@ public class AprilTags extends SubsystemBase {
   @Override
   public void periodic() {
     final PhotonPipelineResult result = photonCamera.getLatestResult();
+    final Field2d aprilField = new Field2d();
 
     if (result.hasTargets()) {
       // final PhotonTrackedTarget bestTarget = result.getBestTarget();
@@ -52,7 +56,9 @@ public class AprilTags extends SubsystemBase {
 
         RobotPoseLookup<Pose3d> AprilTagLookup = new RobotPoseLookup<Pose3d>(maxAge);
         AprilTagLookup.addPose(robotPose);
+        aprilField.setRobotPose(robotPose.toPose2d());
       }
+
     }
   }
 }
