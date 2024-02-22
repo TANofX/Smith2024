@@ -23,7 +23,7 @@ public class ReadyToPassNote extends Command {
   @Override
   public void initialize() {
    
-    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(Constants.Shooter.meetIntakeAngle));
+    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(Constants.Shooter.meetIntakeAngle));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,6 +39,6 @@ public class ReadyToPassNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.shooter.isAtElevation();
+    return RobotContainer.shooterWrist.isAtElevation();
   }
 }

@@ -23,7 +23,7 @@ public class ShootInAmp extends Command {
   public void initialize() {
 
     if (RobotContainer.shooter.hasNote()) {
-      RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(Constants.Shooter.shootInAmpAngle));
+      RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(Constants.Shooter.shootInAmpAngle));
       RobotContainer.shooter.startMotorsForShooter(5); //change pls??? also make constant pls
       RobotContainer.elevator.elevatorToMaxHeight();
     }

@@ -18,7 +18,7 @@ public class SafePosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.shooter.setElevation(Constants.Shooter.stowAngle);
+    RobotContainer.shooterWrist.setElevation(Constants.Shooter.stowAngle);
     RobotContainer.elevator.elevatorToMinHeight();
   }
 
@@ -33,6 +33,6 @@ public class SafePosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return RobotContainer.shooter.isAtElevation();
+   return RobotContainer.shooterWrist.isAtElevation();
   }
 }

@@ -26,7 +26,7 @@ public class ReadyToShoot extends Command {
   @Override
   public void execute() {
     RobotContainer.shooter.startMotorsForShooter(RobotContainer.fireControl.getVelocity());
-    RobotContainer.shooter.setElevation(Rotation2d.fromRadians(RobotContainer.fireControl.getAngle().getRadians())); //If calculated Angle not accurate, use the simple one (getAltAngle())
+    RobotContainer.shooterWrist.setElevation(Rotation2d.fromRadians(RobotContainer.fireControl.getAngle().getRadians())); //If calculated Angle not accurate, use the simple one (getAltAngle())
   }
 
   // Called once the command ends or is interrupted.

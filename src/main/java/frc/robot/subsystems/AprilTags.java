@@ -54,11 +54,10 @@ public class AprilTags extends SubsystemBase {
             tagPose.get(),
             AprilTagDetection.cameraToRobot);
 
-        RobotPoseLookup<Pose3d> AprilTagLookup = new RobotPoseLookup<Pose3d>(maxAge);
+        RobotPoseLookup<Pose3d> AprilTagLookup = new RobotPoseLookup<Pose3d>();
         AprilTagLookup.addPose(robotPose);
         aprilField.setRobotPose(robotPose.toPose2d());
-      }
-
+      } 
     }
   }
 }

@@ -54,6 +54,7 @@ public class RobotContainer {
   public static final Elevator elevator = new Elevator();
   public static final Intake intake = new Intake();
   public static final Shooter shooter = new Shooter();
+  public static final ShooterWrist shooterWrist = new ShooterWrist();
   public static final FireControl fireControl = new FireControl(swerve::getPose, DriverStation::getAlliance);
 
   // Other Hardware
@@ -69,8 +70,8 @@ public class RobotContainer {
 
     //SmartDashboard.putData(intake.getIntakePivotTuner());
     //SmartDashboard.putData(intake.getIntakeTuner());
-    SmartDashboard.putData("Zero Shooter Elevation", Commands.runOnce(() -> { shooter.updateRotationOffset();}, shooter));
-    SmartDashboard.putData("Tune Elevation", shooter.getElevationTunerCommand());
+    SmartDashboard.putData("Zero Shooter Elevation", Commands.runOnce(() -> { shooterWrist.updateRotationOffset();}, shooter));
+    SmartDashboard.putData("Tune Elevation", shooterWrist.getElevationTunerCommand());
     SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
     SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
     SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());

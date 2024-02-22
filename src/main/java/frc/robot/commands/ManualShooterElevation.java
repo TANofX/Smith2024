@@ -29,7 +29,7 @@ public class ManualShooterElevation extends Command {
   @Override
   public void execute() {
     double degreesPerExecution = Constants.Shooter.maxElevationDegreesPerSecond * .05;
-    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(RobotContainer.shooter.getAbsoluteRotationDegrees() + degreesPerExecution * this.control.get()));
+    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(RobotContainer.shooterWrist.getAbsoluteRotationDegrees() + degreesPerExecution * this.control.get()));
   
   }
 
