@@ -36,24 +36,24 @@ public class Intake extends AdvancedSubsystem {
  // private final SparkPIDController pivotController = pivotIntakeMotor.getPIDController();
   private final SparkPIDController intakeController = intakeMotor.getPIDController();
   private final NoteSensor intakeBeamBreakSensor = new NoteSensor(Constants.Intake.intakeNoteSensorChannel);
-  
-  //private final SparkLimitSwitch downLimitSwitch = pivotIntakeMotor.getReverseLimitSwitch(Type.kNormallyOpen);
-  //private final SparkLimitSwitch upLimitSwitch = pivotIntakeMotor.getForwardLimitSwitch(Type.kNormallyClosed);
 
   /** Creates a new Intake. */
   public Intake() {
-   
     registerHardware("Intake Motor", intakeMotor);
    // registerHardware("Pivot Intake Motor", pivotIntakeMotor);
-
-    intakeController.setFF(1/6700, 0);
-
+    //intakeController.setFF(1/6700, 0);
+    intakeController.setP(Constants.Intake.intakeMotorP);
+    intakeController.setI(Constants.Intake.intakeMotorI);
+    intakeController.setD(Constants.Intake.intakeMotorD);
+    intakeController.setFF(Constants.Intake.intakeMotorPFeedForward);
   }
   public void reverseIntake() {
-    intakeController.setReference(-2000, ControlType.kVelocity);
+    intakeController.setReference(-6000, ControlType.kVelocity);
+    //runIntakeMotor(-1.0);
   }
   public void intakeGamePiece() {
-    intakeController.setReference(2000, ControlType.kVelocity);
+    intakeController.setReference(6000, ControlType.kVelocity);
+    //runIntakeMotor(1.0);
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
@@ -67,7 +67,6 @@ public class Intake extends AdvancedSubsystem {
     return (Constants.Intake.upperDistancePerMotorRotation * intakeMotor.getEncoder().getVelocity()) * 60;
   }
 
- 
   public void stopIntakeMotor() {
     intakeController.setReference(0, ControlType.kVelocity);
     intakeMotor.stopMotor();
@@ -81,30 +80,19 @@ public class Intake extends AdvancedSubsystem {
     return intakeBeamBreakSensor.isTriggered();
   }
 
-
-  
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Intake Sensor", hasNote());
     // This method will be called once per scheduler run
   }
 
-
-
-
-
-  //public boolean onDownLimitSwitch() {
-   // return downLimitSwitch.isPressed();
-  //}
-
-  //public boolean onUpLimitSwitch() {
-    //return upLimitSwitch.isPressed();
-  //}
-
   @Override
   public Command systemCheckCommand() {
     return Commands.sequence(
-       
+        Commands.runOnce(() -> {
+          runIntakeMotor(3);
+        }, this),
+        Commands.waitSeconds(1.0),
         Commands.runOnce(
             () -> {
               if (Math.abs(getIntakeSpeed() - 3) < 0.01) {
@@ -115,8 +103,6 @@ public class Intake extends AdvancedSubsystem {
               }
               stopIntakeMotor();
             }, this)
-        
-        
             )
         .until(() -> getFaults().size() > 0);
 

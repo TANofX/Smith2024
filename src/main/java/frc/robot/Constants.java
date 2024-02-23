@@ -84,24 +84,26 @@ public final class Constants {
   }
   public static final class Intake {
 
-    public static final int intakeCANID = 21;
-    public static final int pivotIntakeCANID = 0;
-    public static final int intakeAngleSensor = 0;
-    public static final double gearRatio = 80 / 1;
-    public static final double countsPerMotorRevolution = 42;
-    public static final double countsPerRevolution = (gearRatio) * (countsPerMotorRevolution);
-    public static final double intakeAcceleration = 20.2;
-    public static final double degreesPerRevolution = 360.0;
-    public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
-    public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-    public static final double intakeGearRatio = 9/1;
-    public static final double upperGearRatio = 50 / 1;
-    public static final double upperWheelDiameter = Units.inchesToMeters(1.0);
-    public static final double upperDistancePerMotorRotation = Math.PI / upperGearRatio * upperWheelDiameter;
-    public static final double upPositionDegrees = 90;
-    public static final int downPositionDegrees = 0;
-    public static final int intakeNoteSensorChannel = 0;
-    public static final double allowedAngleErrorInDegrees = 1;
+      public static final int intakeCANID = 20;
+      // public static final int pivotIntakeCANID = 20;
+      // public static final int intakeAngleSensor = 20;
+      public static final double gearRatio = 80/1;
+      public static final double countsPerMotorRevolution =  42;
+      public static final double countsPerRevolution = (gearRatio)*(countsPerMotorRevolution);
+      public static final double intakeAcceleration = 20.2;
+      public static final double degreesPerRevolution = 360.0;
+      public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
+      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
+      public static final double intakeGearRatio = 5/1;
+      public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
+      public static final double upPositionDegrees = 90;
+      public static final double downPositionDegrees = 0;
+      public static final int intakeNoteSensorChannel = 0;
+      public static final double allowedAngleErrorInDegrees = 1;
+      public static final double intakeMotorP = 0.000075;
+      public static final double intakeMotorI = 0.00000005;
+      public static final double intakeMotorD = 0.0;
+      public static final double intakeMotorPFeedForward = 0.0001;
   }
     
   public static final class Swerve {
