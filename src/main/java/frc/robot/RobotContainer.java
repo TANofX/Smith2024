@@ -40,6 +40,7 @@ import frc.robot.commands.SafePosition;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ShootInAmp;
 import frc.robot.commands.ShootInSpeaker;
+import frc.robot.commands.ShooterIntake;
 import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.commands.TransferNote;
 import frc.robot.subsystems.*;
@@ -91,6 +92,9 @@ public class RobotContainer {
     driver.LB().whileTrue(new ReverseIntake());
     driver.Y().onTrue(new SafePosition());
     driver.A().whileTrue(new RobotFaceSpeaker());
+    driver.X().onTrue((new ShootInSpeaker().andThen(new ShooterIntake()).andThen(Commands.waitSeconds(.5))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+       shooter.stopMotors();
+      }, shooter)))));
 
     coDriver.X().onTrue(new ElevatorToMin());
     coDriver.A().onTrue(new ElevatorToMax());
