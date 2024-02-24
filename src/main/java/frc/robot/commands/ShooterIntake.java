@@ -20,7 +20,7 @@ public class ShooterIntake extends Command {
   public void initialize() {
     RobotContainer.shooter.intakeAtSpeed(0.2);
     RobotContainer.shooter.startMotorsForShooter(22);
-    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(10));
+    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(10));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
