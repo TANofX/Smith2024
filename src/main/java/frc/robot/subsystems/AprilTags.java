@@ -25,17 +25,18 @@ import edu.wpi.first.apriltag.AprilTag;
 
 public class AprilTags extends SubsystemBase {
 
-  final PhotonCamera photonCamera = new PhotonCamera("photonCamera");
-
+  final PhotonCamera photonCamera = new PhotonCamera("Global_Shutter_Camera");
+  final Field2d aprilField = new Field2d();
   /** Creates a new AprilTag. */
   public AprilTags() {
+    SmartDashboard.putData("April Field", aprilField);
   }
 
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
     final PhotonPipelineResult result = photonCamera.getLatestResult();
-    final Field2d aprilField = new Field2d();
+
 
     if (result.hasTargets()) {
       // final PhotonTrackedTarget bestTarget = result.getBestTarget();

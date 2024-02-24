@@ -55,6 +55,7 @@ public class RobotContainer {
   public static final Intake intake = new Intake();
   public static final Shooter shooter = new Shooter();
   public static final ShooterWrist shooterWrist = new ShooterWrist();
+  public static final AprilTags aprilTags = new AprilTags();
   public static final FireControl fireControl = new FireControl(swerve::getPose, DriverStation::getAlliance);
 
   // Other Hardware
