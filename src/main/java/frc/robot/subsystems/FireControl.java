@@ -37,16 +37,17 @@ public class FireControl extends SubsystemBase {
     Optional<Alliance> currentAlliance = allianceSupplier.get();
 
     Pose2d shooterPose = currentPosition; //.plus(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)));
-    Transform2d shooterToSpeaker;
+    //Transform2d shooterToSpeaker;
+    Translation2d shooterToSpeaker;
 
     if (currentAlliance.isPresent() && Alliance.Red == currentAlliance.get()) {
-      shooterToSpeaker = new Transform2d(shooterPose, Constants.FireControl.RED_SPEAKER_POSITION);
+      shooterToSpeaker = Constants.FireControl.RED_SPEAKER_POSITION.getTranslation().minus(shooterPose.getTranslation());//new Transform2d(shooterPose, Constants.FireControl.RED_SPEAKER_POSITION).getTranslation();
     } else {
-      shooterToSpeaker = new Transform2d(shooterPose, Constants.FireControl.BLUE_SPEAKER_POSITION);
+      shooterToSpeaker = Constants.FireControl.BLUE_SPEAKER_POSITION.getTranslation().minus(shooterPose.getTranslation());//new Transform2d(shooterPose, Constants.FireControl.BLUE_SPEAKER_POSITION).getTranslation();
     }
 
-    distanceToTarget = distanceFromSpeaker = shooterToSpeaker.getTranslation().getNorm() + Units.inchesToMeters(-6);
-    robotDesiredAngle = shooterToSpeaker.getTranslation().getAngle().minus(Rotation2d.fromDegrees(180));
+    distanceToTarget = distanceFromSpeaker = shooterToSpeaker.getNorm() + Units.inchesToMeters(-6);
+    robotDesiredAngle = shooterToSpeaker.getAngle().minus(Rotation2d.fromDegrees(180));
     
     shooterAngle = Rotation2d.fromRadians(Math.asin(Constants.FireControl.HEIGHT + 0.5 * Constants.FireControl.ACCELERATION));
 
