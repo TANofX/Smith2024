@@ -48,11 +48,11 @@ public class Intake extends AdvancedSubsystem {
     intakeController.setFF(Constants.Intake.intakeMotorPFeedForward);
   }
   public void reverseIntake() {
-    intakeController.setReference(-6000, ControlType.kVelocity);
+    intakeController.setReference(6000, ControlType.kVelocity);
     //runIntakeMotor(-1.0);
   }
   public void intakeGamePiece() {
-    intakeController.setReference(6000, ControlType.kVelocity);
+    intakeController.setReference(-6000, ControlType.kVelocity);
     //runIntakeMotor(1.0);
   }
 
