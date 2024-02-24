@@ -47,7 +47,7 @@ public final class Constants {
     public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio * shooterIntakeWheelDiamater;
-     public static final double wristGearRatio = 47.0/18.0*100;
+     public static final double wristGearRatio = 11.75/4.50*100;
      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
      public static final int maxWristMotorRPM = 6700;
      public static final double maxElevationDegreesPerSecond = maxWristMotorRPM * ROTATION_DEGREES_PER_ROTATION / 60;
