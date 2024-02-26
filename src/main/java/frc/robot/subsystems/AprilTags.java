@@ -17,6 +17,9 @@ import frc.robot.util.RobotPoseLookup;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +30,8 @@ public class AprilTags extends SubsystemBase {
 
   final PhotonCamera photonCamera = new PhotonCamera("Global_Shutter_Camera");
   final Field2d aprilField = new Field2d();
+  public static Transform3d cameraToRobot = new Transform3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-12.0), Units.inchesToMeters(21.5), new Rotation3d(0,Units.degreesToRadians(34.26),Units.degreesToRadians(180)));
+  
   /** Creates a new AprilTag. */
   public AprilTags() {
     SmartDashboard.putData("April Field", aprilField);
@@ -47,11 +52,12 @@ public class AprilTags extends SubsystemBase {
       double timestamp = timerTime - latency;
       double maxAge = 0.0;
 
-      Optional<Pose3d> tagPose = Constants.apriltagLayout.getTagPose(result.getBestTarget().getFiducialId());
+      PhotonTrackedTarget passedTarget = result.getBestTarget();
+      Optional<Pose3d> tagPose = Constants.apriltagLayout.getTagPose(passedTarget.getFiducialId());
 
       if (tagPose.isPresent()) {
         Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-            result.getBestTarget().getBestCameraToTarget(),
+            passedTarget.getBestCameraToTarget(),
             tagPose.get(),
             AprilTagDetection.cameraToRobot);
 

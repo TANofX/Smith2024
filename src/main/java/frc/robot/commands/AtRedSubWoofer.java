@@ -4,40 +4,40 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-public class ShooterIntake extends Command {
-  /** Creates a new ShooterIntake. */
-  public ShooterIntake() {
+public class AtRedSubWoofer extends Command {
+  /** Creates a new AtRedSubWoofer. */
+  public AtRedSubWoofer() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist);
+    addRequirements(RobotContainer.swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.shooter.intakeAtSpeed(0.2);
-    RobotContainer.shooter.startMotorsForShooter(22);
-    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(10));
+Pose2d startPoint = new Pose2d(Constants.FireControl.RED_SPEAKER_POSITION.getTranslation(), Constants.FireControl.RED_SPEAKER_POSITION.getRotation());
+      startPoint.plus(new Transform2d(Units.inchesToMeters(54.25), 0.0, new Rotation2d()));
+      RobotContainer.swerve.resetOdometry(startPoint);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(10));
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    RobotContainer.shooter.stopIntakeMotor();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.shooter.hasNote() & RobotContainer.shooterWrist.isAtElevation();
+    return true;
   }
 }

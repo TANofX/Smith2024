@@ -47,13 +47,13 @@ public final class Constants {
     public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio * shooterIntakeWheelDiamater;
-     public static final double wristGearRatio = 11.75/4.50*100;
+     public static final double wristGearRatio = 47/18*25; //11.75/4.5*25; 
      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
      public static final int maxWristMotorRPM = 6700;
      public static final double maxElevationDegreesPerSecond = maxWristMotorRPM * ROTATION_DEGREES_PER_ROTATION / 60;
      public static final int noteSensorChannel = 1;
      public static final double shootInAmpAngle = -45; //Change pls???
-     public static final double meetIntakeAngle = 80.0;
+     public static final double meetIntakeAngle = 80.0; ///???
      public static final double allowedErrorInDegreesForAngle = 5.0; ///may change???
      public static final double meetIntake = 80.0;
     public static final int elevationEncoderCANID = 41;
@@ -68,7 +68,7 @@ public final class Constants {
     public static final double shooterMotorD = 0.00;
     public static final double shooterMotorFeedForward = 0.00022;
     public static final double shooterMotorIZone = 200;
-    public static final double elevationMotorP = 0.00025;
+    public static final double elevationMotorP = 0.000125;
     public static final double elevationMotorI = 0.0000005;
     public static final double elevationMotorD = 0.000005;
     public static final double elevationMotorFeedForward = 0.0001;
@@ -171,10 +171,9 @@ public final class Constants {
     public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
-    public static final Pose2d BLUE_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(0),
-        Units.inchesToMeters(218.5), Rotation2d.fromDegrees(0.0));
-    public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(630),
-        Units.inchesToMeters(218.5), Rotation2d.fromDegrees(180));
+    public static final Pose2d BLUE_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(-1.5),
+        Units.inchesToMeters(218.42), Rotation2d.fromDegrees(0.0));
+    public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(652.73),Units.inchesToMeters(218.42), Rotation2d.fromDegrees(180));
     // public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(8.3,4.1, Rotation2d.fromDegrees(0));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
         Rotation2d.fromDegrees(180));

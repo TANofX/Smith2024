@@ -8,8 +8,11 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,10 +32,11 @@ public class ShooterWrist extends AdvancedSubsystem {
 
   /** Creates a new Shooter. */
   public ShooterWrist() {
-    elevationMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    elevationMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    elevationMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
+    elevationMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
     elevationMotor.setSoftLimit(SoftLimitDirection.kForward, (float)(180.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
     elevationMotor.setSoftLimit(SoftLimitDirection.kReverse, (float)(-65.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
+    elevationMotor.setIdleMode(IdleMode.kBrake);
     registerHardware("Elevation Motor", elevationMotor);
     registerHardware("Elevation Encoder", elevationEncoder);
     shooterEncoderConfiguration = new CANcoderConfiguration();
@@ -65,6 +69,9 @@ public class ShooterWrist extends AdvancedSubsystem {
   }
 
   /** Sync the relative rotation encoder (falcon) to the value of the absolute encoder (CANCoder) */
+  public void stopMotor() {
+    elevationMotor.stopMotor();
+  }
   public void syncRotationEncoders() {
     elevationMotor.getEncoder().setPosition(-1 * getAbsoluteRotationDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
   }
@@ -73,8 +80,10 @@ public class ShooterWrist extends AdvancedSubsystem {
     //tells us what angle we are at
   }
   public void setElevation(Rotation2d elevation) {
-    double angleOfElevation = (elevation.getDegrees() * -1.0) / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
-    targetElevation = elevation.getDegrees();
+    targetElevation = MathUtil.clamp(elevation.getDegrees(), -178, 65);
+    double actualAngle = getAbsoluteRotationDegrees() - targetElevation;
+    double shooterElevationOffset = actualAngle/Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
+    double angleOfElevation = elevationMotor.getEncoder().getPosition() + shooterElevationOffset;
     elevationController.setReference(angleOfElevation,ControlType.kSmartMotion, 0);
   }
   public boolean isAtElevation () {
@@ -84,8 +93,8 @@ public class ShooterWrist extends AdvancedSubsystem {
   public void periodic() {
     rotationAbsoluteSignal.refresh();
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Shooter Absolute Angle", rotationAbsoluteSignal.getValue() * 360);
-    SmartDashboard.putNumber("Shooter Angle from Motor", elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
+    SmartDashboard.putNumber("Shooter Absolute Angle", getAbsoluteRotationDegrees());
+    SmartDashboard.putNumber("Shooter Angle from Motor", -1* elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
     SmartDashboard.putNumber("Shooter Target Elevation", targetElevation);
   }
 

@@ -12,6 +12,7 @@ import frc.robot.RobotContainer;
 public class SafePosition extends Command {
   /** Creates a new SafePosition. */
   public SafePosition() {
+    addRequirements(RobotContainer.shooterWrist, RobotContainer.shooter, RobotContainer.elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -24,7 +25,10 @@ public class SafePosition extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    RobotContainer.shooterWrist.setElevation(Constants.Shooter.stowAngle);
+    
+  }
 
   // Called once the command ends or is interrupted.
   @Override

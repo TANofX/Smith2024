@@ -13,6 +13,7 @@ import frc.robot.RobotContainer;
 public class ShootInSpeaker extends Command {
   /** Creates a new PassNoteFromIntakeToSpeaker. */
   public ShootInSpeaker() {
+    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -24,7 +25,6 @@ public class ShootInSpeaker extends Command {
     if (RobotContainer.shooter.hasNote()) {
     RobotContainer.shooter.startMotorsForShooter(RobotContainer.fireControl.getVelocity());
     System.out.println("Trying to start Shooter Motors");
-    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(10));
   //RobotContainer.fireControl.setTargetMode(true);
   }
 }

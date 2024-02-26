@@ -1,11 +1,16 @@
 package frc.robot.commands;
 
+import java.sql.Driver;
+import java.util.Optional;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -54,6 +59,11 @@ public class SwerveDriveWithGamepad extends Command {
     x = Math.copySign(x * x, x);
     double y = -RobotContainer.driver.getLeftX();
     y = Math.copySign(y * y, y);
+    Optional<Alliance> currentAlliance = DriverStation.getAlliance();
+    if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
+      x = -1 * x;
+      y = -1 * y;
+    }
     double rot;
     if (RobotContainer.fireControl.trackingTarget()) {
       double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());

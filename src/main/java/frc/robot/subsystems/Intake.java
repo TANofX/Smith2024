@@ -57,7 +57,7 @@ public class Intake extends AdvancedSubsystem {
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
-    double speedInRPM = speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
+    double speedInRPM = -1 * speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
         * Constants.Intake.intakeGearRatio;
 
     intakeController.setReference(speedInRPM, ControlType.kVelocity);

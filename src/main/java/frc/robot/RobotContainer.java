@@ -4,10 +4,13 @@
 package frc.robot;
 //import java.util.function.Supplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.event.EventLoop;
@@ -24,11 +27,13 @@ import frc.lib.util.CycleTracker;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
+import frc.robot.commands.AtRedSubWoofer;
 import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
 import frc.robot.commands.FindMotorExtents;
+import frc.robot.commands.FireControlWrist;
 import frc.robot.commands.IntakeNote;
 import frc.robot.commands.ManualShooterElevation;
 import frc.robot.commands.ReadyToPassNote;
@@ -83,7 +88,7 @@ public class RobotContainer {
     SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
 
     SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));}, swerve));
-
+    SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
   }
 
   private void configureButtonBindings() {
@@ -93,7 +98,7 @@ public class RobotContainer {
     driver.RT().whileTrue(new IntakeNote());
     driver.LB().whileTrue(new ReverseIntake());
     driver.Y().onTrue(new SafePosition());
-    driver.A().whileTrue(new RobotFaceSpeaker());
+    driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
     driver.X().onTrue((new ShootInSpeaker().andThen(new ShooterIntake()).andThen(Commands.waitSeconds(.5))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
        shooter.stopMotors();
       }, shooter)))));
