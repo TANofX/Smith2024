@@ -10,6 +10,7 @@ import frc.robot.RobotContainer;
 public class StopElevator extends Command {
   /** Creates a new StopElevator. */
   public StopElevator() {
+    addRequirements(RobotContainer.elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -17,7 +17,7 @@ public class ManualShooterElevation extends Command {
   public ManualShooterElevation(Supplier<Double> joystickInput) {
     // Use addRequirements() here to declare subsystem dependencies.
     control = joystickInput;
-    addRequirements(RobotContainer.shooter);
+    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist);
   }
 
   // Called when the command is initially scheduled.

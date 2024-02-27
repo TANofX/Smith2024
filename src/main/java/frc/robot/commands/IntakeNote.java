@@ -24,7 +24,7 @@ public class IntakeNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("This is wrong.");
+    System.out.println("intake is intaking.");
   }
 
   // Called once the command ends or is interrupted.

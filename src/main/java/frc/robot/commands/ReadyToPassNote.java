@@ -4,19 +4,16 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.Shooter;
 
 
 public class ReadyToPassNote extends Command {
   /** Creates a new ReadyToPassNote. */
   public ReadyToPassNote() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.intake);
-    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist);
+    addRequirements(RobotContainer.shooterWrist);
   }
 
   // Called when the command is initially scheduled.

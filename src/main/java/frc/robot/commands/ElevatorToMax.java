@@ -10,6 +10,7 @@ import frc.robot.RobotContainer;
 public class ElevatorToMax extends Command {
   /** Creates a new ElevatorToMax. */
   public ElevatorToMax() {
+    addRequirements(RobotContainer.elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

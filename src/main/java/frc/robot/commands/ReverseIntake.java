@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class ReverseIntake extends Command {
   /** Creates a new ReverseIntake. */
   public ReverseIntake() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.intake);
   }
 
   // Called when the command is initially scheduled.
