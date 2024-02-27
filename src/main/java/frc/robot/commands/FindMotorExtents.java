@@ -12,7 +12,7 @@ public class FindMotorExtents extends Command {
   /** Creates a new FindMotorExtents. */
   private boolean calibrating = false;
   private boolean extending = false;
-  private boolean lastExtention = false;
+  //private boolean lastExtention = false;
   private int loopVariable;
   private double maxSum;
   private double minSum;
