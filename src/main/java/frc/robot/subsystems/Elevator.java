@@ -8,17 +8,13 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
-import com.revrobotics.SparkRelativeEncoder;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.pid.TuneSmartMotionControl;
-import frc.lib.pid.TuneVelocitySparkPIDController;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
@@ -44,6 +40,7 @@ public class Elevator extends SubsystemBase {
     elevatorController.setSmartMotionMaxAccel(Constants.Elevator.elevatorMotorMaxAcceleration, 0);
     elevatorController.setSmartMotionAllowedClosedLoopError(Constants.Elevator.elevatorMotorClosedLoppError, 0);
   }
+
   public void extendElevator() {
     elevatorMotor.set(-0.25);
   }

@@ -15,14 +15,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.pid.TuneVelocitySparkPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
-import frc.robot.RobotContainer;
-
 import com.revrobotics.*;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-/** Implementation for an SDS Mk4 swerve module using RevNeo Vortex with SparkFlex controller */
+/**
+ * Implementation for an SDS Mk4 swerve module using RevNeo Vortex with
+ * SparkFlex controller
+ */
 public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   public enum ModuleCode {
     FL,
@@ -31,22 +32,22 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     BR
   }
 
-  // Volts to meters/sec
-  private static final double DRIVE_KV = 3.4;
-  // Volts to meters/sec^2
-  private static final double DRIVE_KA = 0.27;
+  // // Volts to meters/sec
+  // private static final double DRIVE_KV = 3.4;
+  // // Volts to meters/sec^2
+  // private static final double DRIVE_KA = 0.27;
 
-  // Volts to deg/sec
-  private static final double ROTATION_KV = 12.0 / 900;
-  // Volts to deg/sec^2
-  private static final double ROTATION_KA = 0.00006;
+  // // Volts to deg/sec
+  // private static final double ROTATION_KV = 12.0 / 900;
+  // // Volts to deg/sec^2
+  // private static final double ROTATION_KA = 0.00006;
 
-  private static final double DRIVE_GEARING = 1.0/6.12;
-  private static final double DRIVE_METERS_PER_ROTATION =
-      DRIVE_GEARING * Math.PI * Units.inchesToMeters(4.0);
-  private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 /(150/7)) * 360.0;
+  private static final double DRIVE_GEARING = 1.0 / 6.12;
+  private static final double DRIVE_METERS_PER_ROTATION = DRIVE_GEARING * Math.PI * Units.inchesToMeters(4.0);
+  private static final double ROTATION_DEGREES_PER_ROTATION = (1.0 / (150 / 7)) * 360.0;
 
-  // M/s - Tune (Apply full output and measure max vel. Adjust KV/KA for sim if needed)
+  // M/s - Tune (Apply full output and measure max vel. Adjust KV/KA for sim if
+  // needed)
   public static final double DRIVE_MAX_VEL = 4.65;
 
   private static final double DRIVE_KP = 0.0000004;
@@ -64,15 +65,13 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   private static final double ROTATION_MAX_ACCELERATION = 10000;
   private static final double ROTATION_ERROR = 0.05;
 
-  
-
   public final ModuleCode moduleCode;
   // private final LinearSystemSim<N1, N1, N1> driveSim;
   // private final LinearSystemSim<N2, N1, N1> rotationSim;
 
   private final CANSparkFlex driveMotor;
   // private final REVPhysicsSim driveSimState;
-  
+
   private final CANSparkFlex rotationMotor;
   // private final REVPhysicsSim rotationSimState;
 
@@ -87,11 +86,12 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   /**
    * Create a Mk4 swerve module
    *
-   * @param moduleCode The code representing this module
-   * @param driveMotorCanID The CAN ID of the drive motor
+   * @param moduleCode         The code representing this module
+   * @param driveMotorCanID    The CAN ID of the drive motor
    * @param rotationMotorCanID The CAN ID of the rotation motor
-   * @param encoderCanID The CAN ID of the rotation CANCoder
-   * @param canBus The name of the can bus the devices are connected to.
+   * @param encoderCanID       The CAN ID of the rotation CANCoder
+   * @param canBus             The name of the can bus the devices are connected
+   *                           to.
    */
   public Mk4SwerveModuleProSparkFlex(
       ModuleCode moduleCode,
@@ -105,12 +105,9 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
 
     rotationEncoder = new CANcoder(encoderCanID, canBus);
     rotationEncoderConfig = new CANcoderConfiguration();
-    rotationEncoderConfig.MagnetSensor.AbsoluteSensorRange =
-        AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    rotationEncoderConfig.MagnetSensor.SensorDirection =
-        SensorDirectionValue.CounterClockwise_Positive;
-    rotationEncoderConfig.MagnetSensor.MagnetOffset =
-        Preferences.getDouble(getName() + "RotationOffset", 0.0) / 360.0;
+    rotationEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    rotationEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    rotationEncoderConfig.MagnetSensor.MagnetOffset = Preferences.getDouble(getName() + "RotationOffset", 0.0) / 360.0;
     rotationEncoder.getConfigurator().apply(rotationEncoderConfig);
     // rotationEncoderSimState = rotationEncoder.getSimState();
 
@@ -140,9 +137,11 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     rotationAbsoluteSignal = rotationEncoder.getAbsolutePosition();
     rotationAbsoluteVelSignal = rotationEncoder.getVelocity();
 
-    // driveSim = new LinearSystemSim<>(LinearSystemId.identifyVelocitySystem(DRIVE_KV, DRIVE_KA));
+    // driveSim = new
+    // LinearSystemSim<>(LinearSystemId.identifyVelocitySystem(DRIVE_KV, DRIVE_KA));
     // rotationSim =
-    //     new LinearSystemSim<>(LinearSystemId.identifyPositionSystem(ROTATION_KV, ROTATION_KA));
+    // new LinearSystemSim<>(LinearSystemId.identifyPositionSystem(ROTATION_KV,
+    // ROTATION_KA));
 
     registerHardware("Drive Motor", driveMotor);
     registerHardware("Rotation Motor", rotationMotor);
@@ -177,12 +176,14 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     // driveSimState.setRotorVelocity(driveVel);
     // driveSimState.addRotorPosition(driveVel * 0.02);
 
-    // double rotationPos = rotationSim.getOutput(0) / ROTATION_DEGREES_PER_ROTATION;
+    // double rotationPos = rotationSim.getOutput(0) /
+    // ROTATION_DEGREES_PER_ROTATION;
     // double rotationDeltaPos = rotationPos - rotationPositionSignal.getValue();
     // rotationSimState.addRotorPosition(rotationDeltaPos);
     // rotationSimState.setRotorVelocity(rotationDeltaPos / 0.02);
     // rotationEncoderSimState.setRawPosition(rotationSim.getOutput(0) / 360.0);
-    // rotationEncoderSimState.setVelocity(getRotationVelocityDegreesPerSecond() / 360.0);
+    // rotationEncoderSimState.setVelocity(getRotationVelocityDegreesPerSecond() /
+    // 360.0);
   }
 
   /**
@@ -214,22 +215,20 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     SmartDashboard.putNumber(getName() + "/Relative Rotation", getRelativeRotationDegrees());
     SmartDashboard.putNumber(getName() + "/Target Rotations", (targetAngle / ROTATION_DEGREES_PER_ROTATION));
 
-    REVLibError driveError = 
-      driveMotor.getPIDController().setReference(60*targetState.speedMetersPerSecond / DRIVE_METERS_PER_ROTATION, ControlType.kVelocity, 0);
+    REVLibError driveError = driveMotor.getPIDController()
+        .setReference(60 * targetState.speedMetersPerSecond / DRIVE_METERS_PER_ROTATION, ControlType.kVelocity, 0);
     if (driveError != REVLibError.kOk) {
       addFault(
-        "[Drive Motor]: Status code: "
-        + driveError.name()
-      );
+          "[Drive Motor]: Status code: "
+              + driveError.name());
     }
 
-    REVLibError rotationError =
-      rotationMotor.getPIDController().setReference(targetAngle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
+    REVLibError rotationError = rotationMotor.getPIDController()
+        .setReference(targetAngle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
     if (rotationError != REVLibError.kOk) {
       addFault(
-        "[Rotation Motor]: Status code: "
-          + rotationError.name()
-      );
+          "[Rotation Motor]: Status code: "
+              + rotationError.name());
     }
   }
 
@@ -313,7 +312,8 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   }
 
   /**
-   * Update the rotation offset for this module. This will assume that the current module position
+   * Update the rotation offset for this module. This will assume that the current
+   * module position
    * should be the new zero.
    */
   public void updateRotationOffset() {
@@ -325,7 +325,10 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     syncRotationEncoders();
   }
 
-  /** Sync the relative rotation encoder (falcon) to the value of the absolute encoder (CANCoder) */
+  /**
+   * Sync the relative rotation encoder (falcon) to the value of the absolute
+   * encoder (CANCoder)
+   */
   public void syncRotationEncoders() {
     rotationMotor.getEncoder().setPosition(getAbsoluteRotationDegrees() / ROTATION_DEGREES_PER_ROTATION);
   }
@@ -347,8 +350,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     }
     double angle = getRelativeRotationDegrees() + deltaRot;
 
-
-    //MAYBE? .setRotorControl
+    // MAYBE? .setRotorControl
     driveMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.stopMotor();
     rotationMotor.getPIDController().setReference(angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition);
@@ -361,96 +363,100 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   @Override
   public Command systemCheckCommand() {
     return Commands.sequence(
-            Commands.runOnce(
-                () -> {
-                  clearFaults();
-                  driveMotor.stopMotor();
-                  rotationMotor.set(0.3);
-                },
-                this),
-            Commands.waitSeconds(0.3),
-            Commands.runOnce(
-                () -> {
-                  if (getRotationVelocityDegreesPerSecond() < 20) {
-                    addFault(
-                        "[System Check] Rotation motor encoder velocity measured too slow",
-                        false,
-                        true);
-                  }
-                  if (rotationAbsoluteVelSignal.getValue() * 360 < 20) {
-                    addFault(
-                        "[System Check] Absolute encoder velocity measured too slow " + (rotationAbsoluteVelSignal.getValue() * 360), false, true);
-                  }
-                },
-                this),
-            Commands.run(
-                    () -> {
-                      double deltaRot = 90 - getAbsoluteRotationDegrees();
-                      if (deltaRot > 180) {
-                        deltaRot -= 360;
-                      } else if (deltaRot < -180) {
-                        deltaRot += 360;
-                      }
-                      double angle = getRelativeRotationDegrees() + deltaRot;
-                      rotationMotor.getPIDController().setReference(
-                        angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
-                    },
-                    this)
-                .withTimeout(1.0),
-            Commands.runOnce(
-                () -> {
-                  if (getAbsoluteRotationDegrees() < 70 || getAbsoluteRotationDegrees() > 110) {
-                    addFault(
-                        "[System Check] Rotation Motor did not reach target position", false, true);
-                  }
-                },
-                this),
-            Commands.runOnce(
-                () -> {
-                  driveMotor.setIdleMode(IdleMode.kCoast);
-                  driveMotor.set(0.1);
-                  rotationMotor.stopMotor();
-                },
-                this),
-            Commands.waitSeconds(0.5),
-            Commands.runOnce(
-                () -> {
-                  if (getDriveVelocityMetersPerSecond() < 0.25) {
-                    addFault("[System Check] Drive motor encoder velocity too slow", false, true);
-                  }
-                  driveMotor.setIdleMode(IdleMode.kBrake);
-                  driveMotor.stopMotor();
-                },
-                this),
-            Commands.waitSeconds(0.25),
-            Commands.run(
-                    () -> {
-                      double deltaRot = 0 - getAbsoluteRotationDegrees();
-                      if (deltaRot > 180) {
-                        deltaRot -= 360;
-                      } else if (deltaRot < -180) {
-                        deltaRot += 360;
-                      }
-                      double angle = getRelativeRotationDegrees() + deltaRot;
-                      rotationMotor.getPIDController().setReference(
-                        angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
-                    },
-                    this)
-                .withTimeout(1.0),
-            Commands.runOnce(
-                () -> {
-                  if (Math.abs(getAbsoluteRotationDegrees()) > 20) {
-                    addFault("[System Check] Rotation did not reach target position", false, true);
-                  }
-                },
-                this))
+        Commands.runOnce(
+            () -> {
+              clearFaults();
+              driveMotor.stopMotor();
+              rotationMotor.set(0.3);
+            },
+            this),
+        Commands.waitSeconds(0.3),
+        Commands.runOnce(
+            () -> {
+              if (getRotationVelocityDegreesPerSecond() < 20) {
+                addFault(
+                    "[System Check] Rotation motor encoder velocity measured too slow",
+                    false,
+                    true);
+              }
+              if (rotationAbsoluteVelSignal.getValue() * 360 < 20) {
+                addFault(
+                    "[System Check] Absolute encoder velocity measured too slow "
+                        + (rotationAbsoluteVelSignal.getValue() * 360),
+                    false, true);
+              }
+            },
+            this),
+        Commands.run(
+            () -> {
+              double deltaRot = 90 - getAbsoluteRotationDegrees();
+              if (deltaRot > 180) {
+                deltaRot -= 360;
+              } else if (deltaRot < -180) {
+                deltaRot += 360;
+              }
+              double angle = getRelativeRotationDegrees() + deltaRot;
+              rotationMotor.getPIDController().setReference(
+                  angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
+            },
+            this)
+            .withTimeout(1.0),
+        Commands.runOnce(
+            () -> {
+              if (getAbsoluteRotationDegrees() < 70 || getAbsoluteRotationDegrees() > 110) {
+                addFault(
+                    "[System Check] Rotation Motor did not reach target position", false, true);
+              }
+            },
+            this),
+        Commands.runOnce(
+            () -> {
+              driveMotor.setIdleMode(IdleMode.kCoast);
+              driveMotor.set(0.1);
+              rotationMotor.stopMotor();
+            },
+            this),
+        Commands.waitSeconds(0.5),
+        Commands.runOnce(
+            () -> {
+              if (getDriveVelocityMetersPerSecond() < 0.25) {
+                addFault("[System Check] Drive motor encoder velocity too slow", false, true);
+              }
+              driveMotor.setIdleMode(IdleMode.kBrake);
+              driveMotor.stopMotor();
+            },
+            this),
+        Commands.waitSeconds(0.25),
+        Commands.run(
+            () -> {
+              double deltaRot = 0 - getAbsoluteRotationDegrees();
+              if (deltaRot > 180) {
+                deltaRot -= 360;
+              } else if (deltaRot < -180) {
+                deltaRot += 360;
+              }
+              double angle = getRelativeRotationDegrees() + deltaRot;
+              rotationMotor.getPIDController().setReference(
+                  angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
+            },
+            this)
+            .withTimeout(1.0),
+        Commands.runOnce(
+            () -> {
+              if (Math.abs(getAbsoluteRotationDegrees()) > 20) {
+                addFault("[System Check] Rotation did not reach target position", false, true);
+              }
+            },
+            this))
         .until(() -> getFaults().size() > 0)
         .andThen(Commands.runOnce(this::stopMotors, this));
   }
+
   public Command getDriveTunerCommand() {
     return new TuneVelocitySparkPIDController("Drive Motors", driveMotor, this);
   }
+
   public Command getSteerTunerCommand() {
-   return new TuneSmartMotionControl("Steer Motors", rotationMotor, this);
+    return new TuneSmartMotionControl("Steer Motors", rotationMotor, this);
   }
 }

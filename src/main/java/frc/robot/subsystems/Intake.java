@@ -4,27 +4,14 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkLimitSwitch.Type;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.pid.TuneVelocitySparkPIDController;
-//import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
 import frc.robot.util.NoteSensor;
@@ -32,28 +19,32 @@ import frc.robot.util.NoteSensor;
 public class Intake extends AdvancedSubsystem {
 
   private final CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.intakeCANID, MotorType.kBrushless);
-  //private final CANSparkMax pivotIntakeMotor = new CANSparkMax(Constants.Intake.pivotIntakeCANID, MotorType.kBrushless);
- // private final SparkPIDController pivotController = pivotIntakeMotor.getPIDController();
+  // private final CANSparkMax pivotIntakeMotor = new
+  // CANSparkMax(Constants.Intake.pivotIntakeCANID, MotorType.kBrushless);
+  // private final SparkPIDController pivotController =
+  // pivotIntakeMotor.getPIDController();
   private final SparkPIDController intakeController = intakeMotor.getPIDController();
   private final NoteSensor intakeBeamBreakSensor = new NoteSensor(Constants.Intake.intakeNoteSensorChannel);
 
   /** Creates a new Intake. */
   public Intake() {
     registerHardware("Intake Motor", intakeMotor);
-   // registerHardware("Pivot Intake Motor", pivotIntakeMotor);
-    //intakeController.setFF(1/6700, 0);
+    // registerHardware("Pivot Intake Motor", pivotIntakeMotor);
+    // intakeController.setFF(1/6700, 0);
     intakeController.setP(Constants.Intake.intakeMotorP);
     intakeController.setI(Constants.Intake.intakeMotorI);
     intakeController.setD(Constants.Intake.intakeMotorD);
     intakeController.setFF(Constants.Intake.intakeMotorPFeedForward);
   }
+
   public void reverseIntake() {
     intakeController.setReference(6000, ControlType.kVelocity);
-    //runIntakeMotor(-1.0);
+    // runIntakeMotor(-1.0);
   }
+
   public void intakeGamePiece() {
     intakeController.setReference(-6000, ControlType.kVelocity);
-    //runIntakeMotor(1.0);
+    // runIntakeMotor(1.0);
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
@@ -102,8 +93,7 @@ public class Intake extends AdvancedSubsystem {
                     true);
               }
               stopIntakeMotor();
-            }, this)
-            )
+            }, this))
         .until(() -> getFaults().size() > 0);
 
   }
@@ -112,7 +102,7 @@ public class Intake extends AdvancedSubsystem {
     return new TuneVelocitySparkPIDController("Intake", intakeMotor, this);
   }
 
-//  public Command getIntakePivotTuner() {
-  //  return new TuneSmartMotionControl("Intake Pivot", pivotIntakeMotor, this);
-  //}
+  // public Command getIntakePivotTuner() {
+  // return new TuneSmartMotionControl("Intake Pivot", pivotIntakeMotor, this);
+  // }
 }

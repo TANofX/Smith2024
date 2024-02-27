@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /** Add your docs here. */
 public class TuneSmartMotionControl extends TuneSparkPIDController {
-    private double maxRPM, minVel, maxVel, maxAcc, allowedErr;
+    private double minVel, maxVel, maxAcc, allowedErr;
 
     public TuneSmartMotionControl(String motorName, CANSparkBase sparkMotor, Subsystem motorOwner) {
         super(motorName, sparkMotor, motorOwner);
@@ -71,8 +71,6 @@ public class TuneSmartMotionControl extends TuneSparkPIDController {
     @Override
     public void initialize() {
         super.initialize();
-
-        maxRPM = 5700;
 
         // Smart Motion Coefficients
         maxVel = 2000; // rpm

@@ -4,29 +4,14 @@
 package frc.robot;
 //import java.util.function.Supplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-//import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
-//import frc.lib.input.controllers.rumble.RumbleOff;
-//import frc.lib.subsystem.AdvancedSubsystem;
-//import frc.lib.util.CycleTracker;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.lib.input.controllers.rumble.RumbleOff;
-import frc.lib.subsystem.AdvancedSubsystem;
-import frc.lib.util.CycleTracker;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.lib.input.controllers.XboxControllerWrapper;
 import frc.robot.commands.AtRedSubWoofer;
 import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.ElevateShooter;
@@ -57,7 +42,7 @@ public class RobotContainer {
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
 
   // Subsystems
-  public static final Swerve swerve = new Swerve();//new Swerve();
+  public static final Swerve swerve = new Swerve();// new Swerve();
   public static final Elevator elevator = new Elevator();
   public static final Intake intake = new Intake();
   public static final Shooter shooter = new Shooter();
@@ -76,19 +61,24 @@ public class RobotContainer {
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
 
-    //SmartDashboard.putData(intake.getIntakePivotTuner());
-    //SmartDashboard.putData(intake.getIntakeTuner());
-    SmartDashboard.putData("Zero Shooter Elevation", Commands.runOnce(() -> { shooterWrist.updateRotationOffset();}, shooter));
+    // SmartDashboard.putData(intake.getIntakePivotTuner());
+    // SmartDashboard.putData(intake.getIntakeTuner());
+    SmartDashboard.putData("Zero Shooter Elevation", Commands.runOnce(() -> {
+      shooterWrist.updateRotationOffset();
+    }, shooter));
     SmartDashboard.putData("Tune Elevation", shooterWrist.getElevationTunerCommand());
     SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
     SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
     SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
-    //SmartDashboard.putData(Commands.runOnce(() -> { intake.updateRotationOffset();}, intake));
+    // SmartDashboard.putData(Commands.runOnce(() -> {
+    // intake.updateRotationOffset();}, intake));
 
     SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
     SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
 
-    SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));}, swerve));
+    SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {
+      swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));
+    }, swerve));
     SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
   }
 
@@ -100,24 +90,32 @@ public class RobotContainer {
     driver.LB().whileTrue(new ReverseIntake());
     driver.Y().onTrue(new SafePosition());
     driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
-    driver.X().onTrue(new ShooterIntake().andThen(Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-       shooter.stopMotors();
-      }, shooter))))));
+    driver.X().onTrue(new ShooterIntake().andThen(
+        Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+          shooter.stopMotors();
+        }, shooter))))));
 
     coDriver.X().onTrue(new ElevatorToMin());
     coDriver.A().onTrue(new ElevatorToMax());
     coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-       shooter.stopMotors();
-      }, shooter))));
-     coDriver.LB().onTrue(new CalibrateElevator());
-     coDriver.DUp().whileTrue(new ExtendElevator());
-     coDriver.DDown().whileTrue(new RetractElevator());
+      shooter.stopMotors();
+    }, shooter))));
+    coDriver.LB().onTrue(new CalibrateElevator());
+    coDriver.DUp().whileTrue(new ExtendElevator());
+    coDriver.DDown().whileTrue(new RetractElevator());
     coDriver.LT().onTrue(new ShootInAmp());
     coDriver.RT().onTrue(new ShootInSpeaker());
     coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
-    coDriver.RB().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {shooter.startMotorsForShooter(fireControl.getVelocity());}, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-       shooter.stopMotors();})))));
-    coDriver.START().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {shooter.startMotorsForShooter(fireControl.getVelocity());}, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-       shooter.stopMotors();})))));
-    }
+    coDriver.RB().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
+      shooter.startMotorsForShooter(fireControl.getVelocity());
+    }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+      shooter.stopMotors();
+    })))));
+    coDriver.START()
+        .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
+          shooter.startMotorsForShooter(fireControl.getVelocity());
+        }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+          shooter.stopMotors();
+        })))));
   }
+}

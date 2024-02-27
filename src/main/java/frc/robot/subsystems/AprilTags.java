@@ -14,24 +14,21 @@ import frc.lib.vision.AprilTagDetection;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.util.RobotPoseLookup;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.apriltag.AprilTag;
 
 public class AprilTags extends SubsystemBase {
 
   final PhotonCamera photonCamera = new PhotonCamera("Global_Shutter_Camera");
   final Field2d aprilField = new Field2d();
-  public static Transform3d cameraToRobot = new Transform3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-12.0), Units.inchesToMeters(21.5), new Rotation3d(0,Units.degreesToRadians(34.26),Units.degreesToRadians(180)));
-  
+  public static Transform3d cameraToRobot = new Transform3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-12.0),
+      Units.inchesToMeters(21.5), new Rotation3d(0, Units.degreesToRadians(34.26), Units.degreesToRadians(180)));
+
   /** Creates a new AprilTag. */
   public AprilTags() {
     SmartDashboard.putData("April Field", aprilField);
@@ -41,7 +38,6 @@ public class AprilTags extends SubsystemBase {
   @Override
   public void periodic() {
     final PhotonPipelineResult result = photonCamera.getLatestResult();
-
 
     if (result.hasTargets()) {
       // final PhotonTrackedTarget bestTarget = result.getBestTarget();
@@ -66,7 +62,7 @@ public class AprilTags extends SubsystemBase {
         AprilTagLookup.addPose(robotPose);
         aprilField.setRobotPose(robotPose.toPose2d());
         RobotContainer.swerve.odometry.addVisionMeasurement(robotPose.toPose2d(), imageCaptureTime);
-      } 
+      }
     }
   }
 }

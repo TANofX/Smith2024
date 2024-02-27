@@ -9,14 +9,12 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 public class FireControl extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier;
@@ -33,26 +31,33 @@ public class FireControl extends SubsystemBase {
   public void periodic() {
     Pose2d currentPosition = poseSupplier.get();
     double distanceFromSpeaker;
-//    Rotation2d robotDesiredAngle;
+    // Rotation2d robotDesiredAngle;
     Optional<Alliance> currentAlliance = allianceSupplier.get();
 
-    Pose2d shooterPose = currentPosition; //.plus(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)));
-    //Transform2d shooterToSpeaker;
+    Pose2d shooterPose = currentPosition; // .plus(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)));
+    // Transform2d shooterToSpeaker;
     Translation2d shooterToSpeaker;
 
     if (currentAlliance.isPresent() && Alliance.Red == currentAlliance.get()) {
-      shooterToSpeaker = Constants.FireControl.RED_SPEAKER_POSITION.getTranslation().minus(shooterPose.getTranslation());//new Transform2d(shooterPose, Constants.FireControl.RED_SPEAKER_POSITION).getTranslation();
+      shooterToSpeaker = Constants.FireControl.RED_SPEAKER_POSITION.getTranslation()
+          .minus(shooterPose.getTranslation());// new Transform2d(shooterPose,
+                                               // Constants.FireControl.RED_SPEAKER_POSITION).getTranslation();
     } else {
-      shooterToSpeaker = Constants.FireControl.BLUE_SPEAKER_POSITION.getTranslation().minus(shooterPose.getTranslation());//new Transform2d(shooterPose, Constants.FireControl.BLUE_SPEAKER_POSITION).getTranslation();
+      shooterToSpeaker = Constants.FireControl.BLUE_SPEAKER_POSITION.getTranslation()
+          .minus(shooterPose.getTranslation());// new Transform2d(shooterPose,
+                                               // Constants.FireControl.BLUE_SPEAKER_POSITION).getTranslation();
     }
 
     distanceToTarget = distanceFromSpeaker = shooterToSpeaker.getNorm() + Units.inchesToMeters(-6);
-    robotDesiredAngle = shooterToSpeaker.getAngle().minus(Rotation2d.fromDegrees(180)).plus(Constants.FireControl.AZMUTH_OFFSET);
-    
-    shooterAngle = Rotation2d.fromRadians(Math.asin(Constants.FireControl.HEIGHT + 0.5 * Constants.FireControl.ACCELERATION));
+    robotDesiredAngle = shooterToSpeaker.getAngle().minus(Rotation2d.fromDegrees(180))
+        .plus(Constants.FireControl.AZMUTH_OFFSET);
+
+    shooterAngle = Rotation2d
+        .fromRadians(Math.asin(Constants.FireControl.HEIGHT + 0.5 * Constants.FireControl.ACCELERATION));
 
     shooterVelocity = Constants.FireControl.TARGET_VELOCITY_MPS;
-    double shooterConstant = (Constants.FireControl.ACCELERATION * distanceFromSpeaker * distanceFromSpeaker) / (2 * shooterVelocity * shooterVelocity);
+    double shooterConstant = (Constants.FireControl.ACCELERATION * distanceFromSpeaker * distanceFromSpeaker)
+        / (2 * shooterVelocity * shooterVelocity);
     double b = distanceFromSpeaker;
     double a = -1 * shooterConstant;
     double c = -1 * (shooterConstant + Constants.FireControl.HEIGHT);
@@ -88,6 +93,7 @@ public class FireControl extends SubsystemBase {
   public Rotation2d getAngle() {
     return shooterAngle;
   }
+
   public Rotation2d getAltAngle() {
     return altShooterAngle;
   }
@@ -95,17 +101,18 @@ public class FireControl extends SubsystemBase {
   public Rotation2d getDesiredRobotAngle() {
     return robotDesiredAngle;
   }
+
   public void setTargetMode(boolean track) {
-    //if (RobotContainer.shooter.hasNote()) {
+    // if (RobotContainer.shooter.hasNote()) {
     this.trackTarget = track;
-    //}
-    //else {
-      //this.trackTarget = false;
-    //}
+    // }
+    // else {
+    // this.trackTarget = false;
+    // }
   }
+
   public boolean trackingTarget() {
     return trackTarget;
   }
-
 
 }

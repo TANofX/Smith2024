@@ -34,18 +34,17 @@ public class ShooterWrist extends AdvancedSubsystem {
   public ShooterWrist() {
     elevationMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
     elevationMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
-    elevationMotor.setSoftLimit(SoftLimitDirection.kForward, (float)(180.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
-    elevationMotor.setSoftLimit(SoftLimitDirection.kReverse, (float)(-65.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
+    elevationMotor.setSoftLimit(SoftLimitDirection.kForward,
+        (float) (180.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
+    elevationMotor.setSoftLimit(SoftLimitDirection.kReverse,
+        (float) (-65.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
     elevationMotor.setIdleMode(IdleMode.kBrake);
     registerHardware("Elevation Motor", elevationMotor);
     registerHardware("Elevation Encoder", elevationEncoder);
     shooterEncoderConfiguration = new CANcoderConfiguration();
-    shooterEncoderConfiguration.MagnetSensor.AbsoluteSensorRange =
-        AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    shooterEncoderConfiguration.MagnetSensor.SensorDirection =
-        SensorDirectionValue.Clockwise_Positive;
-    shooterEncoderConfiguration.MagnetSensor.MagnetOffset =
-        Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
+    shooterEncoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    shooterEncoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    shooterEncoderConfiguration.MagnetSensor.MagnetOffset = Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
     elevationEncoder.getConfigurator().apply(shooterEncoderConfiguration);
     rotationAbsoluteSignal = elevationEncoder.getAbsolutePosition();
     rotationAbsoluteSignal.refresh();
@@ -58,7 +57,7 @@ public class ShooterWrist extends AdvancedSubsystem {
     elevationController.setSmartMotionMaxVelocity(Constants.Shooter.elevationMaxVelocity, 0);
     elevationController.setSmartMotionAllowedClosedLoopError(Constants.Shooter.elevationAllowedClosedLoopError, 0);
   }
-    
+
   public void updateRotationOffset() {
     double currentOffset = shooterEncoderConfiguration.MagnetSensor.MagnetOffset;
     double offset = (currentOffset - rotationAbsoluteSignal.getValue()) % 1.0;
@@ -68,44 +67,57 @@ public class ShooterWrist extends AdvancedSubsystem {
     syncRotationEncoders();
   }
 
-  /** Sync the relative rotation encoder (falcon) to the value of the absolute encoder (CANCoder) */
+  /**
+   * Sync the relative rotation encoder (falcon) to the value of the absolute
+   * encoder (CANCoder)
+   */
   public void stopMotor() {
     elevationMotor.stopMotor();
   }
+
   public void syncRotationEncoders() {
-    elevationMotor.getEncoder().setPosition(-1 * getAbsoluteRotationDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
+    elevationMotor.getEncoder()
+        .setPosition(-1 * getAbsoluteRotationDegrees() / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
   }
+
   public double getAbsoluteRotationDegrees() {
-    return rotationAbsoluteSignal.getValue() * 360 * (-1.0); 
-    //tells us what angle we are at
+    return rotationAbsoluteSignal.getValue() * 360 * (-1.0);
+    // tells us what angle we are at
   }
+
   public void setElevation(Rotation2d elevation) {
     targetElevation = MathUtil.clamp(elevation.getDegrees(), -178, 65);
     double actualAngle = getAbsoluteRotationDegrees() - targetElevation;
-    double shooterElevationOffset = actualAngle/Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
+    double shooterElevationOffset = actualAngle / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     double angleOfElevation = elevationMotor.getEncoder().getPosition() + shooterElevationOffset;
-    elevationController.setReference(angleOfElevation,ControlType.kSmartMotion, 0);
+    elevationController.setReference(angleOfElevation, ControlType.kSmartMotion, 0);
   }
-  public boolean isAtElevation () {
+
+  public boolean isAtElevation() {
     return Math.abs(getAbsoluteRotationDegrees() - targetElevation) <= Constants.Shooter.allowedErrorInDegreesForAngle;
   }
+
   @Override
   public void periodic() {
     rotationAbsoluteSignal.refresh();
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Shooter Absolute Angle", getAbsoluteRotationDegrees());
-    SmartDashboard.putNumber("Shooter Angle from Motor", -1* elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
+    SmartDashboard.putNumber("Shooter Angle from Motor",
+        -1 * elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
     SmartDashboard.putNumber("Shooter Target Elevation", targetElevation);
   }
 
   @Override
   protected Command systemCheckCommand() {
 
-    //throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
-    return Commands.runOnce(() -> {}, this);
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'systemCheckCommand'");
+    return Commands.runOnce(() -> {
+    }, this);
   }
+
   public Command getElevationTunerCommand() {
     return new TuneSmartMotionControl("Shooter Elevation", elevationMotor, this);
   }
-  
+
 }

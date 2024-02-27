@@ -4,37 +4,22 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.lib.pid.TuneSmartMotionControl;
-import frc.lib.pid.TuneSparkPIDController;
 import frc.lib.pid.TuneVelocitySparkPIDController;
-//import elevationMotor.getPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.util.NoteSensor;
-import frc.robot.subsystems.ShooterWrist;
-
 
 public class Shooter extends AdvancedSubsystem {
-  private static final int Rotation2d = 0;
+  // private static final int Rotation2d = 0;
   private final CANSparkFlex topMotor = new CANSparkFlex(Constants.Shooter.topCANID, MotorType.kBrushless);
   private final CANSparkMax shooterIntakeMotor = new CANSparkMax(Constants.Shooter.intakeCANID, MotorType.kBrushless);
   private final SparkPIDController topController = topMotor.getPIDController();
@@ -45,7 +30,7 @@ public class Shooter extends AdvancedSubsystem {
   /** Creates a new Shooter. */
   public Shooter() {
     registerHardware("Top Motor", topMotor);
-    
+
     registerHardware("Shooters Intake Motor", shooterIntakeMotor);
     topMotor.getEncoder().getVelocity();
     shooterIntakeController.setP(Constants.Shooter.shooterIntakeMotorP, 0);
@@ -55,46 +40,53 @@ public class Shooter extends AdvancedSubsystem {
     topController.setP(Constants.Shooter.shooterMotorP, 0);
     topController.setI(Constants.Shooter.shooterMotorI, 0);
     topController.setD(Constants.Shooter.shooterMotorD, 0);
-    topController.setFF(Constants.Shooter.shooterMotorFeedForward, 0);    
+    topController.setFF(Constants.Shooter.shooterMotorFeedForward, 0);
     topController.setIZone(Constants.Shooter.shooterMotorIZone, 0);
   }
-    
-    public void stopIntakeMotor() {
-      shooterIntakeMotor.set(0);
-    }
-    public void startMotorsForShooter(double speedInMps) {
-      speedInRPM = -1*speedInMps/(Math.PI * Constants.Shooter.wheelDiameter)*60.0*Constants.Shooter.gearRatioShooterSide;
-      topController.setReference(speedInRPM , ControlType.kVelocity, 0);
-    }
 
-    public void stopMotors() {
-      topMotor.set(0);
-      shooterIntakeMotor.set(0);
-    }
-    public void intakeAtSpeed(double metersPerSecond) {
-      double setPoint = (metersPerSecond / Constants.Shooter.intakeDistancePerMotorRotation) * 60.0;
-      shooterIntakeController.setReference(setPoint, ControlType.kVelocity, 0);
-    }
+  public void stopIntakeMotor() {
+    shooterIntakeMotor.set(0);
+  }
 
-  public boolean hasNote () {
+  public void startMotorsForShooter(double speedInMps) {
+    speedInRPM = -1 * speedInMps / (Math.PI * Constants.Shooter.wheelDiameter) * 60.0
+        * Constants.Shooter.gearRatioShooterSide;
+    topController.setReference(speedInRPM, ControlType.kVelocity, 0);
+  }
+
+  public void stopMotors() {
+    topMotor.set(0);
+    shooterIntakeMotor.set(0);
+  }
+
+  public void intakeAtSpeed(double metersPerSecond) {
+    double setPoint = (metersPerSecond / Constants.Shooter.intakeDistancePerMotorRotation) * 60.0;
+    shooterIntakeController.setReference(setPoint, ControlType.kVelocity, 0);
+  }
+
+  public boolean hasNote() {
     return shooterBeamBreakSensor.isTriggered();
   }
-  public double getShooterSpeed () {
+
+  public double getShooterSpeed() {
     return topMotor.getEncoder().getVelocity();
   }
-  //Uses encoder on motor to get the speed
-  public double getTargetShooterSpeed () {
+
+  // Uses encoder on motor to get the speed
+  public double getTargetShooterSpeed() {
     return speedInRPM;
   }
-  public boolean atSpeed () {
+
+  public boolean atSpeed() {
     double error = Math.abs(getTargetShooterSpeed() - getShooterSpeed());
     return error <= Math.abs(getTargetShooterSpeed() * 0.05);
-    
+
   }
-  public boolean readyToShoot () {
+
+  public boolean readyToShoot() {
     return RobotContainer.shooterWrist.isAtElevation() && atSpeed();
   }
- 
+
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Ready to Shoot", readyToShoot());
@@ -106,8 +98,10 @@ public class Shooter extends AdvancedSubsystem {
   @Override
   protected Command systemCheckCommand() {
 
-    //throw new UnsupportedOperationException("Unimplemented method 'systemCheckCommand'");
-    return Commands.runOnce(() -> {}, this);
+    // throw new UnsupportedOperationException("Unimplemented method
+    // 'systemCheckCommand'");
+    return Commands.runOnce(() -> {
+    }, this);
   }
 
   public Command getIntakeTunerCommand() {
@@ -116,5 +110,5 @@ public class Shooter extends AdvancedSubsystem {
 
   public Command getShooterTunerCommand() {
     return new TuneVelocitySparkPIDController("Shooter", topMotor, this);
-  }  
+  }
 }
