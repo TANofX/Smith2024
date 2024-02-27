@@ -31,7 +31,7 @@ public class ShootInAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-     RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(Constants.Shooter.shootInAmpAngle));
+     RobotContainer.shooterWrist.setElevation(Constants.Shooter.shootInAmpAngle);
 
   }
 

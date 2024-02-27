@@ -47,7 +47,7 @@ public class FireControl extends SubsystemBase {
     }
 
     distanceToTarget = distanceFromSpeaker = shooterToSpeaker.getNorm() + Units.inchesToMeters(-6);
-    robotDesiredAngle = shooterToSpeaker.getAngle().minus(Rotation2d.fromDegrees(180));
+    robotDesiredAngle = shooterToSpeaker.getAngle().minus(Rotation2d.fromDegrees(180)).plus(Constants.FireControl.AZMUTH_OFFSET);
     
     shooterAngle = Rotation2d.fromRadians(Math.asin(Constants.FireControl.HEIGHT + 0.5 * Constants.FireControl.ACCELERATION));
 

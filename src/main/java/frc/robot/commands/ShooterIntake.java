@@ -18,7 +18,9 @@ public class ShooterIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.shooter.intakeAtSpeed(0.2);
+    if (!RobotContainer.shooter.hasNote()) {
+      RobotContainer.shooter.intakeAtSpeed(0.2);
+    }
     RobotContainer.shooter.startMotorsForShooter(22);
     RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(10));
   }

@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
 import frc.robot.commands.AtRedSubWoofer;
 import frc.robot.commands.CalibrateElevator;
+import frc.robot.commands.ElevateShooter;
 import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
@@ -99,9 +100,9 @@ public class RobotContainer {
     driver.LB().whileTrue(new ReverseIntake());
     driver.Y().onTrue(new SafePosition());
     driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
-    driver.X().onTrue((new ShootInSpeaker().andThen(new ShooterIntake()).andThen(Commands.waitSeconds(.5))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+    driver.X().onTrue(new ShooterIntake().andThen(Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
        shooter.stopMotors();
-      }, shooter)))));
+      }, shooter))))));
 
     coDriver.X().onTrue(new ElevatorToMin());
     coDriver.A().onTrue(new ElevatorToMax());
@@ -114,5 +115,9 @@ public class RobotContainer {
     coDriver.LT().onTrue(new ShootInAmp());
     coDriver.RT().onTrue(new ShootInSpeaker());
     coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    coDriver.RB().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {shooter.startMotorsForShooter(fireControl.getVelocity());}, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+       shooter.stopMotors();})))));
+    coDriver.START().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {shooter.startMotorsForShooter(fireControl.getVelocity());}, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+       shooter.stopMotors();})))));
     }
   }

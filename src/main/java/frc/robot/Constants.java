@@ -52,10 +52,10 @@ public final class Constants {
      public static final int maxWristMotorRPM = 6700;
      public static final double maxElevationDegreesPerSecond = maxWristMotorRPM * ROTATION_DEGREES_PER_ROTATION / 60;
      public static final int noteSensorChannel = 1;
-     public static final double shootInAmpAngle = -45; //Change pls???
-     public static final double meetIntakeAngle = 80.0; ///???
-     public static final double allowedErrorInDegreesForAngle = 5.0; ///may change???
-     public static final double meetIntake = 80.0;
+     public static final Rotation2d shootInAmpAngle = Rotation2d.fromDegrees(-45); //Change pls???
+     public static final Rotation2d SHOOT_IN_SPEAKER_AT_SUBWOOFER = Rotation2d.fromDegrees(50);
+     public static final Rotation2d SHOOT_AT_PODIUM = Rotation2d.fromDegrees(32);
+     public static final double allowedErrorInDegreesForAngle = 3.5; ///may change???
     public static final int elevationEncoderCANID = 41;
     public static final Rotation2d stowAngle = Rotation2d.fromDegrees(-179.5);
     public static final Rotation2d intakeAngle = Rotation2d.fromDegrees(42.0);
@@ -72,7 +72,7 @@ public final class Constants {
     public static final double elevationMotorI = 0.0000005;
     public static final double elevationMotorD = 0.000005;
     public static final double elevationMotorFeedForward = 0.0001;
-    public static final double elevationMaxVelocity = 4500;
+    public static final double elevationMaxVelocity = 4000;
     public static final double elevationMaxAcceleration = 4000;
     public static final double elevationAllowedClosedLoopError = 1 / ROTATION_DEGREES_PER_ROTATION;
 
@@ -167,7 +167,7 @@ public final class Constants {
   public static final class FireControl {
     public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
-    public static final double HEIGHT = Units.inchesToMeters(80.13);
+    public static final double HEIGHT = Units.inchesToMeters(62.13);
     public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
@@ -177,6 +177,7 @@ public final class Constants {
     // public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(8.3,4.1, Rotation2d.fromDegrees(0));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
         Rotation2d.fromDegrees(180));
+    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(7);
   }
 
   public static final class Elevator {
