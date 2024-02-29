@@ -33,8 +33,11 @@ public class TuneVelocitySparkPIDController extends TuneSparkPIDController {
 
         double target = SmartDashboard.getNumber(name + " Target Velocity", 0.0);
         if (target != targetVelocity) { pidController.setReference(target, ControlType.kVelocity); targetVelocity = target; }
-
+        double error = (target-encoder.getVelocity())/target;
+        
         SmartDashboard.putNumber(name + " Current Velocity", encoder.getVelocity());
+        SmartDashboard.putNumber(name + " Percent Error", error);
+        
         SmartDashboard.putNumber(name + " Output Voltage", tuningController.getAppliedOutput());
     }
 }

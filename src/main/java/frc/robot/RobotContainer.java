@@ -3,6 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -24,9 +27,13 @@ import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
+import frc.robot.commands.FindMotorExtents;
 import frc.robot.commands.IntakeNote;
+import frc.robot.commands.ManualShooterElevation;
+import frc.robot.commands.ReadyToPassNote;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
+import frc.robot.commands.RobotFaceSpeaker;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SafePosition;
 import frc.robot.commands.Shoot;
@@ -43,10 +50,10 @@ public class RobotContainer {
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
 
   // Auto choser
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
 
   // Subsystems
-  public static final Swerve swerve = new Swerve();
+  public static final Swerve swerve = new Swerve();//new Swerve();
   public static final Elevator elevator = new Elevator();
   public static final Intake intake = new Intake();
   public static final Shooter shooter = new Shooter();
@@ -61,8 +68,44 @@ public class RobotContainer {
   public RobotContainer() {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
+    configureButtonBindings();
+
+    //SmartDashboard.putData(intake.getIntakePivotTuner());
+    //SmartDashboard.putData(intake.getIntakeTuner());
+    SmartDashboard.putData("Zero Shooter Elevation", Commands.runOnce(() -> { shooter.updateRotationOffset();}, shooter));
+    SmartDashboard.putData("Tune Elevation", shooter.getElevationTunerCommand());
+    SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
+    SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
+    SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
+    //SmartDashboard.putData(Commands.runOnce(() -> { intake.updateRotationOffset();}, intake));
+
+    SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
+    SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
+
+    SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));}, swerve));
+
   }
   
 
-  
+  private void configureButtonBindings() {
+
+    driver.B().onTrue((new ReadyToPassNote()).andThen(new TransferNote()));
+    driver.LT().whileTrue(new RunIntake());
+    driver.RT().whileTrue(new IntakeNote());
+    driver.LB().whileTrue(new ReverseIntake());
+    driver.Y().onTrue(new SafePosition());
+    driver.A().whileTrue(new RobotFaceSpeaker());
+
+    coDriver.X().onTrue(new ElevatorToMin());
+    coDriver.A().onTrue(new ElevatorToMax());
+    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+       shooter.stopMotors();
+      }, shooter))));
+     coDriver.LB().onTrue(new CalibrateElevator());
+     coDriver.DUp().whileTrue(new ExtendElevator());
+     coDriver.DDown().whileTrue(new RetractElevator());
+    coDriver.LT().onTrue(new ShootInAmp());
+    coDriver.RT().onTrue(new ShootInSpeaker());
+    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    }
   }

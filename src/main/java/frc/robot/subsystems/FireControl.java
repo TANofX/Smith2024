@@ -10,7 +10,10 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -29,17 +32,11 @@ public class FireControl extends SubsystemBase {
   @Override
   public void periodic() {
     Pose2d currentPosition = poseSupplier.get();
-    Transform2d fieldToRobot = new Transform2d(new Pose2d(), currentPosition); // position of robot (center) from field
-    Transform2d shooterTranslation = fieldToRobot.plus(Constants.FireControl.SHOOTER_OFFSET); // shooter offset from the
-                                                                                              // robot
-    Pose2d shooterPose = new Pose2d(shooterTranslation.getX(), shooterTranslation.getY(),
-        shooterTranslation.getRotation());
-    Rotation2d angleOffset = Rotation2d.fromDegrees(180);
-
     double distanceFromSpeaker;
 //    Rotation2d robotDesiredAngle;
     Optional<Alliance> currentAlliance = allianceSupplier.get();
 
+    Pose2d shooterPose = currentPosition; //.plus(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)));
     Transform2d shooterToSpeaker;
 
     if (currentAlliance.isPresent() && Alliance.Red == currentAlliance.get()) {
@@ -48,50 +45,40 @@ public class FireControl extends SubsystemBase {
       shooterToSpeaker = new Transform2d(shooterPose, Constants.FireControl.BLUE_SPEAKER_POSITION);
     }
 
-    System.out.println(shooterToSpeaker);
-    distanceFromSpeaker = shooterToSpeaker.getTranslation().getNorm();
-    robotDesiredAngle = shooterToSpeaker.getTranslation().getAngle().minus(angleOffset);
-
-    double yShooterVelocity = Math.sqrt(2 * Constants.FireControl.ACCELERATION * Constants.FireControl.HEIGHT); // finding
-                                                                                                                // y
-                                                                                                                // vector
-                                                                                                                // of
-                                                                                                                // the
-                                                                                                                // shooter's
-                                                                                                                // velocity
-    double xShootervelocity = (Constants.FireControl.ACCELERATION * distanceFromSpeaker) / yShooterVelocity; // finding
-                                                                                                             // x vector
-                                                                                                             // of the
-                                                                                                             // shooter's
-                                                                                                             // velocity
-
-
-     //double yShooterVelocity = Math.sqrt(Math.pow(Constants.FireControl.FINAL_Y_VELOCITY, 2) - 2*Constants.FireControl.ACCELERATION*Constants.FireControl.HEIGHT);
-     //double xShootervelocity = (Constants.FireControl.ACCELERATION*distanceFromSpeaker)/(Constants.FireControl.FINAL_Y_VELOCITY - yShooterVelocity);
-     //shooterVelocity = Math
-       // .sqrt(Math.pow(yShooterVelocity, 2) + Math.pow(xShootervelocity, 2));  
-    shooterVelocity = Math
-        .sqrt((2 * Constants.FireControl.ACCELERATION * Constants.FireControl.HEIGHT) + Math.pow(xShootervelocity, 2)); // vector
-                                                                                                                        // sum
-                                                                                                                        // to
-                                                                                                                        // find
-                                                                                                                        // overall
-                                                                                                                        // shooter
-                                                                                                                        // velocity
-      //shooterAngle = Rotation2d.fromRadians(Math.atan(yShooterVelocity/xShootervelocity));                                                                                                                  
-    shooterAngle = Rotation2d.fromRadians(Math.atan(Constants.FireControl.ACCELERATION * distanceFromSpeaker)); // Finding the angle the shooter
-                                                                                        // needs to shoot into the
-                                                                                        // speaker from its current
-                                                                                        // position
-    altShooterAngle = Rotation2d.fromRadians(Constants.FireControl.HEIGHT/distanceFromSpeaker);
+    distanceToTarget = distanceFromSpeaker = shooterToSpeaker.getTranslation().getNorm() + Units.inchesToMeters(-6);
+    robotDesiredAngle = shooterToSpeaker.getTranslation().getAngle().minus(Rotation2d.fromDegrees(180));
     
+    shooterAngle = Rotation2d.fromRadians(Math.asin(Constants.FireControl.HEIGHT + 0.5 * Constants.FireControl.ACCELERATION));
 
+    shooterVelocity = Constants.FireControl.TARGET_VELOCITY_MPS;
+    double shooterConstant = (Constants.FireControl.ACCELERATION * distanceFromSpeaker * distanceFromSpeaker) / (2 * shooterVelocity * shooterVelocity);
+    double b = distanceFromSpeaker;
+    double a = -1 * shooterConstant;
+    double c = -1 * (shooterConstant + Constants.FireControl.HEIGHT);
+    Rotation2d firstOption = Rotation2d.fromRadians(Math.atan((-b + Math.sqrt(b * b - 4 * a * c)) / (2 * a)));
+    Rotation2d secondOption = Rotation2d.fromRadians(Math.atan((-b - Math.sqrt(b * b - 4 * a * c)) / (2 * a)));
+
+    if ((firstOption.getDegrees() >= 0) && (firstOption.getDegrees() <= 85.0)) {
+      shooterAngle = firstOption;
+    } else if ((secondOption.getDegrees() >= 0) && (secondOption.getDegrees() <= 85.0)) {
+      shooterAngle = secondOption;
+    } else {
+      shooterAngle = Rotation2d.fromDegrees(0);
+    }
+
+    SmartDashboard.putNumber("FireControl/Distance To Target", distanceFromSpeaker);
+    SmartDashboard.putNumber("FireControl/Robot Desired Angle", robotDesiredAngle.getDegrees());
   }
 
   private double shooterVelocity;
   private Rotation2d shooterAngle;
   private Rotation2d robotDesiredAngle;
   private Rotation2d altShooterAngle;
+  private double distanceToTarget;
+
+  public double getDistanceToTarget() {
+    return distanceToTarget;
+  }
 
   public double getVelocity() {
     return shooterVelocity;
@@ -108,12 +95,12 @@ public class FireControl extends SubsystemBase {
     return robotDesiredAngle;
   }
   public void setTargetMode(boolean track) {
-    if (RobotContainer.shooter.hasNote()) {
+    //if (RobotContainer.shooter.hasNote()) {
     this.trackTarget = track;
-    }
-    else {
-      this.trackTarget = false;
-    }
+    //}
+    //else {
+      //this.trackTarget = false;
+    //}
   }
   public boolean trackingTarget() {
     return trackTarget;

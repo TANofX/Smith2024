@@ -4,8 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class ShootInSpeaker extends Command {
@@ -19,9 +21,13 @@ public class ShootInSpeaker extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.intake.passGamePiece(Constants.FireControl.FINAL_Y_VELOCITY);
-
+    if (RobotContainer.shooter.hasNote()) {
+    RobotContainer.shooter.startMotorsForShooter(RobotContainer.fireControl.getVelocity());
+    System.out.println("Trying to start Shooter Motors");
+    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(10));
+  //RobotContainer.fireControl.setTargetMode(true);
   }
+}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -34,6 +40,6 @@ public class ShootInSpeaker extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
