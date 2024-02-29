@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class ElevatorToMin extends Command {
   /** Creates a new ElevatorToMin. */
   public ElevatorToMin() {
+    addRequirements(RobotContainer.elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

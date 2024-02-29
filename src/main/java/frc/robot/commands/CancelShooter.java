@@ -5,16 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 
-public class ReverseShooter extends Command {
-  /** Creates a new ReverseShooter. */
-  public ReverseShooter() {
+public class CancelShooter extends Command {
+  /** Creates a new CancelShooter. */
+  public CancelShooter() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    RobotContainer.shooter.stopMotors();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

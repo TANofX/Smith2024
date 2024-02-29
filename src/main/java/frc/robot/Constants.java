@@ -9,14 +9,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.util.FieldCalibration;
-import frc.robot.util.Util;
 import java.io.IOException;
 
 public final class Constants {
@@ -46,16 +41,17 @@ public final class Constants {
     public static final double maxRPM = 5700.0;
     public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
-    public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio * shooterIntakeWheelDiamater;
-     public static final double wristGearRatio = 47.0/18.0*100;
-     public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
-     public static final int maxWristMotorRPM = 6700;
-     public static final double maxElevationDegreesPerSecond = maxWristMotorRPM * ROTATION_DEGREES_PER_ROTATION / 60;
-     public static final int noteSensorChannel = 1;
-     public static final double shootInAmpAngle = -45; //Change pls???
-     public static final double meetIntakeAngle = 80.0;
-     public static final double allowedErrorInDegreesForAngle = 5.0; ///may change???
-     public static final double meetIntake = 80.0;
+    public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio
+        * shooterIntakeWheelDiamater;
+    public static final double wristGearRatio = 47 / 18 * 25; // 11.75/4.5*25;
+    public static final double ROTATION_DEGREES_PER_ROTATION = 360 / wristGearRatio;
+    public static final int maxWristMotorRPM = 6700;
+    public static final double maxElevationDegreesPerSecond = maxWristMotorRPM * ROTATION_DEGREES_PER_ROTATION / 60;
+    public static final int noteSensorChannel = 1;
+    public static final Rotation2d shootInAmpAngle = Rotation2d.fromDegrees(-45); // Change pls???
+    public static final Rotation2d SHOOT_IN_SPEAKER_AT_SUBWOOFER = Rotation2d.fromDegrees(50);
+    public static final Rotation2d SHOOT_AT_PODIUM = Rotation2d.fromDegrees(32);
+    public static final double allowedErrorInDegreesForAngle = 3.5; /// may change???
     public static final int elevationEncoderCANID = 41;
     public static final Rotation2d stowAngle = Rotation2d.fromDegrees(-179.5);
     public static final Rotation2d intakeAngle = Rotation2d.fromDegrees(42.0);
@@ -68,11 +64,11 @@ public final class Constants {
     public static final double shooterMotorD = 0.00;
     public static final double shooterMotorFeedForward = 0.00022;
     public static final double shooterMotorIZone = 200;
-    public static final double elevationMotorP = 0.00025;
+    public static final double elevationMotorP = 0.000125;
     public static final double elevationMotorI = 0.0000005;
     public static final double elevationMotorD = 0.000005;
     public static final double elevationMotorFeedForward = 0.0001;
-    public static final double elevationMaxVelocity = 4500;
+    public static final double elevationMaxVelocity = 4000;
     public static final double elevationMaxAcceleration = 4000;
     public static final double elevationAllowedClosedLoopError = 1 / ROTATION_DEGREES_PER_ROTATION;
 
@@ -85,28 +81,28 @@ public final class Constants {
 
   public static final class Intake {
 
-      public static final int intakeCANID = 20;
-      // public static final int pivotIntakeCANID = 20;
-      // public static final int intakeAngleSensor = 20;
-      public static final double gearRatio = 80/1;
-      public static final double countsPerMotorRevolution =  42;
-      public static final double countsPerRevolution = (gearRatio)*(countsPerMotorRevolution);
-      public static final double intakeAcceleration = 20.2;
-      public static final double degreesPerRevolution = 360.0;
-      public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
-      public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-      public static final double intakeGearRatio = 5/1;
-      public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
-      public static final double upPositionDegrees = 90;
-      public static final double downPositionDegrees = 0;
-      public static final int intakeNoteSensorChannel = 0;
-      public static final double allowedAngleErrorInDegrees = 1;
-      public static final double intakeMotorP = 0.000075;
-      public static final double intakeMotorI = 0.00000005;
-      public static final double intakeMotorD = 0.0;
-      public static final double intakeMotorPFeedForward = 0.0001;
+    public static final int intakeCANID = 20;
+    // public static final int pivotIntakeCANID = 20;
+    // public static final int intakeAngleSensor = 20;
+    public static final double gearRatio = 80 / 1;
+    public static final double countsPerMotorRevolution = 42;
+    public static final double countsPerRevolution = (gearRatio) * (countsPerMotorRevolution);
+    public static final double intakeAcceleration = 20.2;
+    public static final double degreesPerRevolution = 360.0;
+    public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
+    public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
+    public static final double intakeGearRatio = 5 / 1;
+    public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
+    public static final double upPositionDegrees = 90;
+    public static final double downPositionDegrees = 0;
+    public static final int intakeNoteSensorChannel = 0;
+    public static final double allowedAngleErrorInDegrees = 1;
+    public static final double intakeMotorP = 0.000075;
+    public static final double intakeMotorI = 0.00000005;
+    public static final double intakeMotorD = 0.0;
+    public static final double intakeMotorPFeedForward = 0.0001;
   }
-    
+
   public static final class Swerve {
     public static final int imuCanID = 3;
     public static final double maxVelTele = 4.7;
@@ -167,17 +163,19 @@ public final class Constants {
   public static final class FireControl {
     public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
-    public static final double HEIGHT = Units.inchesToMeters(80.13);
+    public static final double HEIGHT = Units.inchesToMeters(62.13);
     public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
-    public static final Pose2d BLUE_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(0),
-        Units.inchesToMeters(218.5), Rotation2d.fromDegrees(0.0));
-    public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(323.25),
-        Units.inchesToMeters(218.5), Rotation2d.fromDegrees(180));
-    // public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(8.3,4.1, Rotation2d.fromDegrees(0));
+    public static final Pose2d BLUE_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(-1.5),
+        Units.inchesToMeters(218.42), Rotation2d.fromDegrees(0.0));
+    public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(652.73),
+        Units.inchesToMeters(218.42), Rotation2d.fromDegrees(180));
+    // public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(8.3,4.1,
+    // Rotation2d.fromDegrees(0));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
         Rotation2d.fromDegrees(180));
+    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(7);
   }
 
   public static final class Elevator {
@@ -185,8 +183,8 @@ public final class Constants {
     public static final double METERS_PER_REV = .180;
     public static final int MOTOR_REV_PER_ROTATION = 100;
     public static final double METERS_PER_MOTOR_REV = METERS_PER_REV / MOTOR_REV_PER_ROTATION;
-    public static final double MAX_HEIGHT = -89; 
-    public static final double MIN_HEIGHT = 0.15; 
+    public static final double MAX_HEIGHT = -89;
+    public static final double MIN_HEIGHT = 0.15;
     public static final double elevatorMotorP = 0.00005;
     public static final double elevatorMotorI = 0.00;
     public static final double elevatorMotorD = 0.00;
@@ -195,7 +193,7 @@ public final class Constants {
     public static final double elevatorMotorMinVelocity = 0;
     public static final double elevatorMotorMaxVelocity = 5500;
     public static final double elevatorMotorMaxAcceleration = 10000;
-    public static final double elevatorMotorClosedLoppError = 2; 
+    public static final double elevatorMotorClosedLoppError = 2;
   }
 
   public static final class LEDStrip {

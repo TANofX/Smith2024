@@ -4,17 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class ShootInAmp extends Command {
   /** Creates a new ShootInAmp. */
   public ShootInAmp() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.shooter);
+    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist, RobotContainer.elevator);
 
   }
 
@@ -23,7 +21,6 @@ public class ShootInAmp extends Command {
   public void initialize() {
 
     if (RobotContainer.shooter.hasNote()) {
-      RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(Constants.Shooter.shootInAmpAngle));
       RobotContainer.shooter.startMotorsForShooter(5); //change pls??? also make constant pls
       RobotContainer.elevator.elevatorToMaxHeight();
     }
@@ -32,6 +29,8 @@ public class ShootInAmp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+     RobotContainer.shooterWrist.setElevation(Constants.Shooter.shootInAmpAngle);
+
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +41,6 @@ public class ShootInAmp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return RobotContainer.shooterWrist.isAtElevation() && RobotContainer.shooter.atSpeed();
   }
 }

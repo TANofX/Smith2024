@@ -17,7 +17,7 @@ public class ManualShooterElevation extends Command {
   public ManualShooterElevation(Supplier<Double> joystickInput) {
     // Use addRequirements() here to declare subsystem dependencies.
     control = joystickInput;
-    addRequirements(RobotContainer.shooter);
+    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +29,8 @@ public class ManualShooterElevation extends Command {
   @Override
   public void execute() {
     double degreesPerExecution = Constants.Shooter.maxElevationDegreesPerSecond * .05;
-    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(RobotContainer.shooter.getAbsoluteRotationDegrees() + degreesPerExecution * this.control.get()));
+    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(RobotContainer.shooterWrist.getAbsoluteRotationDegrees() + degreesPerExecution * this.control.get()));
+  
   }
 
   // Called once the command ends or is interrupted.

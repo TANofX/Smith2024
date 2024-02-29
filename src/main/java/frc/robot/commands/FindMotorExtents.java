@@ -4,18 +4,15 @@
 
 package frc.robot.commands;
 
-import com.fasterxml.jackson.databind.util.RootNameLookup;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class FindMotorExtents extends Command {
   /** Creates a new FindMotorExtents. */
   private boolean calibrating = false;
   private boolean extending = false;
-  private boolean lastExtention = false;
+  //private boolean lastExtention = false;
   private int loopVariable;
   private double maxSum;
   private double minSum;

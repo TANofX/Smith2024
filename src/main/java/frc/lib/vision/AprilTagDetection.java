@@ -4,6 +4,8 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.ComputerVisionUtil;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
+
 import java.util.Optional;
 
 public class AprilTagDetection {
@@ -39,7 +41,7 @@ public class AprilTagDetection {
    * @param robotPose Current robot pose on the field
    * @return Pose of the tag on the field
    */
-  public static Transform3d cameraToRobot;
+  public static Transform3d cameraToRobot = new Transform3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-12.0), Units.inchesToMeters(21.5), new Rotation3d(0,Units.degreesToRadians(34.26),Units.degreesToRadians(180)));
 
   public Pose3d getEstimatedTagPose(Transform3d cameraToRobot, Pose2d robotPose) {
     Transform3d robotToTag = getRobotToTag(cameraToRobot);

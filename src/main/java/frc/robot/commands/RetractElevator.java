@@ -11,6 +11,7 @@ public class RetractElevator extends Command {
   /** Creates a new RetractElevator. */
   public RetractElevator() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.elevator);
   }
 
   // Called when the command is initially scheduled.
