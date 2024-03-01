@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.pid.TunePositionController;
 import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.pid.TuneVelocitySparkPIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
@@ -64,6 +65,15 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   private static final double ROTATION_MAX_VELOCITY = 6700;
   private static final double ROTATION_MAX_ACCELERATION = 10000;
   private static final double ROTATION_ERROR = 0.05;
+
+  private static final double ROTATION_POSITION_KP = 3.0;
+  private static final double ROTATION_POSITION_KI = 0.0;
+  private static final double ROTATION_POSITION_KD = 1.0;
+  private static final double ROTATION_POSITION_I_ZONE = 0;
+  private static final double ROTATION_POSITION_FEED_FORWARD = 0.0;
+  private static final double ROTATION_POSITION_MAX_VELOCITY = 0;
+  private static final double ROTATION_POSITION_MAX_ACCELERATION = 0;
+  private static final double ROTATION_POSITION_ERROR = 0.5;
 
   public final ModuleCode moduleCode;
   // private final LinearSystemSim<N1, N1, N1> driveSim;
@@ -124,11 +134,11 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     rotationMotor = new CANSparkFlex(rotationMotorCanID, MotorType.kBrushless);
     rotationMotor.setInverted(true);
     rotationMotor.setIdleMode(IdleMode.kBrake);
-    rotationMotor.getPIDController().setP(ROTATION_KP);
-    rotationMotor.getPIDController().setI(ROTATION_KI);
-    rotationMotor.getPIDController().setIZone(ROTATION_I_ZONE);
-    rotationMotor.getPIDController().setD(ROTATION_KD);
-    rotationMotor.getPIDController().setFF(ROTATION_FEED_FORWARD);
+    rotationMotor.getPIDController().setP(ROTATION_KP, 0);
+    rotationMotor.getPIDController().setI(ROTATION_KI, 0);
+    rotationMotor.getPIDController().setIZone(ROTATION_I_ZONE, 0);
+    rotationMotor.getPIDController().setD(ROTATION_KD, 0);
+    rotationMotor.getPIDController().setFF(ROTATION_FEED_FORWARD, 0);
     rotationMotor.getPIDController().setSmartMotionMaxVelocity(ROTATION_MAX_VELOCITY, 0);
     rotationMotor.getPIDController().setSmartMotionMaxAccel(ROTATION_MAX_ACCELERATION, 0);
     rotationMotor.getPIDController().setSmartMotionAllowedClosedLoopError(ROTATION_ERROR, 0);
@@ -137,6 +147,14 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     rotationAbsoluteSignal = rotationEncoder.getAbsolutePosition();
     rotationAbsoluteVelSignal = rotationEncoder.getVelocity();
 
+    rotationMotor.getPIDController().setP(ROTATION_POSITION_KP, 1);
+    rotationMotor.getPIDController().setI(ROTATION_POSITION_KI, 1);
+    rotationMotor.getPIDController().setIZone(ROTATION_POSITION_I_ZONE, 1);
+    rotationMotor.getPIDController().setD(ROTATION_POSITION_KD, 1);
+    rotationMotor.getPIDController().setFF(ROTATION_POSITION_FEED_FORWARD, 1);
+    rotationMotor.getPIDController().setSmartMotionMaxVelocity(ROTATION_POSITION_MAX_VELOCITY, 1);
+    rotationMotor.getPIDController().setSmartMotionMaxAccel(ROTATION_POSITION_MAX_ACCELERATION, 1);
+    rotationMotor.getPIDController().setSmartMotionAllowedClosedLoopError(ROTATION_POSITION_ERROR, 1);
     // driveSim = new
     // LinearSystemSim<>(LinearSystemId.identifyVelocitySystem(DRIVE_KV, DRIVE_KA));
     // rotationSim =
@@ -224,7 +242,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     }
 
     REVLibError rotationError = rotationMotor.getPIDController()
-        .setReference(targetAngle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
+        .setReference(targetAngle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition, 1);
     if (rotationError != REVLibError.kOk) {
       addFault(
           "[Rotation Motor]: Status code: "
@@ -353,7 +371,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     // MAYBE? .setRotorControl
     driveMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.stopMotor();
-    rotationMotor.getPIDController().setReference(angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition);
+    rotationMotor.getPIDController().setReference(angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition, 1);
   }
 
   public SwerveModuleState getTargetState() {
@@ -397,7 +415,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
               }
               double angle = getRelativeRotationDegrees() + deltaRot;
               rotationMotor.getPIDController().setReference(
-                  angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
+                  angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition, 1);
             },
             this)
             .withTimeout(1.0),
@@ -437,7 +455,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
               }
               double angle = getRelativeRotationDegrees() + deltaRot;
               rotationMotor.getPIDController().setReference(
-                  angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kSmartMotion, 0);
+                  angle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition, 1);
             },
             this)
             .withTimeout(1.0),
@@ -458,5 +476,8 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
 
   public Command getSteerTunerCommand() {
     return new TuneSmartMotionControl("Steer Motors", rotationMotor, this);
+  }
+  public Command getPositionTunerCommand() {
+    return new TunePositionController("Position Motors", rotationMotor, this);
   }
 }

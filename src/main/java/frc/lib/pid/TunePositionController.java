@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class TunePositionController extends TuneSparkPIDController {
 
     public TunePositionController(String motorName, CANSparkBase sparkMotor, Subsystem motorOwner) {
-        super(motorName, sparkMotor, motorOwner);
+        super(motorName, sparkMotor, motorOwner, 1);
     }
 
     private double targetPosition;
@@ -32,10 +32,13 @@ public class TunePositionController extends TuneSparkPIDController {
         super.execute();
 
         double target = SmartDashboard.getNumber(name + " Target Position", 0.0);
-        if (target != targetPosition) { pidController.setReference(target, ControlType.kPosition); targetPosition = target; }
+    
+        if (target != targetPosition) { pidController.setReference(target, ControlType.kPosition, pidSlot); targetPosition = target; }
         double error = (target-encoder.getPosition())/target;
         
         SmartDashboard.putNumber(name + " Current Position", encoder.getPosition());
         SmartDashboard.putNumber(name + " Percent Error", error);
+
+        SmartDashboard.putNumber(name + " Output Voltage", tuningController.getAppliedOutput());
     }
 }

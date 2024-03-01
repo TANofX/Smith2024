@@ -103,6 +103,7 @@ public class Swerve extends AdvancedSubsystem {
     SteerTuner.addRequirements(this);
     SmartDashboard.putData("Tune Drive Motor", DriveTuner);
     SmartDashboard.putData("Tune Steer Motor", SteerTuner);
+    SmartDashboard.putData("Tune Steer Motor Position", modules[1].getPositionTunerCommand());
 
     kinematics = new SwerveDriveKinematics(
         Constants.Swerve.FrontLeftModule.moduleOffset,
