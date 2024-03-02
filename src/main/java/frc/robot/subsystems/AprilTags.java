@@ -27,6 +27,7 @@ public class AprilTags extends SubsystemBase {
 
   final PhotonCamera photonCamera = new PhotonCamera("Global_Shutter_Camera");
   final Field2d aprilField = new Field2d();
+
   /** Creates a new AprilTag. */
   public AprilTags() {
     SmartDashboard.putData("April Field", aprilField);
@@ -37,19 +38,19 @@ public class AprilTags extends SubsystemBase {
   public void periodic() {
     final PhotonPipelineResult result = photonCamera.getLatestResult();
 
-
     if (result.hasTargets()) {
       // final PhotonTrackedTarget bestTarget = result.getBestTarget();
       // final int id = bestTarget.getFiducialId();
-      double latency = result.getLatencyMillis();
-      double startTime = Timer.getFPGATimestamp();
-      double timerTime = (Timer.getFPGATimestamp() - startTime) * 1000;
-      double timestamp = timerTime - latency;
-      double maxAge = 0.0;
+      // double latency = result.getLatencyMillis();
+      // double startTime = Timer.getFPGATimestamp();
+      // double timerTime = (Timer.getFPGATimestamp() - startTime) * 1000;
+      // double timestamp = timerTime - latency;
+      // double maxAge = 0.0;
 
       Optional<Pose3d> tagPose = Constants.apriltagLayout.getTagPose(result.getBestTarget().getFiducialId());
 
       if (tagPose.isPresent()) {
+        var imageCaptureTime = result.getTimestampSeconds();
         Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
             result.getBestTarget().getBestCameraToTarget(),
             tagPose.get(),
@@ -58,7 +59,8 @@ public class AprilTags extends SubsystemBase {
         RobotPoseLookup<Pose3d> AprilTagLookup = new RobotPoseLookup<Pose3d>();
         AprilTagLookup.addPose(robotPose);
         aprilField.setRobotPose(robotPose.toPose2d());
-      } 
+        RobotContainer.swerve.odometry.addVisionMeasurement(robotPose.toPose2d(), imageCaptureTime);
+      }
     }
   }
 }

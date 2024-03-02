@@ -93,7 +93,7 @@ public class RobotContainer {
     driver.RT().whileTrue(new IntakeNote());
     driver.LB().whileTrue(new ReverseIntake());
     driver.Y().onTrue(new SafePosition());
-    driver.A().whileTrue(new RobotFaceSpeaker());
+      driver.A().whileTrue(new RobotFaceSpeaker());
     driver.X().onTrue((new ShootInSpeaker().andThen(new ShooterIntake()).andThen(Commands.waitSeconds(.5))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
        shooter.stopMotors();
       }, shooter)))));

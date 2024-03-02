@@ -73,7 +73,9 @@ public class ShooterWrist extends AdvancedSubsystem {
     //tells us what angle we are at
   }
   public void setElevation(Rotation2d elevation) {
-    double angleOfElevation = (elevation.getDegrees() * -1.0) / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
+    double actualAngle = elevation.getDegrees() - getAbsoluteRotationDegrees();
+    double shooterElevationOffset = actualAngle/ Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
+   double angleOfElevation = rotationAbsoluteSignal.getValue() + shooterElevationOffset;
     targetElevation = elevation.getDegrees();
     elevationController.setReference(angleOfElevation,ControlType.kSmartMotion, 0);
   }

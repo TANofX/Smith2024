@@ -2,7 +2,7 @@
   "tabPane": [
     {
       "title": "Intake Pivot",
-      "autoPopulate": true,
+      "autoPopulate": false,
       "autoPopulatePrefix": "SmartDashboard/",
       "widgetPane": {
         "gridSize": 128.0,
@@ -910,6 +910,169 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Steer Position",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "3,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "PID Control",
+              "_glyph": 149,
+              "_showGlyph": false,
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Position Motors P Gain",
+                  "_title": "P Gain",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Position Motors I Gain",
+                  "_title": "I Gain",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Position Motors D Gain",
+                  "_title": "D Gain",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Position Motors I Zone",
+                  "_title": "I Zone",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Position Motors Feed Forward",
+                  "_title": "Feed Forward",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Position Motors Min Output",
+                  "_title": "Min Output",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Position Motors Max Output",
+                  "_title": "Max Output",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                }
+              ]
+            }
+          },
+          "0,0": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Position Motors Current Position",
+              "_source1": "network_table:///SmartDashboard/Position Motors Target Position",
+              "_title": "Process Variable",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/Position Motors Current Position": true,
+              "Visible data/SmartDashboard/Position Motors Target Position": true
+            }
+          },
+          "5,1": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Graph",
+              "_source0": "network_table:///SmartDashboard/Position Motors Output Voltage",
+              "_title": "Output",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Graph/Visible time": 30.0,
+              "Graph/X-axis auto scrolling": true,
+              "Y-axis/Automatic bounds": true,
+              "Y-axis/Upper bound": 1.0,
+              "Y-axis/Lower bound": -1.0,
+              "Y-axis/Unit": "ul",
+              "Visible data/SmartDashboard/Position Motors Output Voltage": true
+            }
+          },
+          "5,0": {
+            "size": [
+              4,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Position Motors Target Position",
+              "_title": "Set Position",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": -10.5,
+              "Slider Settings/Max": 10.5,
+              "Slider Settings/Block increment": 0.25,
+              "Visuals/Display value": true
+            }
+          },
+          "8,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Tune Steer Motor Position",
+              "_title": "SmartDashboard/Tune Steer Motor Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Position Motors Percent Error",
+              "_title": "SmartDashboard/Position Motors Percent Error",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
@@ -2854,9 +3017,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Steer Motors Process Variable": true,
-              "Visible data/SmartDashboard/Steer Motors SetPoint": true
+              "Y-axis/Unit": "ul"
             }
           },
           "0,3": {
@@ -2875,8 +3036,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Steer Motors Output": true
+              "Y-axis/Unit": "ul"
             }
           },
           "5,1": {
@@ -3060,7 +3220,7 @@
               "_title": "Field",
               "_glyph": 148,
               "_showGlyph": false,
-              "Game/Game": "k2024Crescendo",
+              "Game/Game": "A2023_Charged_Up",
               "Visuals/Robot Icon Size": 50.0,
               "Visuals/Show Outside Circles": false
             }
@@ -3292,9 +3452,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Drive Motors Current Velocity": true,
-              "Visible data/SmartDashboard/Drive Motors Target Velocity": true
+              "Y-axis/Unit": "ul"
             }
           },
           "0,3": {
@@ -3313,8 +3471,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Drive Motors Output Voltage": true
+              "Y-axis/Unit": "ul"
             }
           },
           "5,0": {
@@ -3457,7 +3614,7 @@
               "_title": "Field",
               "_glyph": 148,
               "_showGlyph": false,
-              "Game/Game": "k2024Crescendo",
+              "Game/Game": "A2023_Charged_Up",
               "Visuals/Robot Icon Size": 50.0,
               "Visuals/Show Outside Circles": false
             }
