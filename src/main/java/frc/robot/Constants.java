@@ -111,6 +111,10 @@ public final class Constants {
     public static final double maxAngularAccelTele = Units.degreesToRadians(540);
     public static final double teleAngleHoldFactor = 3.0;
 
+    public static final double SPEAKER_CONTROLLER_kP = 1.0;
+    public static final double SPEAKER_CONTROLLER_kI = 0.0;
+    public static final double SPEAKER_CONTROLLER_kD = 0.01;
+
     public static final class Odometry {
       public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);
       public static final Matrix<N3, N1> visionStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
