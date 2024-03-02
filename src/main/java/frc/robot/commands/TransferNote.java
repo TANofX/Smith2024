@@ -11,8 +11,7 @@ public class TransferNote extends Command {
   /** Creates a new TransferNote. */
   public TransferNote() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.intake);
-    addRequirements(RobotContainer.shooter);
+    addRequirements(RobotContainer.intake, RobotContainer.shooter);
   }
 
   // Called when the command is initially scheduled.

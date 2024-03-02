@@ -22,6 +22,8 @@ public class TuneSparkPIDController extends Command {
 
   protected String name;
 
+  protected int pidSlot = 0;
+
   /** Creates a new TuneSparkPIDController. */
   public TuneSparkPIDController(String motorName, CANSparkBase sparkMotor, Subsystem motorOwner) {
     tuningController = sparkMotor;
@@ -33,16 +35,21 @@ public class TuneSparkPIDController extends Command {
     addRequirements(motorOwner);
   }
 
+  public TuneSparkPIDController(String motorName, CANSparkBase sparkMotor, Subsystem motorOwner, int slot) {
+    this(motorName, sparkMotor, motorOwner);
+
+    pidSlot = slot;
+  }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    kP = pidController.getP();
-    kI = pidController.getI();
-    kD = pidController.getD();
-    kFF = pidController.getFF();
-    kiZ = pidController.getIZone();
-    kMin = pidController.getOutputMin();
-    kMax = pidController.getOutputMax();
+    kP = pidController.getP(pidSlot);
+    kI = pidController.getI(pidSlot);
+    kD = pidController.getD(pidSlot);
+    kFF = pidController.getFF(pidSlot);
+    kiZ = pidController.getIZone(pidSlot);
+    kMin = pidController.getOutputMin(pidSlot);
+    kMax = pidController.getOutputMax(pidSlot);
 
     SmartDashboard.putNumber(name + " P Gain", kP);
     SmartDashboard.putNumber(name + " I Gain", kI);
@@ -64,13 +71,13 @@ public class TuneSparkPIDController extends Command {
     double min = SmartDashboard.getNumber(name + " Min Output", 0);
     double max = SmartDashboard.getNumber(name + " Max Output", 0);
 
-    if (p != kP) { pidController.setP(p); kP = p; }
-    if (i != kI) { pidController.setI(i); kI = i; }
-    if (d != kD) { pidController.setD(d); kD = d; }
-    if (iz != kiZ) { pidController.setIZone(iz); kiZ = iz; }
-    if (ff != kFF) { pidController.setFF(ff); kFF = ff; }
+    if (p != kP) { pidController.setP(p, pidSlot); kP = p; }
+    if (i != kI) { pidController.setI(i, pidSlot); kI = i; }
+    if (d != kD) { pidController.setD(d, pidSlot); kD = d; }
+    if (iz != kiZ) { pidController.setIZone(iz, pidSlot); kiZ = iz; }
+    if (ff != kFF) { pidController.setFF(ff, pidSlot); kFF = ff; }
     if ((max != kMax) || (min != kMin)) {
-      pidController.setOutputRange(min, max);
+      pidController.setOutputRange(min, max, pidSlot);
       kMin = min;
       kMax = max;
     }

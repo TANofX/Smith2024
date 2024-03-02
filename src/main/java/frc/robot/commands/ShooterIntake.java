@@ -4,35 +4,42 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 
-public class ElevatorToMax extends Command {
-  /** Creates a new ElevatorToMax. */
-  public ElevatorToMax() {
-    addRequirements(RobotContainer.elevator);
+public class ShooterIntake extends Command {
+  /** Creates a new ShooterIntake. */
+  public ShooterIntake() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.elevator.elevatorToMaxHeight();
+    if (!RobotContainer.shooter.hasNote()) {
+      RobotContainer.shooter.intakeAtSpeed(0.2);
+    }
+    RobotContainer.shooter.startMotorsForShooter(22);
+    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(10));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(10));
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    RobotContainer.shooter.stopIntakeMotor();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return RobotContainer.shooter.hasNote() & RobotContainer.shooterWrist.isAtElevation();
   }
 }

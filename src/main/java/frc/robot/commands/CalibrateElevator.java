@@ -10,6 +10,7 @@ import frc.robot.RobotContainer;
 public class CalibrateElevator extends Command {
   /** Creates a new calibrateElevator. */
   public CalibrateElevator() {
+    addRequirements(RobotContainer.elevator);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

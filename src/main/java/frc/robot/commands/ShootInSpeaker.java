@@ -4,15 +4,13 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 public class ShootInSpeaker extends Command {
   /** Creates a new PassNoteFromIntakeToSpeaker. */
   public ShootInSpeaker() {
+    addRequirements(RobotContainer.shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -24,14 +22,15 @@ public class ShootInSpeaker extends Command {
     if (RobotContainer.shooter.hasNote()) {
     RobotContainer.shooter.startMotorsForShooter(RobotContainer.fireControl.getVelocity());
     System.out.println("Trying to start Shooter Motors");
-    RobotContainer.shooter.setElevation(Rotation2d.fromDegrees(10));
   //RobotContainer.fireControl.setTargetMode(true);
   }
 }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    
+  }
 
   // Called once the command ends or is interrupted.
   @Override

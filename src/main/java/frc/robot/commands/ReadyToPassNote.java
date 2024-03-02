@@ -4,31 +4,30 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.Shooter;
 
 
 public class ReadyToPassNote extends Command {
   /** Creates a new ReadyToPassNote. */
   public ReadyToPassNote() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.intake);
-    addRequirements(RobotContainer.shooter);
+    addRequirements(RobotContainer.shooterWrist);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Moving Intake");
-    RobotContainer.shooter.setElevation(Constants.Shooter.intakeAngle);
+   
+    RobotContainer.shooterWrist.setElevation(Constants.Shooter.intakeAngle);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // Called every time the scheduler runs while the command is sRotation2d.frcheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    RobotContainer.shooterWrist.setElevation(Constants.Shooter.intakeAngle);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,6 +38,6 @@ public class ReadyToPassNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.shooter.isAtElevation();
+    return RobotContainer.shooterWrist.isAtElevation();
   }
 }

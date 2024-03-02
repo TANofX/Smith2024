@@ -17,23 +17,22 @@ public class IntakeNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //RobotContainer.intake.intakeGamePiece();
-    RobotContainer.intake.runIntakeMotor(1.0);
+
+    RobotContainer.intake.intakeGamePiece();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("This is wrong.");
+    System.out.println("intake is intaking.");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     RobotContainer.intake.stopIntakeMotor();
+  
   }
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return RobotContainer.intake.hasNote();
