@@ -20,6 +20,14 @@ public class TunablePIDSet implements TunablePID {
 
     public void add(TunablePID pid) {
         pidList.add(pid);
+
+        kP = pid.getP();
+        kI = pid.getI();
+        kD = pid.getD();
+        kFF = pid.getFF();
+        kIZone = pid.getIZone();
+        minValue = pid.getOutputMin();
+        maxValue = pid.getOutputMax();
     }
 
     @Override

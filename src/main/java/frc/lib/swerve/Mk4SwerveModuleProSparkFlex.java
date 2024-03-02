@@ -68,9 +68,9 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   private static final double ROTATION_MAX_ACCELERATION = 10000;
   private static final double ROTATION_ERROR = 0.05;
 
-  private static final double ROTATION_POSITION_KP = 3.0;
+  private static final double ROTATION_POSITION_KP = 1.0;
   private static final double ROTATION_POSITION_KI = 0.0;
-  private static final double ROTATION_POSITION_KD = 1.0;
+  private static final double ROTATION_POSITION_KD = 0.0;
   private static final double ROTATION_POSITION_I_ZONE = 0;
   private static final double ROTATION_POSITION_FEED_FORWARD = 0.0;
   private static final double ROTATION_POSITION_MAX_VELOCITY = 0;
@@ -256,7 +256,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
           "[Drive Motor]: Status code: "
               + driveError.name());
     }
-
+if (Math.abs(deltaRot) > 0.05) {
     REVLibError rotationError = rotationMotor.getPIDController()
         .setReference(targetAngle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition, 1);
     if (rotationError != REVLibError.kOk) {
@@ -265,6 +265,10 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
               + rotationError.name());
     }
   }
+  else {
+    rotationMotor.stopMotor();
+  }
+}
 
   /** Stop all motors */
   public void stopMotors() {

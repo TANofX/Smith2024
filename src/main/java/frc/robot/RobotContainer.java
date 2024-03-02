@@ -14,6 +14,7 @@ import frc.lib.input.controllers.XboxControllerWrapper;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.AtRedSubWoofer;
 import frc.robot.commands.CalibrateElevator;
+import frc.robot.commands.ClimbPosition;
 import frc.robot.commands.ElevateShooter;
 import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
@@ -94,6 +95,7 @@ public class RobotContainer {
         Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
           shooter.stopMotors();
         }, shooter))))));
+        driver.DUp().onTrue(new ClimbPosition());
 
     coDriver.X().onTrue(new ElevatorToMin());
     coDriver.A().onTrue(new ElevatorToMax());

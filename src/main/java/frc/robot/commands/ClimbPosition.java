@@ -4,38 +4,37 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 
-public class TransferNote extends Command {
-  /** Creates a new TransferNote. */
-  public TransferNote() {
+public class ClimbPosition extends Command {
+  /** Creates a new ClimbPosition. */
+  public ClimbPosition() {
+    addRequirements(RobotContainer.shooterWrist, RobotContainer.elevator);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.intake, RobotContainer.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //RobotContainer.intake.passGamePiece(0.5);
-    RobotContainer.intake.passGamePiece(1.0);
-    RobotContainer.shooter.intakeAtSpeed(0.05);
+   
+    RobotContainer.elevator.elevatorToMaxHeight();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+     RobotContainer.shooterWrist.setElevation(Rotation2d.fromDegrees(-90));
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    RobotContainer.shooter.stopIntakeMotor();
-    RobotContainer.intake.stopIntakeMotor();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return RobotContainer.shooter.hasNote();
-  }
+    return RobotContainer.shooterWrist.isAtElevation();
+}
 }
