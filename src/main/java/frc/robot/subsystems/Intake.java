@@ -38,17 +38,17 @@ public class Intake extends AdvancedSubsystem {
   }
 
   public void reverseIntake() {
-    intakeController.setReference(6000, ControlType.kVelocity);
+    intakeController.setReference(-4000, ControlType.kVelocity);
     // runIntakeMotor(-1.0);
   }
 
   public void intakeGamePiece() {
-    intakeController.setReference(-6000, ControlType.kVelocity);
+    intakeController.setReference(4000, ControlType.kVelocity);
     // runIntakeMotor(1.0);
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
-    double speedInRPM = -1 * speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
+    double speedInRPM = 1 * speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
         * Constants.Intake.intakeGearRatio;
 
     intakeController.setReference(speedInRPM, ControlType.kVelocity);
