@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -18,7 +18,7 @@ import frc.robot.util.NoteSensor;
 
 public class Intake extends AdvancedSubsystem {
 
-  private final CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.intakeCANID, MotorType.kBrushless);
+  private final CANSparkFlex intakeMotor = new CANSparkFlex(Constants.Intake.intakeCANID, MotorType.kBrushless);
   // private final CANSparkMax pivotIntakeMotor = new
   // CANSparkMax(Constants.Intake.pivotIntakeCANID, MotorType.kBrushless);
   // private final SparkPIDController pivotController =
