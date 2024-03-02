@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.pid.TunablePID;
+import frc.lib.pid.TunableSparkPIDController;
 import frc.lib.pid.TunePositionController;
 import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.pid.TuneVelocitySparkPIDController;
@@ -93,6 +95,9 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
 
   private SwerveModuleState targetState = new SwerveModuleState();
 
+  private final TunablePID steerTunable;
+  private final TunablePID driveTunable;
+
   /**
    * Create a Mk4 swerve module
    *
@@ -161,6 +166,9 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     // new LinearSystemSim<>(LinearSystemId.identifyPositionSystem(ROTATION_KV,
     // ROTATION_KA));
 
+    steerTunable = new TunableSparkPIDController(rotationMotor.getPIDController(), 1);
+    driveTunable = new TunableSparkPIDController(driveMotor.getPIDController(), 0);
+
     registerHardware("Drive Motor", driveMotor);
     registerHardware("Rotation Motor", rotationMotor);
     registerHardware("Rotation Encoder", rotationEncoder);
@@ -170,12 +178,26 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   public void periodic() {
     SmartDashboard.putNumber(getName() + "/DriveTemp", driveMotor.getMotorTemperature());
     SmartDashboard.putNumber(getName() + "/RotationTemp", rotationMotor.getMotorTemperature());
+    SmartDashboard.putNumber(getName() + "/DriveOutput", driveMotor.getAppliedOutput());
+    SmartDashboard.putNumber(getName() + "/DriveTarget", targetState.speedMetersPerSecond);
+    SmartDashboard.putNumber(getName() + "/DriveActual", getDriveVelocityMetersPerSecond());
+    SmartDashboard.putNumber(getName() + "/SteerOutput", rotationMotor.getAppliedOutput());
+    SmartDashboard.putNumber(getName() + "/SteerTarget", targetState.angle.getDegrees());
+    SmartDashboard.putNumber(getName() + "/SteerActual", getAbsoluteRotationDegrees());
 
     // Refresh cached values in background
     StatusSignal.waitForAll(
         0,
         rotationAbsoluteSignal,
         rotationAbsoluteVelSignal);
+  }
+
+  public TunablePID getSteerTunablePID() {
+    return steerTunable;
+  }
+
+  public TunablePID getDriveTunablePID() {
+    return driveTunable;
   }
 
   @Override
@@ -226,12 +248,6 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
       deltaRot += 360;
     }
     double targetAngle = getRelativeRotationDegrees() + deltaRot;
-
-    SmartDashboard.putNumber(getName() + "/Target Angle", targetAngle);
-    SmartDashboard.putNumber(getName() + "/Delta Rotation", deltaRot);
-    SmartDashboard.putNumber(getName() + "/Absolute Rotation", getAbsoluteRotationDegrees());
-    SmartDashboard.putNumber(getName() + "/Relative Rotation", getRelativeRotationDegrees());
-    SmartDashboard.putNumber(getName() + "/Target Rotations", (targetAngle / ROTATION_DEGREES_PER_ROTATION));
 
     REVLibError driveError = driveMotor.getPIDController()
         .setReference(60 * targetState.speedMetersPerSecond / DRIVE_METERS_PER_ROTATION, ControlType.kVelocity, 0);
@@ -468,16 +484,5 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
             this))
         .until(() -> getFaults().size() > 0)
         .andThen(Commands.runOnce(this::stopMotors, this));
-  }
-
-  public Command getDriveTunerCommand() {
-    return new TuneVelocitySparkPIDController("Drive Motors", driveMotor, this);
-  }
-
-  public Command getSteerTunerCommand() {
-    return new TuneSmartMotionControl("Steer Motors", rotationMotor, this);
-  }
-  public Command getPositionTunerCommand() {
-    return new TunePositionController("Position Motors", rotationMotor, this);
   }
 }
