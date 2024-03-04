@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import java.util.Optional;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,7 +16,6 @@ public class SwerveDriveWithGamepad extends Command {
   private final SlewRateLimiter xVelLimiter;
   private final SlewRateLimiter yVelLimiter;
   private final SlewRateLimiter angularVelLimiter;
-  private final PIDController speakerController;
 
   private Rotation2d rotationTarget = null;
   private final double rotationHoldFactor;
@@ -31,7 +28,6 @@ public class SwerveDriveWithGamepad extends Command {
     this.angularVelLimiter = new SlewRateLimiter(Constants.Swerve.maxAngularAccelTele);
     this.rotationHoldFactor = Constants.Swerve.teleAngleHoldFactor;
     this.aimAtGamePiece = aimAtGamePiece;
-    this.speakerController = new PIDController(1.0, 0, 0.01); //MAKE CONSTANTS
     addRequirements(RobotContainer.swerve);
   }
 
@@ -65,17 +61,7 @@ public class SwerveDriveWithGamepad extends Command {
     }
     double rot;
     if (RobotContainer.fireControl.trackingTarget()) {
-      double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());
-      double target = MathUtil.angleModulus(RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
-      if (Math.abs(target - measurement) > Math.PI) {
-        if (measurement < (-Math.PI / 2.0)) {
-          target -= 2 * Math.PI;
-        } else {
-          target += 2 * Math.PI;
-        }
-      }
-      rot = speakerController.calculate(measurement, target);
-      rot = MathUtil.clamp(rot, -1, 1);
+      rot = RobotContainer.fireControl.getRequiredRotation();
     }
     else {
     rot = -RobotContainer.driver.getRightX();
