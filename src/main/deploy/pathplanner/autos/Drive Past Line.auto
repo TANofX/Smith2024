@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
+      "x": 1.2,
       "y": 2.5
     },
     "rotation": 0
@@ -14,13 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "C to piece 8"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Piece 8 to piece 7"
+            "pathName": "Pass Line"
           }
         }
       ]

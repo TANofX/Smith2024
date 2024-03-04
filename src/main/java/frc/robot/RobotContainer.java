@@ -3,6 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -43,7 +46,7 @@ public class RobotContainer {
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
 
   // Auto choser
-  //private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
   // Subsystems
   public static final Swerve swerve = new Swerve();// new Swerve();
@@ -84,8 +87,23 @@ public class RobotContainer {
       swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));
     }, swerve));
     SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
+
+    // Register Named Commands for pathplanner
+    NamedCommands.registerCommand("ShootInSpeaker", new ShootInSpeaker());
+    NamedCommands.registerCommand("RunIntake", new IntakeNote());
+    NamedCommands.registerCommand("Shoot", new Shoot());
+    // NamedCommands.registerCommand("", );
+
+
+    // create auto chooser
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
   
+  // return the selected auto to getAutonomous
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 
   private void configureButtonBindings() {
 
