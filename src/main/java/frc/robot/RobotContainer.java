@@ -92,29 +92,29 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     
-    driver.LT().whileTrue(new RunIntake());
+    //driver.LT().whileTrue(new RunIntake());
  
-    driver.LB().whileTrue(new ReverseIntake());
+    driver.LB().onTrue(new ElevatorToMin());
     
-    driver.Y().onTrue(new SafePosition());
-    driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
-    driver.X().onTrue(new ShooterIntake().andThen(
-        Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-          shooter.stopMotors();
-        }, shooter))))));
+    //driver.Y().onTrue(new SafePosition());
+    //driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
+    driver.X().whileTrue(new ReverseIntake());
+        //Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+          //shooter.stopMotors();
+       // }, shooter))))));
     driver.RT().whileTrue(new ConditionalCommand(new IntakeNote(), (new IntakeNote().alongWith(new ReadyToPassNote())).andThen(new TransferNote()), shooterWrist::isStowed));
-    coDriver.X().onTrue(new ElevatorToMin());
-    coDriver.RB().onTrue((new ReadyToPassNote()).andThen(new TransferNote()));
-        coDriver.A().onTrue(new ElevatorToMax());
-    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-      shooter.stopMotors();
-    }, shooter))));
+    //coDriver.X().onTrue(new ElevatorToMin());
+    coDriver.RB().onTrue(new TransferNote());
+    //coDriver.A().onTrue(new ElevatorToMax());
+    //coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+     // shooter.stopMotors();
+    //}, shooter))));
     coDriver.LB().onTrue(new CalibrateElevator());
     coDriver.DUp().whileTrue(new ExtendElevator());
     coDriver.DDown().whileTrue(new RetractElevator());
     coDriver.LT().onTrue(new ShootInAmp());
-    coDriver.RT().onTrue(new ShootInSpeaker());
-    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    coDriver.RT().onTrue(new TransferNote().andThen(new ShootInSpeaker()).andThen(new Shoot()));
+    //coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
     
     coDriver.START()
         .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
