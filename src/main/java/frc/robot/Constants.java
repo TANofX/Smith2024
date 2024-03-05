@@ -93,7 +93,7 @@ public final class Constants {
     public static final double degreesPerRevolution = 360.0;
     public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
     public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-    public static final double intakeGearRatio = 5 / 1;
+    public static final double intakeGearRatio = 4 / 1;
     public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
     public static final double upPositionDegrees = 90;
     public static final double downPositionDegrees = 0;
@@ -127,6 +127,10 @@ public final class Constants {
     public static final double maxAngularVelTele = Units.degreesToRadians(180);
     public static final double maxAngularAccelTele = Units.degreesToRadians(540);
     public static final double teleAngleHoldFactor = 3.0;
+
+    public static final double SPEAKER_CONTROLLER_kP = 1.0;
+    public static final double SPEAKER_CONTROLLER_kI = 0.0;
+    public static final double SPEAKER_CONTROLLER_kD = 0.01;
 
     public static final class Odometry {
       public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);

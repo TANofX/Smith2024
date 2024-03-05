@@ -61,8 +61,10 @@ public class AprilTags extends SubsystemBase {
         RobotPoseLookup<Pose3d> AprilTagLookup = new RobotPoseLookup<Pose3d>();
         AprilTagLookup.addPose(robotPose);
         aprilField.setRobotPose(robotPose.toPose2d());
+        if (passedTarget.getPoseAmbiguity() < 0.25) {
         RobotContainer.swerve.odometry.addVisionMeasurement(robotPose.toPose2d(), imageCaptureTime);
       }
+    }
     }
   }
 }

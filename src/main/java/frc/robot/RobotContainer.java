@@ -16,6 +16,7 @@ import frc.lib.input.controllers.XboxControllerWrapper;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.AtRedSubWoofer;
 import frc.robot.commands.CalibrateElevator;
+import frc.robot.commands.ClimbPosition;
 import frc.robot.commands.ElevateShooter;
 import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
