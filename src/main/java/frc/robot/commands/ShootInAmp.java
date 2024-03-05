@@ -24,6 +24,7 @@ public class ShootInAmp extends Command {
       RobotContainer.shooter.startMotorsForShooter(5); //change pls??? also make constant pls
       RobotContainer.elevator.elevatorToMaxHeight();
     }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
