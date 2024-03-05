@@ -22,6 +22,8 @@ import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
 
+import frc.robot.RobotContainer;
+
 public class ShooterWrist extends AdvancedSubsystem {
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);
   private final SparkPIDController elevationController = elevationMotor.getPIDController();
@@ -96,7 +98,9 @@ public class ShooterWrist extends AdvancedSubsystem {
   public boolean isAtElevation() {
     return Math.abs(getAbsoluteRotationDegrees() - targetElevation) <= Constants.Shooter.allowedErrorInDegreesForAngle;
   }
-
+  public boolean isStowed() {
+    return Math.abs(getAbsoluteRotationDegrees() - (Constants.Shooter.stowAngle.getDegrees())) <= Constants.Shooter.allowedErrorInDegreesForAngle;
+  }
   @Override
   public void periodic() {
     rotationAbsoluteSignal.refresh();

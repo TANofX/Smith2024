@@ -2,39 +2,42 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.LEDs;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.LEDs.AnimationTypes;
 
-public class IntakeNote extends Command {
-  /** Creates a new IntakeNote. */
-  public IntakeNote() {
+public class LEDHasNote extends Command {
+  /** Creates a new LEDHasNote. */
+  public LEDHasNote() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.intake);
+    addRequirements(RobotContainer.LEDs);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    RobotContainer.intake.intakeGamePiece();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("intake is intaking.");
+    if (RobotContainer.intake.hasNote()) {
+      RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorOrange);
+    } else {
+      RobotContainer.LEDs.changeAnimation(AnimationTypes.Empty);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.intake.stopIntakeMotor();
-  
   }
+
+  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.intake.hasNote();
+    return false;
   }
 }

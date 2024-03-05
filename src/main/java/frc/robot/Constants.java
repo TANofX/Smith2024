@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
+
 import java.io.IOException;
 
 public final class Constants {
@@ -102,6 +104,21 @@ public final class Constants {
     public static final double intakeMotorD = 0.0;
     public static final double intakeMotorPFeedForward = 0.0001;
   }
+   public static final class LEDs {
+   public static final int CANdleID = 1;
+    public static final int JoystickId = 0;
+    public static final int IncrementAnimButton = XboxController.Button.kRightBumper.value;
+    public static final int DecrementAnimButton = XboxController.Button.kLeftBumper.value;
+    public static final int BlockButton = XboxController.Button.kStart.value;
+    public static final int MaxBrightnessAngle = 90;
+    public static final int MidBrightnessAngle = 180;
+    public static final int ZeroBrightnessAngle = 270;
+    public static final int ChangeDirectionAngle = 0;
+    public static final int VbatButton = XboxController.Button.kA.value;
+    public static final int V5Button = XboxController.Button.kB.value;
+    public static final int CurrentButton = XboxController.Button.kX.value;
+    public static final int TemperatureButton = XboxController.Button.kY.value;
+}
 
   public static final class Swerve {
     public static final int imuCanID = 3;
