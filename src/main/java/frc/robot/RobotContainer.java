@@ -37,6 +37,7 @@ import frc.robot.commands.ShootInSpeaker;
 import frc.robot.commands.ShooterIntake;
 import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.commands.TransferNote;
+import frc.robot.commands.auto.Autos;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
@@ -45,8 +46,7 @@ public class RobotContainer {
   public static final XboxControllerWrapper driver = new XboxControllerWrapper(0, 0.1);
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
 
-  // Auto choser
-  private final SendableChooser<Command> autoChooser;
+  
 
   // Subsystems
   public static final Swerve swerve = new Swerve();// new Swerve();
@@ -94,16 +94,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", new Shoot());
     // NamedCommands.registerCommand("", );
 
+    Autos.init();
 
-    // create auto chooser
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    
   }
   
-  // return the selected auto to getAutonomous
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
 
   private void configureButtonBindings() {
 
