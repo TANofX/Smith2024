@@ -126,12 +126,12 @@ public class RobotContainer {
     coDriver.LT().onTrue(new ShootInAmp());
     coDriver.RT().onTrue(new ShootInSpeaker());
     coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
-    coDriver.RB().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
+    coDriver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
       shooter.startMotorsForShooter(fireControl.getVelocity());
     }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
       shooter.stopMotors();
     })))));
-    coDriver.START()
+    coDriver.DLeft()
         .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
           shooter.startMotorsForShooter(fireControl.getVelocity());
         }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
