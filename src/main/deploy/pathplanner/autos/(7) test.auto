@@ -3,20 +3,14 @@
   "startingPose": {
     "position": {
       "x": 0.7,
-      "y": 6.75
+      "y": 4.35
     },
-    "rotation": 60.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "parallel",
-          "data": {
-            "commands": []
-          }
-        },
         {
           "type": "deadline",
           "data": {
@@ -24,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "A to piece 1"
+                  "pathName": "B to peice 7"
                 }
               },
               {
@@ -34,18 +28,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Piece 1 to shoot pose"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": []
           }
         }
       ]

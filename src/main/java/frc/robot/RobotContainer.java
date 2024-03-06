@@ -64,7 +64,7 @@ public class RobotContainer {
   // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
-    swerve.setDefaultCommand(new SwerveDriveWithGamepad());
+    // swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
 
@@ -92,6 +92,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShootInSpeaker", new ShootInSpeaker());
     NamedCommands.registerCommand("RunIntake", new IntakeNote());
     NamedCommands.registerCommand("Shoot", new Shoot());
+    NamedCommands.registerCommand("TansferNote", new TransferNote());
     // NamedCommands.registerCommand("", );
 
     Autos.init();

@@ -31,9 +31,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Piece 1 to shoot pose"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "TransferNote"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Piece 1 to shoot pose"
+                }
+              }
+            ]
           }
         },
         {
