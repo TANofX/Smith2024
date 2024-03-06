@@ -4,6 +4,8 @@
 package frc.robot;
 //import java.util.function.Supplier;
 
+import java.sql.Driver;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,7 +29,6 @@ import frc.robot.commands.ReadyToPassNote;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.RobotFaceSpeaker;
-import frc.robot.commands.RunIntake;
 import frc.robot.commands.SafePosition;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ShootInAmp;
@@ -84,40 +85,18 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-
-    driver.B().onTrue((new ReadyToPassNote()).andThen(new TransferNote()));
-    driver.LT().whileTrue(new RunIntake());
-    driver.RT().whileTrue(new IntakeNote());
-    driver.LB().whileTrue(new ReverseIntake());
-    driver.Y().onTrue(new SafePosition());
-    driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
-    driver.X().onTrue(new ShooterIntake().andThen(
-        Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-          shooter.stopMotors();
-        }, shooter))))));
-        driver.DUp().onTrue(new ClimbPosition());
-
-    coDriver.X().onTrue(new ElevatorToMin());
-    coDriver.A().onTrue(new ElevatorToMax());
-    coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-      shooter.stopMotors();
-    }, shooter))));
-    coDriver.LB().onTrue(new CalibrateElevator());
-    coDriver.DUp().whileTrue(new ExtendElevator());
-    coDriver.DDown().whileTrue(new RetractElevator());
-    coDriver.LT().onTrue(new ShootInAmp());
-    coDriver.RT().onTrue(new ShootInSpeaker());
-    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
-    coDriver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
+    driver.RB().onTrue(new ClimbPosition());
+    driver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
       shooter.startMotorsForShooter(fireControl.getVelocity());
     }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
       shooter.stopMotors();
     })))));
-    coDriver.DLeft()
+    driver.DLeft()
         .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
           shooter.startMotorsForShooter(fireControl.getVelocity());
         }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
           shooter.stopMotors();
         })))));
+    coDriver.B().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
   }
 }
