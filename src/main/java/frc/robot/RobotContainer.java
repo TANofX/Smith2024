@@ -5,7 +5,6 @@ package frc.robot;
 //import java.util.function.Supplier;
 
 
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.AtRedSubWoofer;
+import frc.robot.commands.AutoFireControl;
 import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.ClimbPosition;
 import frc.robot.commands.ElevateShooter;
@@ -29,7 +29,6 @@ import frc.robot.commands.ReadyToPassNote;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.RobotFaceSpeaker;
-import frc.robot.commands.RunIntake;
 import frc.robot.commands.SafePosition;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ShootInAmp;
@@ -80,6 +79,7 @@ public class RobotContainer {
     SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
     SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
     SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
+    SmartDashboard.putData("Auto Fire Control", new AutoFireControl());
     // SmartDashboard.putData(Commands.runOnce(() -> {
     // intake.updateRotationOffset();}, intake));
 
