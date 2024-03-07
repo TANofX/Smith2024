@@ -137,4 +137,8 @@ public double getRequiredRotation() {
    return rot;
 }
 
+public boolean isAtTargetAngle() {
+  return (Math.abs(robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees()) < 1.0);
+}
+
 }

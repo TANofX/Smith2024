@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.AtRedSubWoofer;
+import frc.robot.commands.AutoFireControl;
 import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.ClimbPosition;
 import frc.robot.commands.ElevateShooter;
@@ -72,6 +73,7 @@ public class RobotContainer {
     SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
     SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
     SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
+    SmartDashboard.putData("Auto Fire Control", new AutoFireControl());
     // SmartDashboard.putData(Commands.runOnce(() -> {
     // intake.updateRotationOffset();}, intake));
 
