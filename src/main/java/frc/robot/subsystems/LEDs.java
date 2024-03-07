@@ -94,16 +94,18 @@ public class LEDs extends AdvancedSubsystem {
     private AnimationTypes m_currentAnimation;
 
     public LEDs() { // void?
-        m_candle.configV5Enabled(true);
         // this.joystick = joy;
-        changeAnimation(AnimationTypes.Fire);
         CANdleConfiguration configAll = new CANdleConfiguration();
+        configAll.v5Enabled = true;
+        configAll.vBatOutputMode = VBatOutputMode.Off;
+        configAll.enableOptimizations = true;
         configAll.statusLedOffWhenActive = true;
         configAll.disableWhenLOS = false;
         configAll.stripType = LEDStripType.GRB;
         configAll.brightnessScalar = 0.1;
         configAll.vBatOutputMode = VBatOutputMode.Modulated;
         m_candle.configAllSettings(configAll, 100);
+        changeAnimation(AnimationTypes.SetAll);
     }
 
     public void toggle5VOverride() {
@@ -254,7 +256,7 @@ public class LEDs extends AdvancedSubsystem {
         switch (toChange) {
             default:
             case Empty:
-                m_candleChannel = 9;
+                m_candleChannel = 0;
                 m_toAnimate = new RainbowAnimation(1, 0.7, LEDS_PER_ANIMATION, m_animDirection,
                         m_candleChannel * LEDS_PER_ANIMATION + 8);
                 break;
@@ -264,21 +266,21 @@ public class LEDs extends AdvancedSubsystem {
                 break;
 
             case OneColorRed:
-                m_candleChannel = 19;
+                m_candleChannel = 1;
                 m_toAnimate = new StrobeAnimation(130, 0, 0, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
             case OneColorOrange:
-                m_candleChannel = 22;
+                m_candleChannel = 2;
                 m_toAnimate = new StrobeAnimation(237, 130, 24, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
 
             case OneColorBlue:
-                m_candleChannel = 20;
+                m_candleChannel = 3;
                 m_toAnimate = new StrobeAnimation(0, 0, 130, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
 
             case OneColorGreen:
-                m_candleChannel = 21;
+                m_candleChannel = 4;
                 m_toAnimate = new StrobeAnimation(0, 130, 0, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
 
@@ -295,6 +297,8 @@ public class LEDs extends AdvancedSubsystem {
         // This method will be called once per scheduler run
         if (m_toAnimate == null) {
             if (!m_setAnim) {
+                // set LED strip
+                m_candle.setLEDs(255, 0, 128, 128, 8, 50);
                 /* Only setLEDs once, because every set will transmit a frame */
                 m_candle.setLEDs(255, 255, 255, 0, 0, 1);
                 m_candle.setLEDs(255, 255, 0, 0, 1, 1);

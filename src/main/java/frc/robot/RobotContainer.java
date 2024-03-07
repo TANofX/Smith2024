@@ -38,6 +38,7 @@ import frc.robot.commands.ShooterIntake;
 import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.commands.TransferNote;
 import frc.robot.commands.LEDs.LEDHasNote;
+import frc.robot.commands.Notifications;
 
 import frc.robot.subsystems.*;
 
@@ -66,7 +67,9 @@ public class RobotContainer {
     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
-    LEDs.setDefaultCommand(new LEDHasNote());
+    LEDs.setDefaultCommand(new Notifications());
+   
+    
 
     // SmartDashboard.putData(intake.getIntakePivotTuner());
     // SmartDashboard.putData(intake.getIntakeTuner());
@@ -92,10 +95,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     
-    //driver.LT().whileTrue(new RunIntake());
+    driver.LT().whileTrue(new SafePosition());
  
     driver.LB().onTrue(new ElevatorToMin());
-    
+     
     //driver.Y().onTrue(new SafePosition());
     //driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
     driver.X().whileTrue(new ReverseIntake());
@@ -119,17 +122,17 @@ public class RobotContainer {
     coDriver.START();
   
     coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
-    coDriver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
-      shooter.startMotorsForShooter(fireControl.getVelocity());
-    }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-      shooter.stopMotors();
-    })))));
-    coDriver.DLeft()
+    //coDriver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
+   //   shooter.startMotorsForShooter(fireControl.getVelocity());
+    //}, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+    //  shooter.stopMotors();
+    //})))));
+  /*   coDriver.DLeft()
         .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
           shooter.startMotorsForShooter(fireControl.getVelocity());
         }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
           shooter.stopMotors();
 
-        })))));
+        }))))); */
   }
 }
