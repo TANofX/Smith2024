@@ -2799,7 +2799,7 @@
                   "_glyph": 148,
                   "_showGlyph": false
                 }
-             ]
+              ]
             }
           }
         }
@@ -2877,7 +2877,7 @@
                   "_glyph": 148,
                   "_showGlyph": false
                 }
-             ]
+              ]
             }
           }
         }
@@ -2975,9 +2975,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Drive Motors Current Velocity": true,
-              "Visible data/SmartDashboard/Drive Motors Target Velocity": true
+              "Y-axis/Unit": "ul"
             }
           },
           "0,3": {
@@ -2996,8 +2994,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Drive Motors Output Voltage": true
+              "Y-axis/Unit": "ul"
             }
           },
           "5,0": {
@@ -3385,12 +3382,60 @@
           }
         }
       }
+    },
+    {
+      "title": "Tab 12",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "1,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Autonomous Mode",
+              "_title": "/SmartDashboard/Autonomous Mode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,0": {
+            "size": [
+              6,
+              5
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
+            }
+          }
+        }
+      }
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
-    "y": 0.0,
-    "width": 1544.0,
-    "height": 842.4000244140625
+    "x": -5.599999904632568,
+    "y": 0.800000011920929,
+    "width": 1547.199951171875,
+    "height": 828.7999877929688
   }
 }
