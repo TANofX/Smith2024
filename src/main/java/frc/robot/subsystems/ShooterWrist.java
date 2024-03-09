@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ShooterWrist extends AdvancedSubsystem {
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);
@@ -67,7 +68,12 @@ public class ShooterWrist extends AdvancedSubsystem {
     Preferences.setDouble("intakeRotationOffset", offset * 360.0);
     shooterEncoderConfiguration.MagnetSensor.MagnetOffset = offset;
     elevationEncoder.getConfigurator().apply(shooterEncoderConfiguration);
-    syncRotationEncoders();
+   syncRotationEncoders();
+  }
+  public Command zeroShooterWrist() {
+     return Commands.runOnce(() -> {
+          updateRotationOffset();
+    }).ignoringDisable(true);
   }
 
   /**

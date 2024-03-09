@@ -92,6 +92,7 @@ public class Shooter extends AdvancedSubsystem {
   public void periodic() {
     SmartDashboard.putBoolean("Ready to Shoot", readyToShoot());
     SmartDashboard.putBoolean("Is at Speed", atSpeed());
+    SmartDashboard.putBoolean("Shooter Has Note", hasNote());
     SmartDashboard.putNumber("Target Shooter Speed", getTargetShooterSpeed());
     SmartDashboard.putNumber("Actual Shooter Speed", getShooterSpeed());
   }
