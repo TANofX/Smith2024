@@ -68,7 +68,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   private static final double ROTATION_MAX_ACCELERATION = 10000;
   private static final double ROTATION_ERROR = 0.05;
 
-  private static final double ROTATION_POSITION_KP = 1.0;
+  private static final double ROTATION_POSITION_KP = 0.9;
   private static final double ROTATION_POSITION_KI = 0.0;
   private static final double ROTATION_POSITION_KD = 0.0;
   private static final double ROTATION_POSITION_I_ZONE = 0;

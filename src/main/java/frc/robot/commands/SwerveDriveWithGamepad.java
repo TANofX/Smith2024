@@ -84,41 +84,41 @@ public class SwerveDriveWithGamepad extends Command {
     double yVel = this.yVelLimiter.calculate(y * Constants.Swerve.maxVelTele);
     double angularVel = this.angularVelLimiter.calculate(targetAngularVel);
 
-    if (stop) {
-      rotationTarget = null;
+  //   if (stop) {
+  //     rotationTarget = null;
 
-      RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
-    } else {
-      if (!aimAtGamePiece && Math.abs(angularVel) <= 0.01) {
-        if (rotationTarget == null) {
-          rotationTarget = RobotContainer.swerve.getPose().getRotation();
-        }
+  //     RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
+  //   } else {
+  //     if (!aimAtGamePiece && Math.abs(angularVel) <= 0.01) {
+  //       if (rotationTarget == null) {
+  //         rotationTarget = RobotContainer.swerve.getPose().getRotation();
+  //       }
 
-        if (Math.abs(xVel) > 0.2 || Math.abs(yVel) > 0.2) {
-          Rotation2d error = rotationTarget.minus(RobotContainer.swerve.getPose().getRotation());
-          angularVel = error.getRadians() * rotationHoldFactor;
-        }
-      } else {
-        rotationTarget = null;
-      }
+  //       if (Math.abs(xVel) > 0.2 || Math.abs(yVel) > 0.2) {
+  //         Rotation2d error = rotationTarget.minus(RobotContainer.swerve.getPose().getRotation());
+  //         angularVel = error.getRadians() * rotationHoldFactor;
+  //       }
+  //     } else {
+  //       rotationTarget = null;
+  //     }
 
-      if (!targeting) {
-        RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
-      } else {
-        if (Math.abs(
-                new Translation2d(xVel, yVel)
-                    .getAngle()
-                    .minus(RobotContainer.swerve.getPose().getRotation())
-                    .getDegrees())
-            < 45.0) {
-          double vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
-          RobotContainer.swerve.driveRobotRelative(new ChassisSpeeds(vel, 0.0, angularVel));
-        } else {
-          RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
-        }
-      }
-    }
-
+  //     if (!targeting) {
+  //       RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
+  //     } else {
+  //       if (Math.abs(
+  //               new Translation2d(xVel, yVel)
+  //                   .getAngle()
+  //                   .minus(RobotContainer.swerve.getPose().getRotation())
+  //                   .getDegrees())
+  //           < 45.0) {
+  //         double vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
+  //         RobotContainer.swerve.driveRobotRelative(new ChassisSpeeds(vel, 0.0, angularVel));
+  //       } else {
+  //         RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
+  //       }
+  //     }
+  //   }
+RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
    
   }
 
