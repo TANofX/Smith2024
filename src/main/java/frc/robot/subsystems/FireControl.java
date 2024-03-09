@@ -30,7 +30,7 @@ public class FireControl extends SubsystemBase {
   public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
     this.poseSupplier = poseSupplier;
     this.allianceSupplier = allianceSupplier;
-    this.speakerController = new PIDController(1.0, 0, 0.01); //MAKE CONSTANTS
+    this.speakerController = new PIDController(2.0, 0.0, 0.01); //MAKE CONSTANTS
 
   }
 
@@ -135,6 +135,10 @@ public class FireControl extends SubsystemBase {
 
 public double getRequiredRotation() {
    return rot;
+}
+
+public boolean isAtTargetAngle() {
+  return (Math.abs(robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees()) < 1.0);
 }
 
 }
