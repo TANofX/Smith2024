@@ -55,6 +55,7 @@ public final class Constants {
     public static final int elevationEncoderCANID = 41;
     public static final Rotation2d stowAngle = Rotation2d.fromDegrees(-179.5);
     public static final Rotation2d intakeAngle = Rotation2d.fromDegrees(42.0);
+    public static final Rotation2d elevatorAmpDownAngle = Rotation2d.fromDegrees(0);
     public static final double shooterIntakeMotorP = 0.00015;
     public static final double shooterIntakeMotorI = 0.00000001;
     public static final double shooterIntakeMotorD = 0.00005;
