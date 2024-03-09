@@ -10,41 +10,37 @@ import frc.robot.RobotContainer;
 public class Shoot extends Command {
   /** Creates a new Shoot. */
   public boolean ampShot;
+
   public Shoot(boolean ampShot) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.shooter, RobotContainer.shooterWrist, RobotContainer.elevator);
+    addRequirements(RobotContainer.shooter, RobotContainer.elevator);
     this.ampShot = ampShot;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (ampShot) {
-    if (RobotContainer.shooter.readyToShoot() && RobotContainer.elevator.isAtElevation()) {
-      RobotContainer.shooter.intakeAtSpeed(-1*RobotContainer.shooter.getShooterSpeed());
+      if (RobotContainer.shooter.readyToShoot() && RobotContainer.elevator.isAtElevation()) {
+        RobotContainer.shooter.intakeAtSpeed(-1 * RobotContainer.shooter.getShooterSpeed());
 
-    }
-    
-  }
-   else {
-      RobotContainer.shooter.intakeAtSpeed(-1*RobotContainer.shooter.getShooterSpeed());
-    }
-  RobotContainer.shooter.intakeAtSpeed(-1*RobotContainer.shooter.getShooterSpeed());
+      }
 
+    } else if (RobotContainer.shooter.readyToShoot() && RobotContainer.fireControl.isAtTargetAngle()) {
+      RobotContainer.shooter.intakeAtSpeed(-1 * RobotContainer.shooter.getShooterSpeed());
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     RobotContainer.shooter.stopIntakeMotor();
-    RobotContainer.elevator.elevatorToMinHeight();
-    RobotContainer.shooterWrist.stopMotor();
   }
 
   // Returns true when the command should end.

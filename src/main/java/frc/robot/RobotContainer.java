@@ -21,6 +21,7 @@ import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.CancelShooter;
 import frc.robot.commands.ClimbPosition;
 import frc.robot.commands.ElevateShooter;
+import frc.robot.commands.ElevatorAfterAmp;
 import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
@@ -70,7 +71,7 @@ public class RobotContainer {
   // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
-    // swerve.setDefaultCommand(new SwerveDriveWithGamepad());
+     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
     LEDs.setDefaultCommand(new Notifications());
@@ -144,8 +145,8 @@ public class RobotContainer {
     coDriver.LB().onTrue(new CalibrateElevator());
     coDriver.DUp().whileTrue(new ExtendElevator());
     coDriver.DDown().whileTrue(new RetractElevator());
-    coDriver.LT().onTrue(new ShootInAmp().andThen(new Shoot(true)).andThen(new ElevatorToMin().alongWith(new CancelShooter())));
-    coDriver.RT().onTrue((new RobotFaceSpeaker().raceWith(new ReadyToPassNote().andThen(new TransferNote().andThen(Commands.waitUntil(() -> {return fireControl.isAtTargetAngle();}))).andThen(new FireControlWrist()))).andThen((new ShootInSpeaker()).andThen(new Shoot(false).andThen(new CancelShooter()))));
+    coDriver.LT().onTrue(shootInAmpCommand());
+    coDriver.RT().onTrue(shootInSpeaker());
     coDriver.START();
     coDriver.B().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
    
@@ -154,5 +155,37 @@ public class RobotContainer {
           shooter.stopMotors();
 
         }))))); */
+  
+  }
+
+  private Command shootInSpeaker() {
+    return (new RobotFaceSpeaker().raceWith(
+          new ReadyToPassNote().andThen(
+            new TransferNote().andThen(
+              new FireControlWrist().alongWith(
+              new ShootInSpeaker().andThen(
+                new Shoot(false).andThen(
+                    new CancelShooter()
+                  )
+                )
+              )
+            )
+          )
+        )
+    );
+  }
+
+  private Command shootInAmpCommand() {
+    return  new ReadyToPassNote().andThen(
+              new TransferNote().andThen(
+                new ShootInAmp().andThen(
+                  new Shoot(true).andThen(
+                    new ElevatorAfterAmp().alongWith(
+                    new CancelShooter()
+                    )
+                  )
+                )
+              )
+    );
   }
 }

@@ -86,12 +86,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isAtElevation() {
-    if (encoder.getPosition() == elevatorTarget) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return (Math.abs(encoder.getPosition() - elevatorTarget) <= 0.5);
   }
   @Override
   public void periodic() {

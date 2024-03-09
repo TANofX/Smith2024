@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class AprilTags extends SubsystemBase {
 
   final PhotonCamera photonCamera = new PhotonCamera("Global_Shutter_Camera");
+  final PhotonCamera photonCamera2 = new PhotonCamera("Arducam_OV9281_USB_Camera");
+
   final Field2d aprilField = new Field2d();
   public static Transform3d cameraToRobot = new Transform3d(Units.inchesToMeters(-10.5), Units.inchesToMeters(-12.0),
       Units.inchesToMeters(21.5), new Rotation3d(0, Units.degreesToRadians(34.26), Units.degreesToRadians(180)));
@@ -38,8 +40,15 @@ public class AprilTags extends SubsystemBase {
   @Override
   public void periodic() {
     final PhotonPipelineResult result = photonCamera.getLatestResult();
+    final PhotonPipelineResult result2 = photonCamera2.getLatestResult();
 
-    if (result.hasTargets()) {
+
+    processResult(result, AprilTagDetection.cameraToRobot);
+    processResult(result2, AprilTagDetection.cameraToRobot2);
+  }
+
+  private void processResult(PhotonPipelineResult result, Transform3d cameraToRobot) {
+     if (result.hasTargets()) {
       // final PhotonTrackedTarget bestTarget = result.getBestTarget();
       // // final int id = bestTarget.getFiducialId();
       // double latency = result.getLatencyMillis();
@@ -56,7 +65,7 @@ public class AprilTags extends SubsystemBase {
         Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
             passedTarget.getBestCameraToTarget(),
             tagPose.get(),
-            AprilTagDetection.cameraToRobot);
+            cameraToRobot);
 
         RobotPoseLookup<Pose3d> AprilTagLookup = new RobotPoseLookup<Pose3d>();
         AprilTagLookup.addPose(robotPose);
@@ -66,5 +75,5 @@ public class AprilTags extends SubsystemBase {
       }
     }
     }
-  }
+  } 
 }

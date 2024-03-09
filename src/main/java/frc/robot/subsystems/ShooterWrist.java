@@ -31,6 +31,7 @@ public class ShooterWrist extends AdvancedSubsystem {
   private final CANcoderConfiguration shooterEncoderConfiguration;
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private double targetElevation;
+  private boolean stowed = true;
 
   /** Creates a new Shooter. */
   public ShooterWrist() {
@@ -103,6 +104,13 @@ public class ShooterWrist extends AdvancedSubsystem {
   }
   public void setElevation(Rotation2d elevation) {
     targetElevation = MathUtil.clamp(elevation.getDegrees(), -178, 65);
+
+    if (Math.abs(targetElevation - Constants.Shooter.stowAngle.getDegrees()) < 2.0) {
+      this.stowed = true;
+    } else {
+      this.stowed = false;
+    }
+
     double actualAngle = getAjustedAngle() - targetElevation;
     double shooterElevationOffset = actualAngle / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     double angleOfElevation = elevationMotor.getEncoder().getPosition() + shooterElevationOffset;
@@ -114,7 +122,7 @@ public class ShooterWrist extends AdvancedSubsystem {
     return Math.abs(getAbsoluteRotationDegrees() - targetElevation) <= Constants.Shooter.allowedErrorInDegreesForAngle;
   }
   public boolean isStowed() {
-    return Math.abs(getAbsoluteRotationDegrees() - (Constants.Shooter.stowAngle.getDegrees())) <= Constants.Shooter.allowedErrorInDegreesForAngle;
+    return stowed;
   }
   
   @Override
