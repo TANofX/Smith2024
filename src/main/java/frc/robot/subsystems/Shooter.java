@@ -43,6 +43,7 @@ public class Shooter extends AdvancedSubsystem {
     topController.setD(Constants.Shooter.shooterMotorD, 0);
     topController.setFF(Constants.Shooter.shooterMotorFeedForward, 0);
     topController.setIZone(Constants.Shooter.shooterMotorIZone, 0);
+    topMotor.setSmartCurrentLimit(100,100);
   }
 
   public void stopIntakeMotor() {

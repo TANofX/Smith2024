@@ -149,6 +149,7 @@ public class RobotContainer {
     coDriver.RT().onTrue(shootInSpeaker());
     coDriver.START();
     coDriver.B().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    coDriver.X().onTrue(new CancelShooter());
    
   /*   
         }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
@@ -159,20 +160,21 @@ public class RobotContainer {
   }
 
   private Command shootInSpeaker() {
-    return (new RobotFaceSpeaker().raceWith(
+    return (
           new ReadyToPassNote().andThen(
-            new TransferNote().andThen(
-              new FireControlWrist().alongWith(
+            new TransferNote().andThen(new RobotFaceSpeaker().alongWith(
+              new FireControlWrist()).raceWith(
               new ShootInSpeaker().andThen(
                 new Shoot(false).andThen(
+                  Commands.waitSeconds(0.125).andThen(
                     new CancelShooter()
+                    )
                   )
                 )
               )
             )
           )
-        )
-    );
+       );
   }
 
   private Command shootInAmpCommand() {

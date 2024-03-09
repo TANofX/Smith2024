@@ -133,6 +133,7 @@ public class ShooterWrist extends AdvancedSubsystem {
     SmartDashboard.putNumber("Shooter Angle from Motor",
         -1 * elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
     SmartDashboard.putNumber("Shooter Target Elevation", targetElevation);
+    SmartDashboard.putBoolean("Is at Elevation", isAtElevation());
   }
 
   @Override

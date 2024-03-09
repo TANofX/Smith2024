@@ -35,7 +35,6 @@ public class FireControlWrist extends Command {
   @Override
   public boolean isFinished() {
 
-
-    return RobotContainer.shooterWrist.isAtElevation();
+    return false;
   }
 }

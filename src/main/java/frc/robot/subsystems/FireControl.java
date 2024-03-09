@@ -30,7 +30,9 @@ public class FireControl extends SubsystemBase {
   public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
     this.poseSupplier = poseSupplier;
     this.allianceSupplier = allianceSupplier;
-    this.speakerController = new PIDController(2.0, 0.0, 0.01); //MAKE CONSTANTS
+    this.speakerController = new PIDController(1.75, 1, 0.1); //MAKE CONSTANTS
+    speakerController.setIntegratorRange(-0.4, 0.4);
+    speakerController.setIZone(10);
 
   }
 
@@ -38,6 +40,7 @@ public class FireControl extends SubsystemBase {
   public void periodic() {
     Pose2d currentPosition = poseSupplier.get();
     double distanceFromSpeaker;
+
     // Rotation2d robotDesiredAngle;
     Optional<Alliance> currentAlliance = allianceSupplier.get();
 
@@ -78,20 +81,13 @@ public class FireControl extends SubsystemBase {
     } else {
       shooterAngle = Rotation2d.fromDegrees(0);
     }
-          double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());
-      double target = MathUtil.angleModulus(RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
-      if (Math.abs(target - measurement) > Math.PI) {
-        if (measurement < (-Math.PI / 2.0)) {
-          target -= 2 * Math.PI;
-        } else {
-          target += 2 * Math.PI;
-        }
-      }
-      rot = speakerController.calculate(measurement, target);
-      rot = MathUtil.clamp(rot, -1, 1);
+      
+
 
     SmartDashboard.putNumber("FireControl/Distance To Target", distanceFromSpeaker);
     SmartDashboard.putNumber("FireControl/Robot Desired Angle", robotDesiredAngle.getDegrees());
+    SmartDashboard.putNumber("FireControl/Target Angle", robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees());
+
   }
 
   private double shooterVelocity;
@@ -134,6 +130,17 @@ public class FireControl extends SubsystemBase {
   }
 
 public double getRequiredRotation() {
+  double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());
+  double target = MathUtil.angleModulus(RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
+      if (Math.abs(target - measurement) > Math.PI) {
+        if (measurement < (-Math.PI / 2.0)) {
+          target -= 2 * Math.PI;
+        } else {
+          target += 2 * Math.PI;
+        }
+      }
+    rot = speakerController.calculate(measurement, target);
+    rot = MathUtil.clamp(rot, -1, 1);
    return rot;
 }
 

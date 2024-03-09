@@ -86,7 +86,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean isAtElevation() {
-    return (Math.abs(encoder.getPosition() - elevatorTarget) <= 0.5);
+    return (Math.abs(encoder.getPosition() - elevatorTarget) <= 2.0);
   }
   @Override
   public void periodic() {
