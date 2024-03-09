@@ -85,6 +85,14 @@ public class Elevator extends SubsystemBase {
     return encoder.getPosition();
   }
 
+  public boolean isAtElevation() {
+    if (encoder.getPosition() == elevatorTarget) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
