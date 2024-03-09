@@ -12,7 +12,7 @@
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -34,12 +34,6 @@
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "TransferNote"
-                }
-              },
               {
                 "type": "path",
                 "data": {
