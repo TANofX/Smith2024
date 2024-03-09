@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkLimitSwitch.Type;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ShooterWrist extends AdvancedSubsystem {
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);
@@ -38,6 +40,8 @@ public class ShooterWrist extends AdvancedSubsystem {
         (float) (180.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
     elevationMotor.setSoftLimit(SoftLimitDirection.kReverse,
         (float) (-65.0 / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION));
+    elevationMotor.getForwardLimitSwitch(Type.kNormallyClosed);
+    elevationMotor.getReverseLimitSwitch(Type.kNormallyClosed);
     elevationMotor.setIdleMode(IdleMode.kBrake);
     registerHardware("Elevation Motor", elevationMotor);
     registerHardware("Elevation Encoder", elevationEncoder);
@@ -60,11 +64,16 @@ public class ShooterWrist extends AdvancedSubsystem {
 
   public void updateRotationOffset() {
     double currentOffset = shooterEncoderConfiguration.MagnetSensor.MagnetOffset;
-    double offset = (currentOffset - rotationAbsoluteSignal.getValue()) % 1.0;
+    double offset = (currentOffset - rotationAbsoluteSignal.getValue()) % 1.0; //???
     Preferences.setDouble("intakeRotationOffset", offset * 360.0);
     shooterEncoderConfiguration.MagnetSensor.MagnetOffset = offset;
     elevationEncoder.getConfigurator().apply(shooterEncoderConfiguration);
-    syncRotationEncoders();
+   syncRotationEncoders();
+  }
+  public Command zeroShooterWrist() {
+     return Commands.runOnce(() -> {
+          updateRotationOffset();
+    }).ignoringDisable(true);
   }
 
   /**
@@ -81,22 +90,33 @@ public class ShooterWrist extends AdvancedSubsystem {
   }
 
   public double getAbsoluteRotationDegrees() {
-    return rotationAbsoluteSignal.getValue() * 360 * (-1.0);
+    return rotationAbsoluteSignal.getValue() * 360;
     // tells us what angle we are at
   }
 
+  private double getAjustedAngle() {
+    double getNewAngle = getAbsoluteRotationDegrees();
+    if (getNewAngle > 135) {
+      getNewAngle = getNewAngle - 360;
+    }
+  return getNewAngle;
+  }
   public void setElevation(Rotation2d elevation) {
     targetElevation = MathUtil.clamp(elevation.getDegrees(), -178, 65);
-    double actualAngle = getAbsoluteRotationDegrees() - targetElevation;
+    double actualAngle = getAjustedAngle() - targetElevation;
     double shooterElevationOffset = actualAngle / Constants.Shooter.ROTATION_DEGREES_PER_ROTATION;
     double angleOfElevation = elevationMotor.getEncoder().getPosition() + shooterElevationOffset;
     elevationController.setReference(angleOfElevation, ControlType.kSmartMotion, 0);
+
   }
 
   public boolean isAtElevation() {
     return Math.abs(getAbsoluteRotationDegrees() - targetElevation) <= Constants.Shooter.allowedErrorInDegreesForAngle;
   }
-
+  public boolean isStowed() {
+    return Math.abs(getAbsoluteRotationDegrees() - (Constants.Shooter.stowAngle.getDegrees())) <= Constants.Shooter.allowedErrorInDegreesForAngle;
+  }
+  
   @Override
   public void periodic() {
     rotationAbsoluteSignal.refresh();

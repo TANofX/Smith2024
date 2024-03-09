@@ -30,7 +30,7 @@ public class FireControl extends SubsystemBase {
   public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
     this.poseSupplier = poseSupplier;
     this.allianceSupplier = allianceSupplier;
-    this.speakerController = new PIDController(1.0, 0, 0.01); //MAKE CONSTANTS
+    this.speakerController = new PIDController(2.0, 0.0, 0.01); //MAKE CONSTANTS
 
   }
 
