@@ -129,7 +129,7 @@ public class RobotContainer {
     coDriver.RT().onTrue((new RobotFaceSpeaker().raceWith(new ReadyToPassNote().andThen(new TransferNote().andThen(Commands.waitUntil(() -> {return fireControl.isAtTargetAngle();}))).andThen(new FireControlWrist()))).andThen((new ShootInSpeaker()).andThen(new Shoot().andThen(new CancelShooter()))));
     coDriver.START();
     coDriver.B().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
-   
+    coDriver.X().onTrue(new CancelShooter());   
   /*   
         }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
           shooter.stopMotors();
