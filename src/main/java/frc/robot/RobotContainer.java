@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.commands.AtRedSubWoofer;
 import frc.robot.commands.AutoFireControl;
 import frc.robot.commands.CalibrateElevator;
+import frc.robot.commands.CancelShooter;
 import frc.robot.commands.ClimbPosition;
 import frc.robot.commands.ElevateShooter;
 import frc.robot.commands.ElevatorToMax;
@@ -72,9 +73,7 @@ public class RobotContainer {
 
     // SmartDashboard.putData(intake.getIntakePivotTuner());
     // SmartDashboard.putData(intake.getIntakeTuner());
-    SmartDashboard.putData("Zero Shooter Elevation", Commands.runOnce(() -> {
-      shooterWrist.updateRotationOffset();
-    }, shooter));
+    SmartDashboard.putData("Zero Shooter Elevation", shooterWrist.zeroShooterWrist());
     SmartDashboard.putData("Tune Elevation", shooterWrist.getElevationTunerCommand());
     SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
     SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
@@ -95,41 +94,43 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     
-    driver.LT().whileTrue(new SafePosition());
- 
+    driver.LT().onTrue(new SafePosition());
+    driver.RB().onTrue(new ClimbPosition());
     driver.LB().onTrue(new ElevatorToMin());
-     
-    //driver.Y().onTrue(new SafePosition());
-    //driver.A().whileTrue(new RobotFaceSpeaker().alongWith(new FireControlWrist()));
-    driver.X().whileTrue(new ReverseIntake());
+    driver.X().whileTrue(new ReverseIntake());          
+    driver.DLeft()
+           .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
+          shooter.startMotorsForShooter(fireControl.getVelocity());
+           }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(.5).andThen(Commands.runOnce(() -> {
+           shooter.stopMotors();
+
+           })))));
+
+    
+    driver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
+      shooter.startMotorsForShooter(fireControl.getVelocity());
+   }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+      shooter.stopMotors();
+    })))));
+    driver.RT().whileTrue(new ConditionalCommand(new IntakeNote(), (new IntakeNote().alongWith(new ReadyToPassNote())).andThen(new TransferNote()), shooterWrist::isStowed));
+    
+    
+    
         //Commands.waitSeconds(.5).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
           //shooter.stopMotors();
        // }, shooter))))));
-    driver.RT().whileTrue(new ConditionalCommand(new IntakeNote(), (new IntakeNote().alongWith(new ReadyToPassNote())).andThen(new TransferNote()), shooterWrist::isStowed));
+   
     //coDriver.X().onTrue(new ElevatorToMin());
-    coDriver.RB().onTrue(new TransferNote());
-    //coDriver.A().onTrue(new ElevatorToMax());
-    //coDriver.B().onTrue(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-     // shooter.stopMotors();
-    //}, shooter))));
+    coDriver.RB().onTrue(new ReadyToPassNote().andThen(new TransferNote()));
     coDriver.LB().onTrue(new CalibrateElevator());
     coDriver.DUp().whileTrue(new ExtendElevator());
     coDriver.DDown().whileTrue(new RetractElevator());
-    coDriver.LT().onTrue(new ShootInAmp());
-    coDriver.RT().onTrue(new TransferNote().andThen(new ShootInSpeaker()).andThen(new Shoot()));
-    //coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
-    
+    coDriver.LT().onTrue(new ShootInAmp().andThen(new Shoot()).andThen(new ElevatorToMin().alongWith(new CancelShooter())));
+    coDriver.RT().onTrue((new RobotFaceSpeaker().raceWith(new ReadyToPassNote().andThen(new TransferNote().andThen(Commands.waitUntil(() -> {return fireControl.isAtTargetAngle();}))).andThen(new FireControlWrist()))).andThen((new ShootInSpeaker()).andThen(new Shoot().andThen(new CancelShooter()))));
     coDriver.START();
-  
-    coDriver.Y().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
-    //coDriver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
-   //   shooter.startMotorsForShooter(fireControl.getVelocity());
-    //}, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
-    //  shooter.stopMotors();
-    //})))));
-  /*   coDriver.DLeft()
-        .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
-          shooter.startMotorsForShooter(fireControl.getVelocity());
+    coDriver.B().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+   
+  /*   
         }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
           shooter.stopMotors();
 
