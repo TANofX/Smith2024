@@ -2,7 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
-//import java.util.function.Supplier;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -37,16 +39,20 @@ import frc.robot.commands.ShootInSpeaker;
 import frc.robot.commands.ShooterIntake;
 import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.commands.TransferNote;
+import frc.robot.commands.auto.Autos;
 import frc.robot.commands.LEDs.LEDHasNote;
 import frc.robot.commands.Notifications;
 
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 
 public class RobotContainer {
   // Controllers
   public static final XboxControllerWrapper driver = new XboxControllerWrapper(0, 0.1);
   public static final XboxControllerWrapper coDriver = new XboxControllerWrapper(1, 0.1);
+
+  
 
   // Subsystems
   public static final Swerve swerve = new Swerve();// new Swerve();
@@ -64,7 +70,7 @@ public class RobotContainer {
   // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
-    swerve.setDefaultCommand(new SwerveDriveWithGamepad());
+    // swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
     LEDs.setDefaultCommand(new Notifications());
@@ -89,7 +95,20 @@ public class RobotContainer {
       swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));
     }, swerve));
     SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
+
+    // Register Named Commands for pathplanner
+    NamedCommands.registerCommand("ShootInSpeaker", new ShootInSpeaker());
+    NamedCommands.registerCommand("RunIntake", new IntakeNote());
+    NamedCommands.registerCommand("Shoot", new Shoot());
+    NamedCommands.registerCommand("TansferNote", new TransferNote());
+    // NamedCommands.registerCommand("", );
+
+    Autos.init();
+
+
+    
   }
+  
 
   private void configureButtonBindings() {
 
