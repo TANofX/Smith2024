@@ -81,21 +81,21 @@ public class RobotContainer {
     // SmartDashboard.putData(intake.getIntakePivotTuner());
     // SmartDashboard.putData(intake.getIntakeTuner());
     SmartDashboard.putData("Zero Shooter Elevation", shooterWrist.zeroShooterWrist());
-    SmartDashboard.putData("Tune Elevation", shooterWrist.getElevationTunerCommand());
-    SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
-    SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
-    SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
+    //SmartDashboard.putData("Tune Elevation", shooterWrist.getElevationTunerCommand());
+    //SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
+    //SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
+    //SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
     SmartDashboard.putData("Auto Fire Control", new AutoFireControl());
     // SmartDashboard.putData(Commands.runOnce(() -> {
     // intake.updateRotationOffset();}, intake));
 
-    SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
-    SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
+    //SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
+    //SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
 
-    SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {
-      swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));
-    }, swerve));
-    SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
+    // SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {
+    //   swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));
+    // }, swerve));
+    // SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
 
     // Register Named Commands for pathplanner
     NamedCommands.registerCommand("ShootInSpeaker", new ShootInSpeaker());

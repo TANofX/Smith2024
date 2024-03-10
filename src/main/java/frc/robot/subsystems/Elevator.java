@@ -63,7 +63,7 @@ public class Elevator extends SubsystemBase {
     elevatorToHeight(Constants.Elevator.MAX_HEIGHT);
   }
 
-  private void 
+  public void 
   elevatorToHeight(double motorRotations) {
     elevatorTarget = motorRotations;
     elevatorController.setReference(motorRotations, ControlType.kSmartMotion);

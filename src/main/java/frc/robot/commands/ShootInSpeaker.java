@@ -21,7 +21,7 @@ public class ShootInSpeaker extends Command {
   public void initialize() {
     if (RobotContainer.shooter.hasNote()) {
     RobotContainer.shooter.startMotorsForShooter(RobotContainer.fireControl.getVelocity());
-    System.out.println("Trying to start Shooter Motors");
+    //System.out.println("Trying to start Shooter Motors");
   //RobotContainer.fireControl.setTargetMode(true);
   }
 }

@@ -138,8 +138,8 @@ public class Swerve extends AdvancedSubsystem {
     Command DriveTuner = new TunePIDController("Drive", driveTunable);
     Command SteerTuner = new TunePIDController("Steer", steerTunable);
 
-    SmartDashboard.putData("Tune Drive Motor", DriveTuner);
-    SmartDashboard.putData("Tune Steer Motor", SteerTuner);
+    // SmartDashboard.putData("Tune Drive Motor", DriveTuner);
+    // SmartDashboard.putData("Tune Steer Motor", SteerTuner);
     SmartDashboard.putData("Field", field2d);
     SmartDashboard.putData("Trim Modules", zeroModulesCommand());
     
@@ -187,9 +187,9 @@ public class Swerve extends AdvancedSubsystem {
         new double[] {
             currentPose.getX(), currentPose.getY(), currentPose.getRotation().getDegrees()
         });
-    SmartDashboard.putNumber("OdometryX", currentPose.getX());
-    SmartDashboard.putNumber("OdometryY", currentPose.getY());
-    SmartDashboard.putNumber("OdometryR", currentPose.getRotation().getDegrees());
+    // SmartDashboard.putNumber("OdometryX", currentPose.getX());
+    // SmartDashboard.putNumber("OdometryY", currentPose.getY());
+    // SmartDashboard.putNumber("OdometryR", currentPose.getRotation().getDegrees());
 
     SmartDashboard.putNumber("FL", modules[0].getDriveVelocityMetersPerSecond());
     SmartDashboard.putNumber("FR", modules[1].getDriveVelocityMetersPerSecond());

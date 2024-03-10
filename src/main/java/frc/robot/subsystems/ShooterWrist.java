@@ -129,11 +129,11 @@ public class ShooterWrist extends AdvancedSubsystem {
   public void periodic() {
     rotationAbsoluteSignal.refresh();
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Shooter Absolute Angle", getAbsoluteRotationDegrees());
-    SmartDashboard.putNumber("Shooter Angle from Motor",
+    SmartDashboard.putNumber("Wrist/Absolute Angle", getAbsoluteRotationDegrees());
+    SmartDashboard.putNumber("Wrist/Shooter Angle from Motor",
         -1 * elevationMotor.getEncoder().getPosition() * Constants.Shooter.ROTATION_DEGREES_PER_ROTATION);
-    SmartDashboard.putNumber("Shooter Target Elevation", targetElevation);
-    SmartDashboard.putBoolean("Is at Elevation", isAtElevation());
+    SmartDashboard.putNumber("Wrist/Shooter Target Elevation", targetElevation);
+    SmartDashboard.putBoolean("Wrist/Is at Elevation", isAtElevation());
   }
 
   @Override
