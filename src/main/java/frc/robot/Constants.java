@@ -185,7 +185,7 @@ public final class Constants {
   public static final class FireControl {
     public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
-    public static final double HEIGHT = Units.inchesToMeters(64.13);
+    public static final double HEIGHT = Units.inchesToMeters(65.13);
     public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
@@ -197,7 +197,7 @@ public final class Constants {
     // Rotation2d.fromDegrees(0));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
         Rotation2d.fromDegrees(180));
-    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(7);
+    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(4.5);
   }
 
   public static final class Elevator {

@@ -21,6 +21,7 @@ import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.CancelShooter;
 import frc.robot.commands.ClimbPosition;
 import frc.robot.commands.ElevateShooter;
+import frc.robot.commands.ElevatorAfterAmp;
 import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
@@ -70,7 +71,7 @@ public class RobotContainer {
   // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
-    // swerve.setDefaultCommand(new SwerveDriveWithGamepad());
+     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
     LEDs.setDefaultCommand(new Notifications());
@@ -80,26 +81,26 @@ public class RobotContainer {
     // SmartDashboard.putData(intake.getIntakePivotTuner());
     // SmartDashboard.putData(intake.getIntakeTuner());
     SmartDashboard.putData("Zero Shooter Elevation", shooterWrist.zeroShooterWrist());
-    SmartDashboard.putData("Tune Elevation", shooterWrist.getElevationTunerCommand());
-    SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
-    SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
-    SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
+    //SmartDashboard.putData("Tune Elevation", shooterWrist.getElevationTunerCommand());
+    //SmartDashboard.putData("Tune Shooter", shooter.getShooterTunerCommand());
+    //SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
+    //SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
     SmartDashboard.putData("Auto Fire Control", new AutoFireControl());
     // SmartDashboard.putData(Commands.runOnce(() -> {
     // intake.updateRotationOffset();}, intake));
 
-    SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
-    SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
+    //SmartDashboard.putData("Tune Elevator Motor", elevator.getHeightTunerCommand());
+    //SmartDashboard.putData("Elevator Extents", new FindMotorExtents());
 
-    SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {
-      swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));
-    }, swerve));
-    SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
+    // SmartDashboard.putData("Robot At Center Blue Ring", Commands.runOnce(() -> {
+    //   swerve.resetOdometry(new Pose2d(new Translation2d(2.9, 5.55), Rotation2d.fromDegrees(0)));
+    // }, swerve));
+    // SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
 
     // Register Named Commands for pathplanner
     NamedCommands.registerCommand("ShootInSpeaker", new ShootInSpeaker());
     NamedCommands.registerCommand("RunIntake", new IntakeNote());
-    NamedCommands.registerCommand("Shoot", new Shoot());
+    NamedCommands.registerCommand("Shoot", new Shoot(false));
     NamedCommands.registerCommand("TansferNote", new TransferNote());
     // NamedCommands.registerCommand("", );
 
@@ -120,7 +121,7 @@ public class RobotContainer {
     driver.DLeft()
            .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
           shooter.startMotorsForShooter(fireControl.getVelocity());
-           }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(.5).andThen(Commands.runOnce(() -> {
+           }, shooter))).andThen(new Shoot(false).andThen(Commands.waitSeconds(.5).andThen(Commands.runOnce(() -> {
            shooter.stopMotors();
 
            })))));
@@ -128,7 +129,7 @@ public class RobotContainer {
     
     driver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
       shooter.startMotorsForShooter(fireControl.getVelocity());
-   }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+   }, shooter))).andThen(new Shoot(false).andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
       shooter.stopMotors();
     })))));
     driver.RT().whileTrue(new ConditionalCommand(new IntakeNote(), (new IntakeNote().alongWith(new ReadyToPassNote())).andThen(new TransferNote()), shooterWrist::isStowed));
@@ -144,15 +145,49 @@ public class RobotContainer {
     coDriver.LB().onTrue(new CalibrateElevator());
     coDriver.DUp().whileTrue(new ExtendElevator());
     coDriver.DDown().whileTrue(new RetractElevator());
-    coDriver.LT().onTrue(new ShootInAmp().andThen(new Shoot()).andThen(new ElevatorToMin().alongWith(new CancelShooter())));
-    coDriver.RT().onTrue((new RobotFaceSpeaker().raceWith(new ReadyToPassNote().andThen(new TransferNote().andThen(Commands.waitUntil(() -> {return fireControl.isAtTargetAngle();}))).andThen(new FireControlWrist()))).andThen((new ShootInSpeaker()).andThen(new Shoot().andThen(new CancelShooter()))));
+    coDriver.LT().onTrue(shootInAmpCommand());
+    coDriver.RT().onTrue(shootInSpeaker());
     coDriver.START();
     coDriver.B().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
+    coDriver.X().onTrue(new CancelShooter());
    
   /*   
         }, shooter))).andThen(new Shoot().andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
           shooter.stopMotors();
 
         }))))); */
+  
+  }
+
+  private Command shootInSpeaker() {
+    return (
+          new ReadyToPassNote().andThen(
+            new TransferNote().andThen(new RobotFaceSpeaker().alongWith(
+              new FireControlWrist()).raceWith(
+              new ShootInSpeaker().andThen(
+                new Shoot(false).andThen(
+                  Commands.waitSeconds(0.125).andThen(
+                    new CancelShooter()
+                    )
+                  )
+                )
+              )
+            )
+          )
+       );
+  }
+
+  private Command shootInAmpCommand() {
+    return  new ReadyToPassNote().andThen(
+              new TransferNote().andThen(
+                new ShootInAmp().andThen(
+                  new Shoot(true).andThen(
+                    new ElevatorAfterAmp().alongWith(
+                    new CancelShooter()
+                    )
+                  )
+                )
+              )
+    );
   }
 }

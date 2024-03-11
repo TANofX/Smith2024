@@ -43,6 +43,7 @@ public class Shooter extends AdvancedSubsystem {
     topController.setD(Constants.Shooter.shooterMotorD, 0);
     topController.setFF(Constants.Shooter.shooterMotorFeedForward, 0);
     topController.setIZone(Constants.Shooter.shooterMotorIZone, 0);
+    topMotor.setSmartCurrentLimit(100,100);
   }
 
   public void stopIntakeMotor() {
@@ -90,11 +91,13 @@ public class Shooter extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Ready to Shoot", readyToShoot());
-    SmartDashboard.putBoolean("Is at Speed", atSpeed());
-    SmartDashboard.putBoolean("Shooter Has Note", hasNote());
-    SmartDashboard.putNumber("Target Shooter Speed", getTargetShooterSpeed());
-    SmartDashboard.putNumber("Actual Shooter Speed", getShooterSpeed());
+    SmartDashboard.putBoolean("Shooter/Ready to Shoot", readyToShoot());
+    SmartDashboard.putBoolean("Shooter/Is at Speed", atSpeed());
+    SmartDashboard.putBoolean("Shooter/Shooter Has Note", hasNote());
+    SmartDashboard.putNumber("Shooter/Target Shooter Speed", getTargetShooterSpeed());
+    SmartDashboard.putNumber("Shooter/Actual Shooter Speed", getShooterSpeed());
+    SmartDashboard.putNumber("Shooter/Applied Voltage", topMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Shooter/Current", topMotor.getOutputCurrent());
   }
 
   @Override

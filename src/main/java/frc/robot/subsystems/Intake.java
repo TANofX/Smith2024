@@ -73,7 +73,7 @@ public class Intake extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Intake Sensor", hasNote());
+    SmartDashboard.putBoolean("Intake/Intake Sensor", hasNote());
     // This method will be called once per scheduler run
   }
 
