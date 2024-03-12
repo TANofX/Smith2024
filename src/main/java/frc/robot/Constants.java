@@ -197,7 +197,7 @@ public final class Constants {
     // Rotation2d.fromDegrees(0));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
         Rotation2d.fromDegrees(180));
-    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(4.5);
+    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(5.0);
   }
 
   public static final class Elevator {
