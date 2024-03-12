@@ -86,7 +86,7 @@ public class FireControl extends SubsystemBase {
 
     SmartDashboard.putNumber("FireControl/Distance To Target", distanceFromSpeaker);
     SmartDashboard.putNumber("FireControl/Robot Desired Angle", robotDesiredAngle.getDegrees());
-    SmartDashboard.putNumber("FireControl/Target Angle", robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees());
+    SmartDashboard.putNumber("FireControl/Angle Error", robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees());
 
   }
 
@@ -141,6 +141,7 @@ public double getRequiredRotation() {
       }
     rot = speakerController.calculate(measurement, target);
     rot = MathUtil.clamp(rot, -1, 1);
+    SmartDashboard.putNumber("FireControl/Required Rotation", rot);
    return rot;
 }
 

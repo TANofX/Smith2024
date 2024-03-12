@@ -31,7 +31,7 @@ public class ShooterWrist extends AdvancedSubsystem {
   private final CANcoderConfiguration shooterEncoderConfiguration;
   private final StatusSignal<Double> rotationAbsoluteSignal;
   private double targetElevation;
-  private boolean stowed = true;
+  private boolean stowed = false;
 
   /** Creates a new Shooter. */
   public ShooterWrist() {

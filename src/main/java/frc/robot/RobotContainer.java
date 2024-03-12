@@ -3,9 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
 
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -71,7 +73,6 @@ public class RobotContainer {
   // public static final JetsonClient jetson = new JetsonClient();
 
   public RobotContainer() {
-     swerve.setDefaultCommand(new SwerveDriveWithGamepad());
     SmartDashboard.putData(swerve.zeroModulesCommand());
     configureButtonBindings();
     LEDs.setDefaultCommand(new Notifications());
@@ -98,15 +99,18 @@ public class RobotContainer {
     // SmartDashboard.putData("Robot At Red Speaker", new AtRedSubWoofer());
 
     // Register Named Commands for pathplanner
-    NamedCommands.registerCommand("ShootInSpeaker", new ShootInSpeaker());
-    NamedCommands.registerCommand("RunIntake", new IntakeNote());
-    NamedCommands.registerCommand("Shoot", new Shoot(false));
+    //NamedCommands.registerCommand("ReadyToShootInSpeaker", new ShootInSpeaker());
+    NamedCommands.registerCommand("RunIntake", (new IntakeNote().alongWith(new ReadyToPassNote())).andThen(new TransferNote()));
+    NamedCommands.registerCommand("FaceSpeaker", new RobotFaceSpeaker());
+    //NamedCommands.registerCommand("SpeakerShot", new Shoot(false));
     NamedCommands.registerCommand("TansferNote", new TransferNote());
+    NamedCommands.registerCommand("AutoSpeakerShot", autoShootInSpeaker());
+    NamedCommands.registerCommand("SwerveControl", new SwerveDriveWithGamepad());
     // NamedCommands.registerCommand("", );
-
+    
+    PPHolonomicDriveController.setRotationTargetOverride(this::overrideAngle);
+    
     Autos.init();
-
-
     
   }
   
@@ -176,6 +180,21 @@ public class RobotContainer {
           )
        );
   }
+  
+  private Command autoShootInSpeaker() {
+    return
+      new ReadyToPassNote().andThen(
+        new TransferNote()).andThen(
+          new AutoFireControl().alongWith(
+      
+          new ShootInSpeaker().andThen(
+            new Shoot(false)).andThen(
+              Commands.waitSeconds(0.125)).andThen(
+                new CancelShooter()
+            )
+          )
+      );
+  }
 
   private Command shootInAmpCommand() {
     return  new ReadyToPassNote().andThen(
@@ -190,4 +209,16 @@ public class RobotContainer {
               )
     );
   }
+
+  public Optional <Rotation2d> overrideAngle() {
+    if (fireControl.trackingTarget())
+    {
+      return Optional.of(fireControl.getDesiredRobotAngle());
+    }
+    else
+    {
+      return Optional.empty();
+    }
+  }
+  
 }

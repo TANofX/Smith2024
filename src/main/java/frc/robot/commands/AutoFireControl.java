@@ -15,7 +15,7 @@ public class AutoFireControl extends Command {
 private final SlewRateLimiter angularVelLimiter;
   public AutoFireControl() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.swerve, RobotContainer.shooterWrist);
+    addRequirements(RobotContainer.shooterWrist, RobotContainer.swerve);
     this.angularVelLimiter =  new SlewRateLimiter(Constants.Swerve.maxAngularAccelTele);
   }
 
@@ -29,14 +29,19 @@ private final SlewRateLimiter angularVelLimiter;
   @Override
   public void execute() {
     double targetAngularVel = RobotContainer.fireControl.getRequiredRotation() * Constants.Swerve.maxAngularVelTele;
-    RobotContainer.shooterWrist.setElevation(RobotContainer.fireControl.getDesiredRobotAngle());
-    RobotContainer.swerve.driveRobotRelative(new ChassisSpeeds(0, 0, this.angularVelLimiter.calculate(targetAngularVel)));
+    RobotContainer.shooterWrist.setElevation(RobotContainer.fireControl.getAngle());
+    RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(0, 0, targetAngularVel));
+    
   
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds());
+    RobotContainer.shooterWrist.stopMotor();
+  }
+  
 
   // Returns true when the command should end.
   @Override
