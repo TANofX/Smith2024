@@ -16,7 +16,7 @@ public final class Autos {
 //  private static HashMap<String, Command> eventMap;
   public static AutoBuilder autoBuilder;
   public static ReplanningConfig replanningConfig;
-  public static final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  public static SendableChooser<Command> autoChooser;
 
   static boolean aimAtGamePiece = false;
 
@@ -44,8 +44,8 @@ public final class Autos {
               },
               RobotContainer.swerve);
 
-    autoChooser.setDefaultOption("None", none());
-    autoChooser.addOption("Test", test());
+    autoChooser = AutoBuilder.buildAutoChooser();
+
     
     SmartDashboard.putData("Autonomous Mode", autoChooser);
   }

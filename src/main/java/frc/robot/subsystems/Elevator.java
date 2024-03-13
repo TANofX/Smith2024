@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +31,7 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorMotor.setInverted(false);
+    elevatorMotor.setIdleMode(IdleMode.kBrake);
     elevatorController.setP(Constants.Elevator.elevatorMotorP);
     elevatorController.setI(Constants.Elevator.elevatorMotorI);
     elevatorController.setD(Constants.Elevator.elevatorMotorD);
@@ -61,7 +63,8 @@ public class Elevator extends SubsystemBase {
     elevatorToHeight(Constants.Elevator.MAX_HEIGHT);
   }
 
-  private void elevatorToHeight(double motorRotations) {
+  public void 
+  elevatorToHeight(double motorRotations) {
     elevatorTarget = motorRotations;
     elevatorController.setReference(motorRotations, ControlType.kSmartMotion);
   }
@@ -82,6 +85,9 @@ public class Elevator extends SubsystemBase {
     return encoder.getPosition();
   }
 
+  public boolean isAtElevation() {
+    return (Math.abs(encoder.getPosition() - elevatorTarget) <= 2.0);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -18,7 +18,7 @@ import frc.robot.util.NoteSensor;
 
 public class Intake extends AdvancedSubsystem {
 
-  private final CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.intakeCANID, MotorType.kBrushless);
+  private final CANSparkFlex intakeMotor = new CANSparkFlex(Constants.Intake.intakeCANID, MotorType.kBrushless);
   // private final CANSparkMax pivotIntakeMotor = new
   // CANSparkMax(Constants.Intake.pivotIntakeCANID, MotorType.kBrushless);
   // private final SparkPIDController pivotController =
@@ -38,17 +38,17 @@ public class Intake extends AdvancedSubsystem {
   }
 
   public void reverseIntake() {
-    intakeController.setReference(6000, ControlType.kVelocity);
+    intakeController.setReference(-4000, ControlType.kVelocity);
     // runIntakeMotor(-1.0);
   }
 
   public void intakeGamePiece() {
-    intakeController.setReference(-6000, ControlType.kVelocity);
+    intakeController.setReference(4000, ControlType.kVelocity);
     // runIntakeMotor(1.0);
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
-    double speedInRPM = -1 * speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
+    double speedInRPM = 1 * speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
         * Constants.Intake.intakeGearRatio;
 
     intakeController.setReference(speedInRPM, ControlType.kVelocity);
@@ -73,7 +73,7 @@ public class Intake extends AdvancedSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Intake Sensor", hasNote());
+    SmartDashboard.putBoolean("Intake/Intake Sensor", hasNote());
     // This method will be called once per scheduler run
   }
 

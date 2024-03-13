@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.pid.TunablePID;
+import frc.lib.pid.TunableSparkPIDController;
 import frc.lib.pid.TunePositionController;
 import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.pid.TuneVelocitySparkPIDController;
@@ -66,9 +68,9 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   private static final double ROTATION_MAX_ACCELERATION = 10000;
   private static final double ROTATION_ERROR = 0.05;
 
-  private static final double ROTATION_POSITION_KP = 3.0;
+  private static final double ROTATION_POSITION_KP = 0.9;
   private static final double ROTATION_POSITION_KI = 0.0;
-  private static final double ROTATION_POSITION_KD = 1.0;
+  private static final double ROTATION_POSITION_KD = 0.0;
   private static final double ROTATION_POSITION_I_ZONE = 0;
   private static final double ROTATION_POSITION_FEED_FORWARD = 0.0;
   private static final double ROTATION_POSITION_MAX_VELOCITY = 0;
@@ -92,6 +94,9 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   private final StatusSignal<Double> rotationAbsoluteVelSignal;
 
   private SwerveModuleState targetState = new SwerveModuleState();
+
+  private final TunablePID steerTunable;
+  private final TunablePID driveTunable;
 
   /**
    * Create a Mk4 swerve module
@@ -129,6 +134,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     driveMotor.getPIDController().setIZone(DRIVE_I_ZONE, 0);
     driveMotor.getPIDController().setD(DRIVE_KD, 0);
     driveMotor.getPIDController().setFF(DRIVE_FEED_FORWARD, 0);
+    driveMotor.setSmartCurrentLimit(100, 100);
     // driveSimState.addSparkMax(driveMotor, 8.0f, 5500.0f);
 
     rotationMotor = new CANSparkFlex(rotationMotorCanID, MotorType.kBrushless);
@@ -155,11 +161,15 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     rotationMotor.getPIDController().setSmartMotionMaxVelocity(ROTATION_POSITION_MAX_VELOCITY, 1);
     rotationMotor.getPIDController().setSmartMotionMaxAccel(ROTATION_POSITION_MAX_ACCELERATION, 1);
     rotationMotor.getPIDController().setSmartMotionAllowedClosedLoopError(ROTATION_POSITION_ERROR, 1);
+    rotationMotor.setSmartCurrentLimit(100,100);
     // driveSim = new
     // LinearSystemSim<>(LinearSystemId.identifyVelocitySystem(DRIVE_KV, DRIVE_KA));
     // rotationSim =
     // new LinearSystemSim<>(LinearSystemId.identifyPositionSystem(ROTATION_KV,
     // ROTATION_KA));
+
+    steerTunable = new TunableSparkPIDController(rotationMotor.getPIDController(), 1);
+    driveTunable = new TunableSparkPIDController(driveMotor.getPIDController(), 0);
 
     registerHardware("Drive Motor", driveMotor);
     registerHardware("Rotation Motor", rotationMotor);
@@ -170,12 +180,26 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
   public void periodic() {
     SmartDashboard.putNumber(getName() + "/DriveTemp", driveMotor.getMotorTemperature());
     SmartDashboard.putNumber(getName() + "/RotationTemp", rotationMotor.getMotorTemperature());
+    SmartDashboard.putNumber(getName() + "/DriveOutput", driveMotor.getAppliedOutput());
+    SmartDashboard.putNumber(getName() + "/DriveTarget", targetState.speedMetersPerSecond);
+    SmartDashboard.putNumber(getName() + "/DriveActual", getDriveVelocityMetersPerSecond());
+    SmartDashboard.putNumber(getName() + "/SteerOutput", rotationMotor.getAppliedOutput());
+    SmartDashboard.putNumber(getName() + "/SteerTarget", targetState.angle.getDegrees());
+    SmartDashboard.putNumber(getName() + "/SteerActual", getAbsoluteRotationDegrees());
 
     // Refresh cached values in background
     StatusSignal.waitForAll(
         0,
         rotationAbsoluteSignal,
         rotationAbsoluteVelSignal);
+  }
+
+  public TunablePID getSteerTunablePID() {
+    return steerTunable;
+  }
+
+  public TunablePID getDriveTunablePID() {
+    return driveTunable;
   }
 
   @Override
@@ -227,12 +251,6 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     }
     double targetAngle = getRelativeRotationDegrees() + deltaRot;
 
-    SmartDashboard.putNumber(getName() + "/Target Angle", targetAngle);
-    SmartDashboard.putNumber(getName() + "/Delta Rotation", deltaRot);
-    SmartDashboard.putNumber(getName() + "/Absolute Rotation", getAbsoluteRotationDegrees());
-    SmartDashboard.putNumber(getName() + "/Relative Rotation", getRelativeRotationDegrees());
-    SmartDashboard.putNumber(getName() + "/Target Rotations", (targetAngle / ROTATION_DEGREES_PER_ROTATION));
-
     REVLibError driveError = driveMotor.getPIDController()
         .setReference(60 * targetState.speedMetersPerSecond / DRIVE_METERS_PER_ROTATION, ControlType.kVelocity, 0);
     if (driveError != REVLibError.kOk) {
@@ -240,7 +258,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
           "[Drive Motor]: Status code: "
               + driveError.name());
     }
-
+if (Math.abs(deltaRot) > 0.05) {
     REVLibError rotationError = rotationMotor.getPIDController()
         .setReference(targetAngle / ROTATION_DEGREES_PER_ROTATION, ControlType.kPosition, 1);
     if (rotationError != REVLibError.kOk) {
@@ -249,6 +267,10 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
               + rotationError.name());
     }
   }
+  else {
+    rotationMotor.stopMotor();
+  }
+}
 
   /** Stop all motors */
   public void stopMotors() {
@@ -468,16 +490,5 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
             this))
         .until(() -> getFaults().size() > 0)
         .andThen(Commands.runOnce(this::stopMotors, this));
-  }
-
-  public Command getDriveTunerCommand() {
-    return new TuneVelocitySparkPIDController("Drive Motors", driveMotor, this);
-  }
-
-  public Command getSteerTunerCommand() {
-    return new TuneSmartMotionControl("Steer Motors", rotationMotor, this);
-  }
-  public Command getPositionTunerCommand() {
-    return new TunePositionController("Position Motors", rotationMotor, this);
   }
 }

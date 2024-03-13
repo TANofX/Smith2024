@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
 
@@ -19,8 +20,9 @@ public class ReadyToPassNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   
+   if (!RobotContainer.shooter.hasNote()) {
     RobotContainer.shooterWrist.setElevation(Constants.Shooter.intakeAngle);
+   }
   }
 
   // Called every time the scheduler runs while the command is sRotation2d.frcheduled.
@@ -38,6 +40,6 @@ public class ReadyToPassNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.shooterWrist.isAtElevation();
+    return (RobotContainer.shooter.hasNote() || RobotContainer.shooterWrist.isAtElevation());
   }
 }

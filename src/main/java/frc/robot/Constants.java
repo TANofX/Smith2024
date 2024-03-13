@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
+
 import java.io.IOException;
 
 public final class Constants {
@@ -55,6 +57,7 @@ public final class Constants {
     public static final int elevationEncoderCANID = 41;
     public static final Rotation2d stowAngle = Rotation2d.fromDegrees(-179.5);
     public static final Rotation2d intakeAngle = Rotation2d.fromDegrees(42.0);
+    public static final Rotation2d elevatorAmpDownAngle = Rotation2d.fromDegrees(0);
     public static final double shooterIntakeMotorP = 0.00015;
     public static final double shooterIntakeMotorI = 0.00000001;
     public static final double shooterIntakeMotorD = 0.00005;
@@ -91,7 +94,7 @@ public final class Constants {
     public static final double degreesPerRevolution = 360.0;
     public static final double intakeWheelDiameter = Units.inchesToMeters(1.0);
     public static final double ROTATION_DEGREES_PER_ROTATION = 360 / (gearRatio);
-    public static final double intakeGearRatio = 5 / 1;
+    public static final double intakeGearRatio = 4 / 1;
     public static final double upperDistancePerMotorRotation = Math.PI / intakeGearRatio * intakeWheelDiameter;
     public static final double upPositionDegrees = 90;
     public static final double downPositionDegrees = 0;
@@ -102,6 +105,21 @@ public final class Constants {
     public static final double intakeMotorD = 0.0;
     public static final double intakeMotorPFeedForward = 0.0001;
   }
+   public static final class LEDs {
+   public static final int CANdleID = 4;
+    public static final int JoystickId = 0;
+    public static final int IncrementAnimButton = XboxController.Button.kRightBumper.value;
+    public static final int DecrementAnimButton = XboxController.Button.kLeftBumper.value;
+    public static final int BlockButton = XboxController.Button.kStart.value;
+    public static final int MaxBrightnessAngle = 90;
+    public static final int MidBrightnessAngle = 180;
+    public static final int ZeroBrightnessAngle = 270;
+    public static final int ChangeDirectionAngle = 0;
+    public static final int VbatButton = XboxController.Button.kA.value;
+    public static final int V5Button = XboxController.Button.kB.value;
+    public static final int CurrentButton = XboxController.Button.kX.value;
+    public static final int TemperatureButton = XboxController.Button.kY.value;
+}
 
   public static final class Swerve {
     public static final int imuCanID = 3;
@@ -110,6 +128,10 @@ public final class Constants {
     public static final double maxAngularVelTele = Units.degreesToRadians(180);
     public static final double maxAngularAccelTele = Units.degreesToRadians(540);
     public static final double teleAngleHoldFactor = 3.0;
+
+    public static final double SPEAKER_CONTROLLER_kP = 1.0;
+    public static final double SPEAKER_CONTROLLER_kI = 0.0;
+    public static final double SPEAKER_CONTROLLER_kD = 0.01;
 
     public static final class Odometry {
       public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.05);
@@ -163,7 +185,7 @@ public final class Constants {
   public static final class FireControl {
     public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
-    public static final double HEIGHT = Units.inchesToMeters(62.13);
+    public static final double HEIGHT = Units.inchesToMeters(65.13);
     public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
@@ -175,7 +197,7 @@ public final class Constants {
     // Rotation2d.fromDegrees(0));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
         Rotation2d.fromDegrees(180));
-    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(7);
+    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(5.0);
   }
 
   public static final class Elevator {

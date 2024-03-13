@@ -9,22 +9,32 @@ import frc.robot.RobotContainer;
 
 public class Shoot extends Command {
   /** Creates a new Shoot. */
-  public Shoot() {
+  public boolean ampShot;
+
+  public Shoot(boolean ampShot) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.shooter);
+    addRequirements(RobotContainer.shooter, RobotContainer.elevator);
+    this.ampShot = ampShot;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (RobotContainer.shooter.readyToShoot())
-    RobotContainer.shooter.intakeAtSpeed(-1*RobotContainer.shooter.getShooterSpeed());
+    if (ampShot) {
+      if (RobotContainer.shooter.readyToShoot() && RobotContainer.elevator.isAtElevation()) {
+        RobotContainer.shooter.intakeAtSpeed(-1 * RobotContainer.shooter.getShooterSpeed());
+
+      }
+
+    } else if (RobotContainer.shooter.readyToShoot() && RobotContainer.fireControl.isAtTargetAngle()) {
+      RobotContainer.shooter.intakeAtSpeed(-1 * RobotContainer.shooter.getShooterSpeed());
+    }
   }
 
   // Called once the command ends or is interrupted.

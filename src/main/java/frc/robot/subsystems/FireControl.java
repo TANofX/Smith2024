@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,22 +17,30 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class FireControl extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier;
   private Supplier<Optional<Alliance>> allianceSupplier;
   private boolean trackTarget = false;
+  private final PIDController speakerController;
+  private double rot;
 
   /** Creates a new FireControl. */
   public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
     this.poseSupplier = poseSupplier;
     this.allianceSupplier = allianceSupplier;
+    this.speakerController = new PIDController(2.0, 0, 0.025);//new PIDController(1.5, 1.5, 0.025); //MAKE CONSTANTS
+    speakerController.setIntegratorRange(-0.5, 0.5);
+    speakerController.setIZone(15);
+    speakerController.setTolerance(1.75 * Math.PI / 180.0);
   }
 
   @Override
   public void periodic() {
     Pose2d currentPosition = poseSupplier.get();
     double distanceFromSpeaker;
+
     // Rotation2d robotDesiredAngle;
     Optional<Alliance> currentAlliance = allianceSupplier.get();
 
@@ -71,9 +81,13 @@ public class FireControl extends SubsystemBase {
     } else {
       shooterAngle = Rotation2d.fromDegrees(0);
     }
+      
+
 
     SmartDashboard.putNumber("FireControl/Distance To Target", distanceFromSpeaker);
     SmartDashboard.putNumber("FireControl/Robot Desired Angle", robotDesiredAngle.getDegrees());
+    SmartDashboard.putNumber("FireControl/Angle Error", robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees());
+
   }
 
   private double shooterVelocity;
@@ -114,5 +128,26 @@ public class FireControl extends SubsystemBase {
   public boolean trackingTarget() {
     return trackTarget;
   }
+
+public double getRequiredRotation() {
+  double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());
+  double target = MathUtil.angleModulus(RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
+      if (Math.abs(target - measurement) > Math.PI) {
+        if (measurement < (-Math.PI / 2.0)) {
+          target -= 2 * Math.PI;
+        } else {
+          target += 2 * Math.PI;
+        }
+      }
+    rot = speakerController.calculate(measurement, target);
+    rot = MathUtil.clamp(rot, -0.5, 0.5);
+    SmartDashboard.putNumber("FireControl/Required Rotation", rot);
+   return rot;
+}
+
+public boolean isAtTargetAngle() {
+  //return (Math.abs(robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees()) < 1.0);
+  return speakerController.atSetpoint();
+}
 
 }

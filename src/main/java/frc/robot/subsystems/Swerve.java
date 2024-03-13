@@ -4,8 +4,13 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.sim.Pigeon2SimState;
-//import edu.wpi.first.math.Matrix;
-//import edu.wpi.first.math.controller.PIDController;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -15,11 +20,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 //import edu.wpi.first.math.numbers.N1;
 //import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.lib.pid.TunablePIDSet;
+import frc.lib.pid.TunePIDController;
 import frc.lib.subsystem.AdvancedSubsystem;
 //import frc.lib.subsystem.SubsystemFault;
 import frc.lib.swerve.Mk4SwerveModulePro;
@@ -50,6 +58,9 @@ public class Swerve extends AdvancedSubsystem {
   protected double teleopAngularVelConstraint;
 
   protected final Field2d field2d = new Field2d();
+
+  private final TunablePIDSet steerTunable;
+  private final TunablePIDSet driveTunable;
 
   public Swerve() {
     poseLookup = new RobotPoseLookup<Pose2d>();
@@ -97,13 +108,6 @@ public class Swerve extends AdvancedSubsystem {
             Constants.Swerve.BackRightModule.rotationEncoderCanID,
             Constants.canivoreBusName) // BR
     };
-    Command DriveTuner = modules[1].getDriveTunerCommand();
-    DriveTuner.addRequirements(this);
-    Command SteerTuner = modules[1].getSteerTunerCommand();
-    SteerTuner.addRequirements(this);
-    SmartDashboard.putData("Tune Drive Motor", DriveTuner);
-    SmartDashboard.putData("Tune Steer Motor", SteerTuner);
-    SmartDashboard.putData("Tune Steer Motor Position", modules[1].getPositionTunerCommand());
 
     kinematics = new SwerveDriveKinematics(
         Constants.Swerve.FrontLeftModule.moduleOffset,
@@ -121,8 +125,50 @@ public class Swerve extends AdvancedSubsystem {
 
     registerHardware("IMU", imu);
 
+    steerTunable = new TunablePIDSet();
+    for (Mk4SwerveModuleProSparkFlex m: modules) {
+      steerTunable.add(m.getSteerTunablePID());
+    }
+
+    driveTunable = new TunablePIDSet();
+    for (Mk4SwerveModuleProSparkFlex m: modules) {
+      driveTunable.add(m.getDriveTunablePID());
+    }
+
+    Command DriveTuner = new TunePIDController("Drive", driveTunable);
+    Command SteerTuner = new TunePIDController("Steer", steerTunable);
+
+    // SmartDashboard.putData("Tune Drive Motor", DriveTuner);
+    // SmartDashboard.putData("Tune Steer Motor", SteerTuner);
     SmartDashboard.putData("Field", field2d);
     SmartDashboard.putData("Trim Modules", zeroModulesCommand());
+    
+    // Configure auto builder
+    // AutoBuilder.configureHolonomic(
+    //         this::getPose, // Robot pose supplier
+    //         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+    //         this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    //         this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+    //         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+    //                 new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+    //                 new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+    //                 4.5, // Max module speed, in m/s
+    //                 0.43, // Drive base radius in meters. Distance from robot center to furthest module.
+    //                 new ReplanningConfig() // Default path replanning config. See the API for the options here
+    //         ),
+    //         () -> {
+    //             // Boolean supplier that controls when the path will be mirrored for the red alliance
+    //             // This will flip the path being followed to the red side of the field.
+    //             // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+    //             var alliance = DriverStation.getAlliance();
+    //             if (alliance.isPresent()) {
+    //                 return alliance.get() == DriverStation.Alliance.Red;
+    //             }
+    //             return false;
+    //         },
+    //         (Subsystem) this // Reference to this subsystem to set requirements
+    // );
   }
 
   @Override
@@ -141,9 +187,9 @@ public class Swerve extends AdvancedSubsystem {
         new double[] {
             currentPose.getX(), currentPose.getY(), currentPose.getRotation().getDegrees()
         });
-    SmartDashboard.putNumber("OdometryX", currentPose.getX());
-    SmartDashboard.putNumber("OdometryY", currentPose.getY());
-    SmartDashboard.putNumber("OdometryR", currentPose.getRotation().getDegrees());
+    // SmartDashboard.putNumber("OdometryX", currentPose.getX());
+    // SmartDashboard.putNumber("OdometryY", currentPose.getY());
+    // SmartDashboard.putNumber("OdometryR", currentPose.getRotation().getDegrees());
 
     SmartDashboard.putNumber("FL", modules[0].getDriveVelocityMetersPerSecond());
     SmartDashboard.putNumber("FR", modules[1].getDriveVelocityMetersPerSecond());
@@ -658,6 +704,9 @@ public class Swerve extends AdvancedSubsystem {
                 || modules[3].getFaults().size() > 0)
         .andThen(Commands.runOnce(() -> driveFieldRelative(new ChassisSpeeds()), this));
   }
+
+  
+    
 
   /*
    * @Override
