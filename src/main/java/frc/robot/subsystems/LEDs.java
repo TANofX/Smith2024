@@ -62,6 +62,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class LEDs extends AdvancedSubsystem {
     private final int LEDS_PER_ANIMATION = 10;
@@ -88,7 +89,9 @@ public class LEDs extends AdvancedSubsystem {
         OneColorRed,
         OneColorBlue,
         OneColorGreen,
-        Empty, OneColorOrange
+        OneColorPurple,
+        OneColorYellow,
+    Empty, OneColorOrange
     }
 
     private AnimationTypes m_currentAnimation;
@@ -204,6 +207,8 @@ public class LEDs extends AdvancedSubsystem {
             case OneColorBlue:
                 changeAnimation(AnimationTypes.SetAll);
                 break;
+            case OneColorPurple:
+                changeAnimation(AnimationTypes.SetAll);
             case OneColorGreen:
                 changeAnimation(AnimationTypes.SetAll);
                 break;
@@ -270,23 +275,30 @@ public class LEDs extends AdvancedSubsystem {
                 m_toAnimate = new StrobeAnimation(130, 0, 0, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
             case OneColorOrange:
-                m_candleChannel = 2;
+                m_candleChannel = 1;
                 m_toAnimate = new StrobeAnimation(237, 130, 24, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
 
             case OneColorBlue:
-                m_candleChannel = 3;
+                m_candleChannel = 1;
                 m_toAnimate = new StrobeAnimation(0, 0, 130, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
 
             case OneColorGreen:
-                m_candleChannel = 4;
+                m_candleChannel = 1;
                 m_toAnimate = new StrobeAnimation(0, 130, 0, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
                 break;
+            case OneColorPurple:
+                m_candleChannel = 1;
+                m_toAnimate = new StrobeAnimation(50, 0, 60, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
+            case OneColorYellow:
+                m_candleChannel = 1;
+                m_toAnimate = new StrobeAnimation(255, 255, 0, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
 
         }
         System.out.println("Changed to " + m_currentAnimation.toString());
     }
+    
 
     public void clearAllAnims() {
         m_clearAllAnims = true;
@@ -323,7 +335,14 @@ public class LEDs extends AdvancedSubsystem {
                 m_candle.clearAnimation(i);
             }
         }
-    }
+        if (RobotContainer.intake.hasNote()||RobotContainer.shooter.hasNote()) {
+            m_candle.setLEDs(0, 255, 0, 10, 8, 50);
+        } else {
+            m_candle.setLEDs(255, 0, 0, 0,8,50);
+        }
+
+        }
+    
 
     @Override
     public void simulationPeriodic() {

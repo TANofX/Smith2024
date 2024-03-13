@@ -10,6 +10,17 @@ import frc.lib.input.controllers.rumble.RumbleSinWave;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.LEDs;
 import frc.robot.subsystems.LEDs.AnimationTypes;
+import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.StrobeAnimation;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
+import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.subsystem.AdvancedSubsystem;
+import frc.robot.Constants;
 
 public class Notifications extends Command {
   /** Creates a new Notifications. */
@@ -28,19 +39,12 @@ public class Notifications extends Command {
     if(RobotContainer.shooterWrist.isStowed()) {
     RobotContainer.driver.setRumbleAnimation(new RumbleSinWave(.5));
    }
+
    else {
     RobotContainer.driver.setRumbleAnimation(new RumbleOff());
    }
-    if (RobotContainer.shooter.atSpeed() && RobotContainer.shooterWrist.isAtElevation()) {
-      RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorBlue);
-    }
-    else RobotContainer.LEDs.changeAnimation(AnimationTypes.Empty);
-   
-    if (RobotContainer.intake.hasNote()) {
-      RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorOrange);
-    } else {
-      RobotContainer.LEDs.changeAnimation(AnimationTypes.Empty);
-    }
+    
+  
   }
 
 
