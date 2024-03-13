@@ -30,7 +30,7 @@ public class FireControl extends SubsystemBase {
   public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
     this.poseSupplier = poseSupplier;
     this.allianceSupplier = allianceSupplier;
-    this.speakerController = new PIDController(1.5, 1.5, 0.025); //MAKE CONSTANTS
+    this.speakerController = new PIDController(2.0, 0, 0.025);//new PIDController(1.5, 1.5, 0.025); //MAKE CONSTANTS
     speakerController.setIntegratorRange(-0.5, 0.5);
     speakerController.setIZone(15);
     speakerController.setTolerance(1.75 * Math.PI / 180.0);
@@ -140,7 +140,7 @@ public double getRequiredRotation() {
         }
       }
     rot = speakerController.calculate(measurement, target);
-    rot = MathUtil.clamp(rot, -1, 1);
+    rot = MathUtil.clamp(rot, -0.5, 0.5);
     SmartDashboard.putNumber("FireControl/Required Rotation", rot);
    return rot;
 }

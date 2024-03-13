@@ -14,6 +14,7 @@ import frc.lib.vision.AprilTagDetection;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.util.RobotPoseLookup;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -71,8 +72,9 @@ public class AprilTags extends SubsystemBase {
         AprilTagLookup.addPose(robotPose);
         aprilField.setRobotPose(robotPose.toPose2d());
         if (passedTarget.getPoseAmbiguity() < 0.10) {
-        RobotContainer.swerve.odometry.addVisionMeasurement(robotPose.toPose2d(), imageCaptureTime);
-      }
+          RobotContainer.swerve.odometry.setVisionMeasurementStdDevs(VecBuilder.fill(0.5, 0.5, 0.5));
+          RobotContainer.swerve.odometry.addVisionMeasurement(robotPose.toPose2d(), imageCaptureTime);
+        }
     }
     }
   } 
