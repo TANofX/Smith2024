@@ -2,30 +2,35 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5,
-      "y": 7.25
+      "x": 1.35,
+      "y": 2.8
     },
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoSpeakerShot"
-                }
-              }
-            ]
+            "pathName": "B to shoot pose"
           }
         },
         {
-          "type": "parallel",
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeakerShot"
+          }
+        },
+        {
+          "type": "race",
           "data": {
             "commands": [
               {
@@ -35,13 +40,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.125
+                        "waitTime": 0.2
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "D to piece 1"
+                        "pathName": "B to piece 7"
                       }
                     }
                   ]
@@ -57,16 +62,15 @@
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoSpeakerShot"
-                }
-              }
-            ]
+            "pathName": "Piece 7 to shoot pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeakerShot"
           }
         }
       ]

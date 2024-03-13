@@ -37,12 +37,15 @@ public class SwerveDriveWithGamepad extends Command {
 
   @Override
   public void initialize() {
-    ChassisSpeeds currentSpeeds = RobotContainer.swerve.getCurrentSpeeds();
-    Translation2d hack = new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
-        .rotateBy(RobotContainer.swerve.getPose().getRotation());
-    this.xVelLimiter.reset(hack.getX());
-    this.yVelLimiter.reset(hack.getY());
-    this.angularVelLimiter.reset(currentSpeeds.omegaRadiansPerSecond);
+    // ChassisSpeeds currentSpeeds = RobotContainer.swerve.getCurrentSpeeds();
+    // Translation2d hack = new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
+    //     .rotateBy(RobotContainer.swerve.getPose().getRotation());
+    // this.xVelLimiter.reset(hack.getX());
+    // this.yVelLimiter.reset(hack.getY());
+    // this.angularVelLimiter.reset(currentSpeeds.omegaRadiansPerSecond);
+    this.xVelLimiter.reset(0);
+    this.yVelLimiter.reset(0);
+    this.angularVelLimiter.reset(0);
 
     rotationTarget = null;
   }
