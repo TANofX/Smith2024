@@ -8,10 +8,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.input.controllers.rumble.RumbleOff;
 import frc.lib.input.controllers.rumble.RumbleSinWave;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.LEDs;
 import frc.robot.subsystems.LEDs.AnimationTypes;
 
 public class Notifications extends Command {
+  private enum LED_State {
+    FC_ACTIVE,
+    FC_SPEAKER_READY,
+    FC_SHOOTER_READY,
+    AMP_READY,
+    HAS_NOTE,
+    DEFAULT
+  }
+
+  private LED_State currentState;
+  private LED_State priorState;
+
   /** Creates a new Notifications. */
   public Notifications() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -20,7 +31,10 @@ public class Notifications extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    priorState = LED_State.HAS_NOTE;
+    currentState = LED_State.DEFAULT;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -31,22 +45,61 @@ public class Notifications extends Command {
    else {
     RobotContainer.driver.setRumbleAnimation(new RumbleOff());
    }
+
+   currentState = LED_State.DEFAULT;
+
+   if (RobotContainer.intake.hasNote() || RobotContainer.shooter.hasNote()) {
+    currentState = LED_State.HAS_NOTE;
+   }
+
+   if (RobotContainer.shooter.atSpeed() && RobotContainer.shooterWrist.isAtElevation() && RobotContainer.elevator.isAtElevation()) {
+    currentState = LED_State.AMP_READY;
+   }
+
+   if (RobotContainer.fireControl.trackingTarget()) {
     if (RobotContainer.shooter.atSpeed() && RobotContainer.shooterWrist.isAtElevation()) {
-      RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorBlue);
-    }
-    else RobotContainer.LEDs.changeAnimation(AnimationTypes.Empty);
-   
-    if (RobotContainer.intake.hasNote()) {
-      RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorOrange);
+      if (RobotContainer.fireControl.isAtTargetAngle()) {
+        currentState = LED_State.FC_SPEAKER_READY;
+      } else {
+        currentState = LED_State.FC_SHOOTER_READY;
+      }
     } else {
-      RobotContainer.LEDs.changeAnimation(AnimationTypes.Empty);
+      currentState = LED_State.FC_ACTIVE;
     }
+   }
+
+   if (priorState != currentState) {
+    switch (currentState) {
+      case HAS_NOTE:
+        RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorGreen);
+        break;
+      case FC_ACTIVE:
+        RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorYellow);
+        break;
+      case FC_SHOOTER_READY:
+        RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorBlue);
+        break;
+      case FC_SPEAKER_READY:
+        RobotContainer.LEDs.changeAnimation(AnimationTypes.Empty);
+        break;
+      case AMP_READY:
+        RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorOrange);
+        break;
+      default:
+        RobotContainer.LEDs.changeAnimation(AnimationTypes.OneColorRed);
+        break;
+    }
+   }
+
+   priorState = currentState;
   }
 
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.LEDs.changeAnimation(AnimationTypes.SetAll);
+  }
 
   // Returns true when the command should end.
   @Override

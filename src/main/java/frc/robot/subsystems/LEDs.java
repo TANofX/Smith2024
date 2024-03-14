@@ -49,8 +49,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.XboxController;
-
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
@@ -64,7 +62,7 @@ import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
 
 public class LEDs extends AdvancedSubsystem {
-    private final int LEDS_PER_ANIMATION = 10;
+    private final int LEDS_PER_ANIMATION = 60;
     public final CANdle m_candle = new CANdle(Constants.LEDs.CANdleID, "rio");
     private int m_candleChannel = 0;
     private boolean m_clearAllAnims = false;
@@ -88,7 +86,7 @@ public class LEDs extends AdvancedSubsystem {
         OneColorRed,
         OneColorBlue,
         OneColorGreen,
-        Empty, OneColorOrange
+        Empty, OneColorOrange, OneColorYellow
     }
 
     private AnimationTypes m_currentAnimation;
@@ -102,7 +100,7 @@ public class LEDs extends AdvancedSubsystem {
         configAll.statusLedOffWhenActive = true;
         configAll.disableWhenLOS = false;
         configAll.stripType = LEDStripType.GRB;
-        configAll.brightnessScalar = 0.1;
+        configAll.brightnessScalar = 0.5;
         configAll.vBatOutputMode = VBatOutputMode.Modulated;
         m_candle.configAllSettings(configAll, 100);
         changeAnimation(AnimationTypes.SetAll);
@@ -251,41 +249,46 @@ public class LEDs extends AdvancedSubsystem {
     }
 
     public void changeAnimation(AnimationTypes toChange) {
+        m_candle.clearAnimation(m_candleChannel);
         m_currentAnimation = toChange;
 
         switch (toChange) {
-            default:
             case Empty:
                 m_candleChannel = 0;
-                m_toAnimate = new RainbowAnimation(1, 0.7, LEDS_PER_ANIMATION, m_animDirection,
-                        m_candleChannel * LEDS_PER_ANIMATION + 8);
+                m_toAnimate = new RainbowAnimation(0.75, 0.7, LEDS_PER_ANIMATION, m_animDirection, 8);
                 break;
 
+            default:
             case SetAll:
                 m_toAnimate = null;
                 break;
 
             case OneColorRed:
                 m_candleChannel = 1;
-                m_toAnimate = new StrobeAnimation(130, 0, 0, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
+                m_toAnimate = new StrobeAnimation(130, 0, 0, 0, 0.75, LEDS_PER_ANIMATION, 8);
                 break;
             case OneColorOrange:
                 m_candleChannel = 2;
-                m_toAnimate = new StrobeAnimation(237, 130, 24, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
+                m_toAnimate = new StrobeAnimation(237, 130, 24, 0, 0.75, LEDS_PER_ANIMATION, 8);
                 break;
 
             case OneColorBlue:
                 m_candleChannel = 3;
-                m_toAnimate = new StrobeAnimation(0, 0, 130, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
+                m_toAnimate = new StrobeAnimation(0, 0, 130, 0, 0.75, LEDS_PER_ANIMATION, 8);
                 break;
 
             case OneColorGreen:
                 m_candleChannel = 4;
-                m_toAnimate = new StrobeAnimation(0, 130, 0, LEDS_PER_ANIMATION, m_candleChannel, LEDS_PER_ANIMATION);
+                m_toAnimate = new StrobeAnimation(0, 130, 0, 0, 0.75, LEDS_PER_ANIMATION, 8);
+                break;
+
+            case OneColorYellow:
+                m_candleChannel = 5;
+                m_toAnimate = new StrobeAnimation(200, 200, 0, 0, 0.75, LEDS_PER_ANIMATION, 8);
                 break;
 
         }
-        System.out.println("Changed to " + m_currentAnimation.toString());
+ //       System.out.println("Changed to " + m_currentAnimation.toString());
     }
 
     public void clearAllAnims() {
@@ -298,7 +301,7 @@ public class LEDs extends AdvancedSubsystem {
         if (m_toAnimate == null) {
             if (!m_setAnim) {
                 // set LED strip
-                m_candle.setLEDs(255, 0, 128, 128, 8, 50);
+                m_candle.setLEDs(255, 0, 128, 128, 8, LEDS_PER_ANIMATION);
                 /* Only setLEDs once, because every set will transmit a frame */
                 m_candle.setLEDs(255, 255, 255, 0, 0, 1);
                 m_candle.setLEDs(255, 255, 0, 0, 1, 1);
