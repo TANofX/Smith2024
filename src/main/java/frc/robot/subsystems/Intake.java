@@ -74,6 +74,7 @@ public class Intake extends AdvancedSubsystem {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Intake/Intake Sensor", hasNote());
+    SmartDashboard.putNumber("Intake/Applied Voltage", intakeMotor.getAppliedOutput());
     // This method will be called once per scheduler run
   }
 

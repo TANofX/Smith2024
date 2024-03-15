@@ -54,15 +54,19 @@ import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
+import com.ctre.phoenix.led.TwinkleAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
+import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
 
 public class LEDs extends AdvancedSubsystem {
-    private final int LEDS_PER_ANIMATION = 60;
+    private final int LEDS_PER_ANIMATION = 70;
     public final CANdle m_candle = new CANdle(Constants.LEDs.CANdleID, "rio");
     private int m_candleChannel = 0;
     private boolean m_clearAllAnims = false;
@@ -103,7 +107,7 @@ public class LEDs extends AdvancedSubsystem {
         configAll.brightnessScalar = 0.5;
         configAll.vBatOutputMode = VBatOutputMode.Modulated;
         m_candle.configAllSettings(configAll, 100);
-        changeAnimation(AnimationTypes.SetAll);
+        changeAnimation(AnimationTypes.Empty);
     }
 
     public void toggle5VOverride() {
@@ -265,26 +269,26 @@ public class LEDs extends AdvancedSubsystem {
 
             case OneColorRed:
                 m_candleChannel = 1;
-                m_toAnimate = new StrobeAnimation(130, 0, 0, 0, 0.75, LEDS_PER_ANIMATION, 8);
+                m_toAnimate = new TwinkleAnimation(130, 0, 0, 0, 0.0, LEDS_PER_ANIMATION, TwinklePercent.Percent76, 8);
                 break;
             case OneColorOrange:
                 m_candleChannel = 2;
-                m_toAnimate = new StrobeAnimation(237, 130, 24, 0, 0.75, LEDS_PER_ANIMATION, 8);
+                m_toAnimate = new TwinkleAnimation(237, 130, 24, 0, 0.75, LEDS_PER_ANIMATION, TwinklePercent.Percent76, 8);
                 break;
 
             case OneColorBlue:
                 m_candleChannel = 3;
-                m_toAnimate = new StrobeAnimation(0, 0, 130, 0, 0.75, LEDS_PER_ANIMATION, 8);
+                m_toAnimate = new TwinkleAnimation(0, 0, 130, 0, 0.0, LEDS_PER_ANIMATION,  TwinklePercent.Percent76, 8);
                 break;
 
             case OneColorGreen:
                 m_candleChannel = 4;
-                m_toAnimate = new StrobeAnimation(0, 130, 0, 0, 0.75, LEDS_PER_ANIMATION, 8);
+                m_toAnimate = new TwinkleAnimation(0, 130, 0, 0, 0.0, LEDS_PER_ANIMATION, TwinklePercent.Percent76, 8);
                 break;
 
             case OneColorYellow:
                 m_candleChannel = 5;
-                m_toAnimate = new StrobeAnimation(200, 200, 0, 0, 0.75, LEDS_PER_ANIMATION, 8);
+                m_toAnimate = new TwinkleAnimation(200, 200, 0, 0, 0.75, LEDS_PER_ANIMATION,  TwinklePercent.Percent76, 8);
                 break;
 
         }

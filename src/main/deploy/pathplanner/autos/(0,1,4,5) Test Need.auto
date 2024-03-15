@@ -128,14 +128,14 @@
                 "data": {
                   "pathName": "Piece 5 to Shoot Pose"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoSpeakerShot"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoSpeakerShot"
           }
         }
       ]
