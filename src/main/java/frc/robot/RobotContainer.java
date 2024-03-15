@@ -22,6 +22,8 @@ import frc.robot.commands.AutoFireControl;
 import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.CancelShooter;
 import frc.robot.commands.ClimbPosition;
+import frc.robot.commands.CustomShooterElevation;
+import frc.robot.commands.CustomSpeed;
 import frc.robot.commands.ElevateShooter;
 import frc.robot.commands.ElevatorAfterAmp;
 import frc.robot.commands.ElevatorToMax;
@@ -125,7 +127,7 @@ public class RobotContainer {
     driver.DLeft()
            .onTrue((new ElevateShooter(Constants.Shooter.SHOOT_IN_SPEAKER_AT_SUBWOOFER).alongWith(Commands.runOnce(() -> {
           shooter.startMotorsForShooter(fireControl.getVelocity());
-           }, shooter))).andThen(new Shoot(false).andThen(Commands.waitSeconds(.5).andThen(Commands.runOnce(() -> {
+           }, shooter))).andThen(new Shoot(0).andThen(Commands.waitSeconds(.5).andThen(Commands.runOnce(() -> {
            shooter.stopMotors();
 
            })))));
@@ -133,7 +135,7 @@ public class RobotContainer {
     
     driver.DRight().onTrue((new ElevateShooter(Constants.Shooter.SHOOT_AT_PODIUM).alongWith(Commands.runOnce(() -> {
       shooter.startMotorsForShooter(fireControl.getVelocity());
-   }, shooter))).andThen(new Shoot(false).andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
+   }, shooter))).andThen(new Shoot(0).andThen(Commands.waitSeconds(0.5).andThen(Commands.runOnce(() -> {
       shooter.stopMotors();
     })))));
     driver.RT().whileTrue(new ConditionalCommand(new IntakeNote(), (new IntakeNote().alongWith(new ReadyToPassNote())).andThen(new TransferNote()), shooterWrist::isStowed));
@@ -151,6 +153,7 @@ public class RobotContainer {
     coDriver.DDown().whileTrue(new RetractElevator());
     coDriver.LT().onTrue(shootInAmpCommand());
     coDriver.RT().onTrue(shootInSpeaker());
+    coDriver.Y().onTrue(feedShot());
     coDriver.START();
     coDriver.B().toggleOnTrue(new ManualShooterElevation(coDriver::getRightY));
     coDriver.X().onTrue(new CancelShooter());
@@ -169,7 +172,7 @@ public class RobotContainer {
             new TransferNote().andThen(new RobotFaceSpeaker().alongWith(
               new FireControlWrist()).raceWith(
               new ShootInSpeaker().andThen(
-                new Shoot(false).andThen(
+                new Shoot(1).andThen(
                   Commands.waitSeconds(0.125).andThen(
                     new CancelShooter()
                     )
@@ -188,7 +191,7 @@ public class RobotContainer {
           new AutoFireControl().alongWith(
       
           new ShootInSpeaker().andThen(
-            new Shoot(false)).andThen(
+            new Shoot(1)).andThen(
               Commands.waitSeconds(0.125)).andThen(
                 new CancelShooter()
             )
@@ -200,7 +203,7 @@ public class RobotContainer {
     return  new ReadyToPassNote().andThen(
               new TransferNote().andThen(
                 new ShootInAmp().andThen(
-                  new Shoot(true).andThen(
+                  new Shoot(-1).andThen(
                     new ElevatorAfterAmp().alongWith(
                     new CancelShooter()
                     )
@@ -220,5 +223,21 @@ public class RobotContainer {
       return Optional.empty();
     }
   }
-  
+  private Command feedShot() {
+    return (
+          new ReadyToPassNote().andThen(
+            new TransferNote().andThen(new CustomShooterElevation(Constants.Shooter.FEED_SHOOT).raceWith(
+              new CustomSpeed().andThen(
+                new Shoot(0).andThen(
+                  Commands.waitSeconds(0.125)).andThen(
+                    new CancelShooter()
+                    )
+                  )
+                )
+              )
+            )
+          )
+
+       ;
+  }
 }

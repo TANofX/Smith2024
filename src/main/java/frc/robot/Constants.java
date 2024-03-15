@@ -41,6 +41,7 @@ public final class Constants {
     public static final double gearRatioShooterSide = 1 / 1.333; // Rotations of the motor per rotations of the wheel
     public static final double wheelDiameter = Units.inchesToMeters(3.0);
     public static final double maxRPM = 5700.0;
+    public static final double FEED_SPEED = 20;
     public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio
@@ -52,6 +53,7 @@ public final class Constants {
     public static final int noteSensorChannel = 1;
     public static final Rotation2d shootInAmpAngle = Rotation2d.fromDegrees(-45); // Change pls???
     public static final Rotation2d SHOOT_IN_SPEAKER_AT_SUBWOOFER = Rotation2d.fromDegrees(50);
+    public static final double FEED_SHOOT = 45;
     public static final Rotation2d SHOOT_AT_PODIUM = Rotation2d.fromDegrees(32);
     public static final double allowedErrorInDegreesForAngle = 3.5; /// may change???
     public static final int elevationEncoderCANID = 41;
