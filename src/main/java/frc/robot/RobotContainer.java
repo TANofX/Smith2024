@@ -36,6 +36,7 @@ import frc.robot.commands.ManualShooterElevation;
 import frc.robot.commands.ReadyToPassNote;
 import frc.robot.commands.RetractElevator;
 import frc.robot.commands.ReverseIntake;
+import frc.robot.commands.RobotFaceFeed;
 import frc.robot.commands.RobotFaceSpeaker;
 import frc.robot.commands.SafePosition;
 import frc.robot.commands.Shoot;
@@ -89,6 +90,7 @@ public class RobotContainer {
     //SmartDashboard.putData("Tune Shooter Intake", shooter.getIntakeTunerCommand());
     //SmartDashboard.putData("Tune Intake", intake.getIntakeTuner());
     SmartDashboard.putData("Auto Fire Control", new AutoFireControl());
+    SmartDashboard.putData("Flat Shot", flatShot());
     // SmartDashboard.putData(Commands.runOnce(() -> {
     // intake.updateRotationOffset();}, intake));
 
@@ -188,7 +190,7 @@ public class RobotContainer {
     return
       new ReadyToPassNote().andThen(
         new TransferNote()).andThen(
-          new AutoFireControl().alongWith(
+          new AutoFireControl().raceWith(
       
           new ShootInSpeaker().andThen(
             new Shoot(1)).andThen(
@@ -226,8 +228,26 @@ public class RobotContainer {
   private Command feedShot() {
     return (
           new ReadyToPassNote().andThen(
-            new TransferNote().andThen(new CustomShooterElevation(Constants.Shooter.FEED_SHOOT).raceWith(
-              new CustomSpeed().andThen(
+            new TransferNote().andThen((new RobotFaceFeed().alongWith(
+            new CustomShooterElevation(Constants.Shooter.FEED_SHOOT))).raceWith(
+              new CustomSpeed(Constants.Shooter.FEED_SPEED).andThen(
+                new Shoot(0).andThen(
+                  Commands.waitSeconds(0.125)).andThen(
+                    new CancelShooter()
+                    )
+                  )
+                )
+              )
+            )
+          )
+
+       ;
+  }
+  private Command flatShot() {
+    return (
+          new ReadyToPassNote().andThen(
+            new TransferNote().andThen(new CustomShooterElevation(0.0).raceWith(
+              new CustomSpeed(Constants.Shooter.FEED_SPEED).andThen(
                 new Shoot(0).andThen(
                   Commands.waitSeconds(0.125)).andThen(
                     new CancelShooter()

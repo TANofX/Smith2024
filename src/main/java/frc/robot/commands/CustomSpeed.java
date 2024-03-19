@@ -10,9 +10,11 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class CustomSpeed extends Command {
+  private double speed;
   /** Creates a new PassNoteFromIntakeToSpeaker. */
-  public CustomSpeed() {
+  public CustomSpeed(double speedInMPS) {
     addRequirements(RobotContainer.shooter);
+    speed = speedInMPS;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -22,7 +24,7 @@ public class CustomSpeed extends Command {
   @Override
   public void initialize() {
     if (RobotContainer.shooter.hasNote()) {
-    RobotContainer.shooter.startMotorsForShooter(Constants.Shooter.FEED_SPEED);
+    RobotContainer.shooter.startMotorsForShooter(speed);
     //System.out.println("Trying to start Shooter Motors");
   //RobotContainer.fireControl.setTargetMode(true);
   }

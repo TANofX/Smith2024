@@ -25,6 +25,7 @@ public class Intake extends AdvancedSubsystem {
   // pivotIntakeMotor.getPIDController();
   private final SparkPIDController intakeController = intakeMotor.getPIDController();
   private final NoteSensor intakeBeamBreakSensor = new NoteSensor(Constants.Intake.intakeNoteSensorChannel);
+  private double speedInRPM;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -35,21 +36,21 @@ public class Intake extends AdvancedSubsystem {
     intakeController.setI(Constants.Intake.intakeMotorI);
     intakeController.setD(Constants.Intake.intakeMotorD);
     intakeController.setFF(Constants.Intake.intakeMotorPFeedForward);
+
   }
 
   public void reverseIntake() {
-    intakeController.setReference(-4000, ControlType.kVelocity);
+    passGamePiece(-1.4);
     // runIntakeMotor(-1.0);
   }
 
   public void intakeGamePiece() {
-    intakeController.setReference(4000, ControlType.kVelocity);
+    passGamePiece(1.9);
     // runIntakeMotor(1.0);
   }
 
   public void passGamePiece(double speedMetersPerSecond) {
-    double speedInRPM = 1 * speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter) * 60.0
-        * Constants.Intake.intakeGearRatio;
+    speedInRPM = Constants.Intake.intakeGearRatio * 60 * speedMetersPerSecond / (Math.PI * Constants.Intake.intakeWheelDiameter);
 
     intakeController.setReference(speedInRPM, ControlType.kVelocity);
   }
@@ -75,6 +76,8 @@ public class Intake extends AdvancedSubsystem {
   public void periodic() {
     SmartDashboard.putBoolean("Intake/Intake Sensor", hasNote());
     SmartDashboard.putNumber("Intake/Applied Voltage", intakeMotor.getAppliedOutput());
+    SmartDashboard.putNumber("Intake/Target RPM", speedInRPM);
+    SmartDashboard.putNumber("Intake/Current RPM", intakeMotor.getEncoder().getVelocity());
     // This method will be called once per scheduler run
   }
 

@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.FireControl;
 
 public class AutoFireControl extends Command {
   /** Creates a new AutoFireControl. */
@@ -23,6 +24,7 @@ private final SlewRateLimiter angularVelLimiter;
   
   @Override
   public void initialize() {
+    RobotContainer.fireControl.setTargetMode(FireControl.TargetLocation.SPEAKER);
    }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,13 +42,15 @@ private final SlewRateLimiter angularVelLimiter;
   public void end(boolean interrupted) {
     RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds());
     RobotContainer.shooterWrist.stopMotor();
+    RobotContainer.fireControl.setTargetMode(FireControl.TargetLocation.NONE);
   }
   
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.shooterWrist.isAtElevation() && RobotContainer.fireControl.isAtTargetAngle();
+    return false;
+    //RobotContainer.shooterWrist.isAtElevation() && RobotContainer.fireControl.isAtTargetAngle();
 
   }
 }

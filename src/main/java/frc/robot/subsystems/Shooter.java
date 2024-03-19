@@ -51,6 +51,7 @@ public class Shooter extends AdvancedSubsystem {
   }
 
   public void startMotorsForShooter(double speedInMps) {
+    speedInMps = speedInMps + 5;
     speedInRPM = -1 * speedInMps / (Math.PI * Constants.Shooter.wheelDiameter) * 60.0
         * Constants.Shooter.gearRatioShooterSide;
     topController.setReference(speedInRPM, ControlType.kVelocity, 0);
@@ -81,7 +82,7 @@ public class Shooter extends AdvancedSubsystem {
 
   public boolean atSpeed() {
     double error = Math.abs(getTargetShooterSpeed() - getShooterSpeed());
-    return error <= Math.abs(getTargetShooterSpeed() * 0.05);
+    return error <= Math.abs(getTargetShooterSpeed() * 0.025);
 
   }
 
