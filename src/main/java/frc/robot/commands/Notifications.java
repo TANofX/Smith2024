@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.input.controllers.rumble.RumbleOff;
 import frc.lib.input.controllers.rumble.RumbleSinWave;
@@ -46,6 +47,7 @@ public class Notifications extends Command {
     RobotContainer.driver.setRumbleAnimation(new RumbleOff());
    }
 
+   SmartDashboard.putNumber("Total Current", RobotContainer.powerDistribution.getTotalCurrent());
    currentState = LED_State.DEFAULT;
 
    if (RobotContainer.intake.hasNote() || RobotContainer.shooter.hasNote()) {
