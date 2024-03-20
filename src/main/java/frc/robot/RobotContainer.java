@@ -112,7 +112,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("SwerveControl", new SwerveDriveWithGamepad());
     // NamedCommands.registerCommand("", );
     
-    PPHolonomicDriveController.setRotationTargetOverride(this::overrideAngle);
+    //PPHolonomicDriveController.setRotationTargetOverride(this::overrideAngle);
     
     Autos.init();
     

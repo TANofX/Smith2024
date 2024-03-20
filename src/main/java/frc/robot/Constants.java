@@ -42,7 +42,7 @@ public final class Constants {
     public static final double gearRatioShooterSide = 1 / 1.333; // Rotations of the motor per rotations of the wheel
     public static final double wheelDiameter = Units.inchesToMeters(3.0);
     public static final double maxRPM = 5700.0;
-    public static final double FEED_SPEED = 14.5;
+    public static final double FEED_SPEED = 17;
     public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio
@@ -188,8 +188,8 @@ public final class Constants {
   public static final class FireControl {
     public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
-    public static final double HEIGHT = Units.inchesToMeters(66.13);
-    public static final double TARGET_VELOCITY_MPS = 10;
+    public static final double HEIGHT = Units.inchesToMeters(70);
+    public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
     public static final Pose2d BLUE_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(-1.5),

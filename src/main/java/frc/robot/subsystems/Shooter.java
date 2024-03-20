@@ -43,7 +43,7 @@ public class Shooter extends AdvancedSubsystem {
     topController.setD(Constants.Shooter.shooterMotorD, 0);
     topController.setFF(Constants.Shooter.shooterMotorFeedForward, 0);
     topController.setIZone(Constants.Shooter.shooterMotorIZone, 0);
-    topMotor.setSmartCurrentLimit(100,100);
+    topMotor.setSmartCurrentLimit(60 , 70);
   }
 
   public void stopIntakeMotor() {
@@ -51,7 +51,7 @@ public class Shooter extends AdvancedSubsystem {
   }
 
   public void startMotorsForShooter(double speedInMps) {
-    speedInMps = speedInMps + 5;
+    //speedInMps = speedInMps + 5;
     speedInRPM = -1 * speedInMps / (Math.PI * Constants.Shooter.wheelDiameter) * 60.0
         * Constants.Shooter.gearRatioShooterSide;
     topController.setReference(speedInRPM, ControlType.kVelocity, 0);

@@ -134,7 +134,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     driveMotor.getPIDController().setIZone(DRIVE_I_ZONE, 0);
     driveMotor.getPIDController().setD(DRIVE_KD, 0);
     driveMotor.getPIDController().setFF(DRIVE_FEED_FORWARD, 0);
-    driveMotor.setSmartCurrentLimit(100, 100);
+    driveMotor.setSmartCurrentLimit(100, 60);
     // driveSimState.addSparkMax(driveMotor, 8.0f, 5500.0f);
 
     rotationMotor = new CANSparkFlex(rotationMotorCanID, MotorType.kBrushless);

@@ -74,12 +74,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Speaker Note to Shoot"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "AutoSpeakerShot"
@@ -92,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Shoot to Amp Note"
+                  "pathName": "Speaker Note to Amp Note"
                 }
               },
               {
