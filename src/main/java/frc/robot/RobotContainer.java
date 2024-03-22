@@ -187,6 +187,10 @@ public class RobotContainer {
   }
   
   private Command autoShootInSpeaker() {
+    if (!shooter.hasNote() && !intake.hasNote()) {
+      return new CancelShooter();
+    }
+    else {
     return
       new ReadyToPassNote().andThen(
         new TransferNote()).andThen(
@@ -199,6 +203,7 @@ public class RobotContainer {
             )
           )
       );
+    }
   }
 
   private Command shootInAmpCommand() {
