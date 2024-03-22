@@ -134,7 +134,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     driveMotor.getPIDController().setIZone(DRIVE_I_ZONE, 0);
     driveMotor.getPIDController().setD(DRIVE_KD, 0);
     driveMotor.getPIDController().setFF(DRIVE_FEED_FORWARD, 0);
-    driveMotor.setSmartCurrentLimit(100, 60);
+    driveMotor.setSmartCurrentLimit(100, 80);
     // driveSimState.addSparkMax(driveMotor, 8.0f, 5500.0f);
 
     rotationMotor = new CANSparkFlex(rotationMotorCanID, MotorType.kBrushless);
@@ -161,7 +161,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     rotationMotor.getPIDController().setSmartMotionMaxVelocity(ROTATION_POSITION_MAX_VELOCITY, 1);
     rotationMotor.getPIDController().setSmartMotionMaxAccel(ROTATION_POSITION_MAX_ACCELERATION, 1);
     rotationMotor.getPIDController().setSmartMotionAllowedClosedLoopError(ROTATION_POSITION_ERROR, 1);
-    rotationMotor.setSmartCurrentLimit(100,100);
+    rotationMotor.setSmartCurrentLimit(100,80);
     // driveSim = new
     // LinearSystemSim<>(LinearSystemId.identifyVelocitySystem(DRIVE_KV, DRIVE_KA));
     // rotationSim =
@@ -186,7 +186,7 @@ public class Mk4SwerveModuleProSparkFlex extends AdvancedSubsystem {
     SmartDashboard.putNumber(getName() + "/SteerOutput", rotationMotor.getAppliedOutput());
     SmartDashboard.putNumber(getName() + "/SteerTarget", targetState.angle.getDegrees());
     SmartDashboard.putNumber(getName() + "/SteerActual", getAbsoluteRotationDegrees());
-
+    SmartDashboard.putNumber(getName() + "Current", driveMotor.getOutputCurrent());
     // Refresh cached values in background
     StatusSignal.waitForAll(
         0,

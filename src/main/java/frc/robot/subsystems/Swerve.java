@@ -195,6 +195,7 @@ public class Swerve extends AdvancedSubsystem {
     SmartDashboard.putNumber("FR", modules[1].getDriveVelocityMetersPerSecond());
     SmartDashboard.putNumber("BL", modules[2].getDriveVelocityMetersPerSecond());
     SmartDashboard.putNumber("BR", modules[3].getDriveVelocityMetersPerSecond());
+  
 
     SmartDashboard.putNumberArray(
         "Swerve/ModuleStates",

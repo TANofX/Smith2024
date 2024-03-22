@@ -38,7 +38,7 @@ public class Intake extends AdvancedSubsystem {
     intakeController.setFF(Constants.Intake.intakeMotorPFeedForward);
 
   }
-
+  
   public void reverseIntake() {
     passGamePiece(-1.4);
     // runIntakeMotor(-1.0);
@@ -78,6 +78,8 @@ public class Intake extends AdvancedSubsystem {
     SmartDashboard.putNumber("Intake/Applied Voltage", intakeMotor.getAppliedOutput());
     SmartDashboard.putNumber("Intake/Target RPM", speedInRPM);
     SmartDashboard.putNumber("Intake/Current RPM", intakeMotor.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Intake/Current", intakeMotor.getOutputCurrent());
+
     // This method will be called once per scheduler run
   }
 

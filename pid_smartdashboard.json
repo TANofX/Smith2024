@@ -545,6 +545,24 @@
                   "_title": "Max Output",
                   "_glyph": 148,
                   "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Shooter Elevation P Gain",
+                  "_title": "Shooter Elevation P Gain",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SmartDashboard/Intake Target Velocity",
+                  "_title": "Set Velocity",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Slider Settings/Min": -5700.0,
+                  "Slider Settings/Max": 5700.0,
+                  "Slider Settings/Block increment": 100.0,
+                  "Visuals/Display value": true
                 }
               ]
             }
@@ -586,23 +604,6 @@
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
               "Y-axis/Unit": "ul"
-            }
-          },
-          "5,0": {
-            "size": [
-              4,
-              1
-            ],
-            "content": {
-              "_type": "Number Slider",
-              "_source0": "network_table:///SmartDashboard/Intake Target Velocity",
-              "_title": "Set Velocity",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Slider Settings/Min": -5700.0,
-              "Slider Settings/Max": 5700.0,
-              "Slider Settings/Block increment": 100.0,
-              "Visuals/Display value": true
             }
           },
           "9,0": {
@@ -748,19 +749,6 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "5,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Shooter Elevation P Gain",
-              "_title": "Shooter Elevation P Gain",
-              "_glyph": 148,
-              "_showGlyph": false
             }
           },
           "6,3": {
@@ -910,6 +898,75 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "5,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/SystemStatus/Swerve/SystemCheck",
+              "_title": "SystemStatus/Swerve/SystemCheck",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/SystemStatus/Swerve/CheckRan",
+              "_title": "SystemStatus/Swerve/CheckRan",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/SystemStatus/FLSwerveModule/SystemCheck",
+              "_title": "SystemStatus/FLSwerveModule/SystemCheck",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/SystemStatus/FLSwerveModule/CheckRan",
+              "_title": "SystemStatus/FLSwerveModule/CheckRan",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "5,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/SystemStatus/FRSwerveModule/SystemCheck",
+              "_title": "SystemStatus/FRSwerveModule/SystemCheck",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
@@ -3478,8 +3535,7 @@
               "Y-axis/Automatic bounds": true,
               "Y-axis/Upper bound": 1.0,
               "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/Total Current": true
+              "Y-axis/Unit": "ul"
             }
           },
           "3,0": {
@@ -3500,9 +3556,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.333333492279053,
-    "y": -7.333333492279053,
-    "width": 1294.6666259765625,
-    "height": 694.6666870117188
+    "x": -6.666666507720947,
+    "y": 0.0,
+    "width": 1292.0,
+    "height": 680.0
   }
 }
