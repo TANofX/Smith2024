@@ -4,6 +4,7 @@
 package frc.robot;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -110,6 +111,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("TansferNote", new TransferNote());
     NamedCommands.registerCommand("AutoSpeakerShot", autoShootInSpeaker());
     NamedCommands.registerCommand("SwerveControl", new SwerveDriveWithGamepad());
+    //NamedCommands.registerCommand("New AutoSpeakerShot", newAutoShootInSpeaker());
     // NamedCommands.registerCommand("", );
     
     //PPHolonomicDriveController.setRotationTargetOverride(this::overrideAngle);
@@ -167,6 +169,12 @@ public class RobotContainer {
         }))))); */
   
   }
+  private boolean doesNotHaveNote() {
+    return !shooter.hasNote() && !intake.hasNote();
+  }
+  private BooleanSupplier noNotes() {
+    return this::doesNotHaveNote;
+  }
 
   private Command shootInSpeaker() {
     return (
@@ -187,12 +195,8 @@ public class RobotContainer {
   }
   
   private Command autoShootInSpeaker() {
-    if (!shooter.hasNote() && !intake.hasNote()) {
-      return new CancelShooter();
-    }
-    else {
-    return
-      new ReadyToPassNote().andThen(
+
+   return new ConditionalCommand(new CancelShooter(), new ReadyToPassNote().andThen(
         new TransferNote()).andThen(
           new AutoFireControl().raceWith(
       
@@ -202,9 +206,10 @@ public class RobotContainer {
                 new CancelShooter()
             )
           )
-      );
-    }
+      ), noNotes());
   }
+  
+  
 
   private Command shootInAmpCommand() {
     return  new ReadyToPassNote().andThen(
