@@ -19,7 +19,7 @@ public class SwerveDriveWithGamepad extends Command {
 
   private Rotation2d rotationTarget = null;
   private final double rotationHoldFactor;
-
+  private static final double maxSpeedForChild = 0.5;
   private final boolean aimAtGamePiece;
 
   public SwerveDriveWithGamepad(boolean aimAtGamePiece) {
@@ -52,9 +52,9 @@ public class SwerveDriveWithGamepad extends Command {
 
   @Override
   public void execute() {
-    double x = -RobotContainer.driver.getLeftY();
+    double x = -RobotContainer.driver.getLeftY() * maxSpeedForChild;
     x = Math.copySign(x * x, x);
-    double y = -RobotContainer.driver.getLeftX();
+    double y = -RobotContainer.driver.getLeftX()* maxSpeedForChild;
     y = Math.copySign(y * y, y);
     Optional<Alliance> currentAlliance = DriverStation.getAlliance();
     if (currentAlliance.isPresent() && currentAlliance.get() == Alliance.Red) {
@@ -65,7 +65,7 @@ public class SwerveDriveWithGamepad extends Command {
     if (RobotContainer.fireControl.trackingTarget()) {
       rot = RobotContainer.fireControl.getRequiredRotation();
     } else {
-      rot = -RobotContainer.driver.getRightX();
+      rot = -RobotContainer.driver.getRightX() * maxSpeedForChild;
       rot = Math.copySign(rot * rot, rot);
     }
     double targetAngularVel = rot * Constants.Swerve.maxAngularVelTele;

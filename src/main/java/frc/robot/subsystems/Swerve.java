@@ -20,6 +20,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 //import edu.wpi.first.math.numbers.N1;
 //import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -61,7 +63,10 @@ public class Swerve extends AdvancedSubsystem {
 
   private final TunablePIDSet steerTunable;
   private final TunablePIDSet driveTunable;
-
+  private StructArrayPublisher<SwerveModuleState> ModuleStatesPublisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("/Swerve/States", SwerveModuleState.struct).publish();
+  private StructArrayPublisher<SwerveModuleState> targetModuleStatesPublisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("/Swerve/TargetStates", SwerveModuleState.struct).publish();
   public Swerve() {
     poseLookup = new RobotPoseLookup<Pose2d>();
 
@@ -181,7 +186,23 @@ public class Swerve extends AdvancedSubsystem {
     SmartDashboard.putNumber("Swerve/OdomRuntime", correctTimeMS);
     field2d.setRobotPose(currentPose);
     poseLookup.addPose(currentPose);
-
+    SwerveModuleState[] moduleStates = 
+      new SwerveModuleState[] {
+        modules[0].getState(),
+        modules[1].getState(),
+        modules[2].getState(),
+        modules[3].getState()
+    };
+    ModuleStatesPublisher.set(moduleStates);
+     
+    SwerveModuleState[] targetModuleStates = 
+      new SwerveModuleState[] {
+        modules[0].getTargetState(),
+        modules[1].getTargetState(),
+        modules[2].getTargetState(),
+        modules[3].getTargetState()
+    };
+    targetModuleStatesPublisher.set(targetModuleStates);
     SmartDashboard.putNumberArray(
         "Swerve/Odometry",
         new double[] {
@@ -222,6 +243,7 @@ public class Swerve extends AdvancedSubsystem {
             modules[3].getTargetState().angle.getDegrees(),
             modules[3].getTargetState().speedMetersPerSecond,
         });
+      
 
     // Rotation3d orientation = getOrientation();
     // SmartDashboard.putNumberArray(

@@ -312,7 +312,7 @@ if (Math.abs(deltaRot) > 0.05) {
    * @return Drive motor velocity
    */
   public double getDriveVelocityMetersPerSecond() {
-    return driveMotor.getEncoder().getVelocity() * DRIVE_METERS_PER_ROTATION;
+    return (driveMotor.getEncoder().getVelocity() * DRIVE_METERS_PER_ROTATION) / 60;
   }
 
   /**
@@ -321,7 +321,7 @@ if (Math.abs(deltaRot) > 0.05) {
    * @return Rotation motor velocity
    */
   public double getRotationVelocityDegreesPerSecond() {
-    return rotationMotor.getEncoder().getVelocity() * ROTATION_DEGREES_PER_ROTATION;
+    return (rotationMotor.getEncoder().getVelocity() * ROTATION_DEGREES_PER_ROTATION) / 60;
   }
 
   /**
