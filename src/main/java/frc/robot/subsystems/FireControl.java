@@ -20,9 +20,15 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class FireControl extends SubsystemBase {
+  public enum TargetLocation {
+    AMP,
+    SPEAKER,
+    NONE
+  }
   private Supplier<Pose2d> poseSupplier;
   private Supplier<Optional<Alliance>> allianceSupplier;
   private boolean trackTarget = false;
+  private TargetLocation targetingMode = TargetLocation.NONE;
   private final PIDController speakerController;
   private double rot;
 
@@ -30,33 +36,43 @@ public class FireControl extends SubsystemBase {
   public FireControl(Supplier<Pose2d> poseSupplier, Supplier<Optional<Alliance>> allianceSupplier) {
     this.poseSupplier = poseSupplier;
     this.allianceSupplier = allianceSupplier;
-    this.speakerController = new PIDController(1.0, 0, 0.01); //MAKE CONSTANTS
-
+    this.speakerController = new PIDController(2.0, 0, 0.025);//new PIDController(1.5, 1.5, 0.025); //MAKE CONSTANTS
+    speakerController.setIntegratorRange(-0.5, 0.5);
+    speakerController.setIZone(15);
+    speakerController.setTolerance(1.75 * Math.PI / 180.0);
   }
 
   @Override
   public void periodic() {
     Pose2d currentPosition = poseSupplier.get();
     double distanceFromSpeaker;
+
     // Rotation2d robotDesiredAngle;
     Optional<Alliance> currentAlliance = allianceSupplier.get();
 
     Pose2d shooterPose = currentPosition; // .plus(new Transform2d(new Translation2d(), Rotation2d.fromDegrees(180)));
     // Transform2d shooterToSpeaker;
     Translation2d shooterToSpeaker;
+    Translation2d shooterToAmp;
 
     if (currentAlliance.isPresent() && Alliance.Red == currentAlliance.get()) {
       shooterToSpeaker = Constants.FireControl.RED_SPEAKER_POSITION.getTranslation()
+          .minus(shooterPose.getTranslation());
+          shooterToAmp = Constants.FireControl.RED_AMP_CORNER_POSITION.getTranslation().minus(Constants.FireControl.FEEDOFFSET)
           .minus(shooterPose.getTranslation());// new Transform2d(shooterPose,
                                                // Constants.FireControl.RED_SPEAKER_POSITION).getTranslation();
     } else {
       shooterToSpeaker = Constants.FireControl.BLUE_SPEAKER_POSITION.getTranslation()
+          .minus(shooterPose.getTranslation());
+      shooterToAmp = Constants.FireControl.BLUE_AMP_CORNER_POSITION.getTranslation().minus(Constants.FireControl.FEEDOFFSET)
           .minus(shooterPose.getTranslation());// new Transform2d(shooterPose,
                                                // Constants.FireControl.BLUE_SPEAKER_POSITION).getTranslation();
     }
 
     distanceToTarget = distanceFromSpeaker = shooterToSpeaker.getNorm() + Units.inchesToMeters(-6);
     robotDesiredAngle = shooterToSpeaker.getAngle().minus(Rotation2d.fromDegrees(180))
+        .plus(Constants.FireControl.AZMUTH_OFFSET);
+    feedDesiredAngle = shooterToAmp.getAngle().minus(Rotation2d.fromDegrees(180))
         .plus(Constants.FireControl.AZMUTH_OFFSET);
 
     shooterAngle = Rotation2d
@@ -78,20 +94,13 @@ public class FireControl extends SubsystemBase {
     } else {
       shooterAngle = Rotation2d.fromDegrees(0);
     }
-          double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());
-      double target = MathUtil.angleModulus(RobotContainer.fireControl.getDesiredRobotAngle().getRadians());
-      if (Math.abs(target - measurement) > Math.PI) {
-        if (measurement < (-Math.PI / 2.0)) {
-          target -= 2 * Math.PI;
-        } else {
-          target += 2 * Math.PI;
-        }
-      }
-      rot = speakerController.calculate(measurement, target);
-      rot = MathUtil.clamp(rot, -1, 1);
+      
+
 
     SmartDashboard.putNumber("FireControl/Distance To Target", distanceFromSpeaker);
     SmartDashboard.putNumber("FireControl/Robot Desired Angle", robotDesiredAngle.getDegrees());
+    SmartDashboard.putNumber("FireControl/Angle Error", robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees());
+
   }
 
   private double shooterVelocity;
@@ -99,6 +108,7 @@ public class FireControl extends SubsystemBase {
   private Rotation2d robotDesiredAngle;
   private Rotation2d altShooterAngle;
   private double distanceToTarget;
+  private Rotation2d feedDesiredAngle;
 
   public double getDistanceToTarget() {
     return distanceToTarget;
@@ -120,25 +130,57 @@ public class FireControl extends SubsystemBase {
     return robotDesiredAngle;
   }
 
-  public void setTargetMode(boolean track) {
+  public void setTargetMode(TargetLocation track) {
+    targetingMode = track;
+    switch (targetingMode) {
+      case AMP:
+      case SPEAKER:
+      this.trackTarget = true;
+        break;
+      
+      default:
+      trackTarget = false;
+        break;
+    }
     // if (RobotContainer.shooter.hasNote()) {
-    this.trackTarget = track;
+    }
     // }
     // else {
     // this.trackTarget = false;
     // }
-  }
 
   public boolean trackingTarget() {
     return trackTarget;
   }
 
-public double getRequiredRotation() {
+public double calculateRotation(Rotation2d targetAngle) {
+  double measurement = MathUtil.angleModulus(RobotContainer.swerve.getPose().getRotation().getRadians());
+  double target = MathUtil.angleModulus(targetAngle.getRadians());
+      if (Math.abs(target - measurement) > Math.PI) {
+        if (measurement < (-Math.PI / 2.0)) {
+          target -= 2 * Math.PI;
+        } else {
+          target += 2 * Math.PI;
+        }
+      }
+    rot = speakerController.calculate(measurement, target);
+    rot = MathUtil.clamp(rot, -0.5, 0.5);
+    SmartDashboard.putNumber("FireControl/Required Rotation", rot);
    return rot;
+}
+public double getRequiredRotation() {
+  switch (targetingMode) {
+    case SPEAKER:
+      return calculateRotation(getDesiredRobotAngle());
+    case AMP:
+      return calculateRotation(feedDesiredAngle);
+    default:
+      return 0;
+  }
 }
 
 public boolean isAtTargetAngle() {
-  return (Math.abs(robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees()) < 1.0);
+  //return (Math.abs(robotDesiredAngle.getDegrees() - poseSupplier.get().getRotation().getDegrees()) < 1.0);
+  return speakerController.atSetpoint();
 }
-
 }

@@ -6,12 +6,15 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
+
 import java.io.IOException;
 
 public final class Constants {
@@ -39,6 +42,7 @@ public final class Constants {
     public static final double gearRatioShooterSide = 1 / 1.333; // Rotations of the motor per rotations of the wheel
     public static final double wheelDiameter = Units.inchesToMeters(3.0);
     public static final double maxRPM = 5700.0;
+    public static final double FEED_SPEED = 17;
     public static final double shooterIntakeGearRatio = 60.0 / 1.0;
     public static final double shooterIntakeWheelDiamater = Units.inchesToMeters(3.0);
     public static final double intakeDistancePerMotorRotation = Math.PI / shooterIntakeGearRatio
@@ -50,11 +54,13 @@ public final class Constants {
     public static final int noteSensorChannel = 1;
     public static final Rotation2d shootInAmpAngle = Rotation2d.fromDegrees(-45); // Change pls???
     public static final Rotation2d SHOOT_IN_SPEAKER_AT_SUBWOOFER = Rotation2d.fromDegrees(50);
+    public static final double FEED_SHOOT = 35;
     public static final Rotation2d SHOOT_AT_PODIUM = Rotation2d.fromDegrees(32);
-    public static final double allowedErrorInDegreesForAngle = 3.5; /// may change???
+    public static final double allowedErrorInDegreesForAngle = 2.5; /// may change???
     public static final int elevationEncoderCANID = 41;
     public static final Rotation2d stowAngle = Rotation2d.fromDegrees(-179.5);
     public static final Rotation2d intakeAngle = Rotation2d.fromDegrees(42.0);
+    public static final Rotation2d elevatorAmpDownAngle = Rotation2d.fromDegrees(0);
     public static final double shooterIntakeMotorP = 0.00015;
     public static final double shooterIntakeMotorI = 0.00000001;
     public static final double shooterIntakeMotorD = 0.00005;
@@ -102,6 +108,21 @@ public final class Constants {
     public static final double intakeMotorD = 0.0;
     public static final double intakeMotorPFeedForward = 0.0001;
   }
+   public static final class LEDs {
+   public static final int CANdleID = 4;
+    public static final int JoystickId = 0;
+    public static final int IncrementAnimButton = XboxController.Button.kRightBumper.value;
+    public static final int DecrementAnimButton = XboxController.Button.kLeftBumper.value;
+    public static final int BlockButton = XboxController.Button.kStart.value;
+    public static final int MaxBrightnessAngle = 90;
+    public static final int MidBrightnessAngle = 180;
+    public static final int ZeroBrightnessAngle = 270;
+    public static final int ChangeDirectionAngle = 0;
+    public static final int VbatButton = XboxController.Button.kA.value;
+    public static final int V5Button = XboxController.Button.kB.value;
+    public static final int CurrentButton = XboxController.Button.kX.value;
+    public static final int TemperatureButton = XboxController.Button.kY.value;
+}
 
   public static final class Swerve {
     public static final int imuCanID = 3;
@@ -167,7 +188,7 @@ public final class Constants {
   public static final class FireControl {
     public static final double FINAL_Y_VELOCITY = 3;
     public static final double ACCELERATION = 9.81;
-    public static final double HEIGHT = Units.inchesToMeters(62.13);
+    public static final double HEIGHT = Units.inchesToMeters(70);
     public static final double TARGET_VELOCITY_MPS = 15;
     // public static final double SHOOTER_HEIGHT = 24;
     // public static final double HEIGHT = SPEAKER_HEIGHT - SHOOTER_HEIGHT;
@@ -175,11 +196,14 @@ public final class Constants {
         Units.inchesToMeters(218.42), Rotation2d.fromDegrees(0.0));
     public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(Units.inchesToMeters(652.73),
         Units.inchesToMeters(218.42), Rotation2d.fromDegrees(180));
+    public static final Pose2d BLUE_AMP_CORNER_POSITION = Constants.apriltagLayout.getTagPose(6).get().toPose2d();
+    public static final Pose2d RED_AMP_CORNER_POSITION = Constants.apriltagLayout.getTagPose(5).get().toPose2d();
     // public static final Pose2d RED_SPEAKER_POSITION = new Pose2d(8.3,4.1,
     // Rotation2d.fromDegrees(0));
     public static final Transform2d SHOOTER_OFFSET = new Transform2d(Units.inchesToMeters(-6), Units.inchesToMeters(0),
         Rotation2d.fromDegrees(180));
-    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(7);
+    public static final Rotation2d AZMUTH_OFFSET = Rotation2d.fromDegrees(5.0);
+    public static final Translation2d FEEDOFFSET = new Translation2d(0,1.5);
   }
 
   public static final class Elevator {

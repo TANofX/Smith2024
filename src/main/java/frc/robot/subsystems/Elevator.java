@@ -44,11 +44,11 @@ public class Elevator extends SubsystemBase {
   }
 
   public void extendElevator() {
-    elevatorMotor.set(-0.25);
+    elevatorMotor.set(-0.5);
   }
 
   public void retractElevator() {
-    elevatorMotor.set(0.25);
+    elevatorMotor.set(0.5);
   }
 
   public void stopElevator() {
@@ -63,7 +63,8 @@ public class Elevator extends SubsystemBase {
     elevatorToHeight(Constants.Elevator.MAX_HEIGHT);
   }
 
-  private void elevatorToHeight(double motorRotations) {
+  public void 
+  elevatorToHeight(double motorRotations) {
     elevatorTarget = motorRotations;
     elevatorController.setReference(motorRotations, ControlType.kSmartMotion);
   }
@@ -84,6 +85,9 @@ public class Elevator extends SubsystemBase {
     return encoder.getPosition();
   }
 
+  public boolean isAtElevation() {
+    return (Math.abs(encoder.getPosition() - elevatorTarget) <= 4.0); //???
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

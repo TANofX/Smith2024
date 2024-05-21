@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.CalibrateElevator;
+import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.commands.auto.Autos;
 
 public class Robot extends TimedRobot {
@@ -18,7 +21,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     new RobotContainer();
+    CameraServer.startAutomaticCapture();
     //Autos.init();
+     
   }
 
   @Override
@@ -38,7 +43,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoCommand = Autos.getAutonomousCommand();
+    RobotContainer.swerve.removeDefaultCommand();
 
+    autoCommand = new CalibrateElevator().andThen(new CalibrateElevator()).andThen(autoCommand);
+    
     if (autoCommand != null) {
       autoCommand.schedule();
     }
@@ -55,6 +63,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    RobotContainer.swerve.setDefaultCommand(new SwerveDriveWithGamepad());
   }
 
   @Override

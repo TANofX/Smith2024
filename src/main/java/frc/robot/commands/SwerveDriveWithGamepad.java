@@ -37,13 +37,15 @@ public class SwerveDriveWithGamepad extends Command {
 
   @Override
   public void initialize() {
-    ChassisSpeeds currentSpeeds = RobotContainer.swerve.getCurrentSpeeds();
-    Translation2d hack =
-        new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
-            .rotateBy(RobotContainer.swerve.getPose().getRotation());
-    this.xVelLimiter.reset(hack.getX());
-    this.yVelLimiter.reset(hack.getY());
-    this.angularVelLimiter.reset(currentSpeeds.omegaRadiansPerSecond);
+    // ChassisSpeeds currentSpeeds = RobotContainer.swerve.getCurrentSpeeds();
+    // Translation2d hack = new Translation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
+    //     .rotateBy(RobotContainer.swerve.getPose().getRotation());
+    // this.xVelLimiter.reset(hack.getX());
+    // this.yVelLimiter.reset(hack.getY());
+    // this.angularVelLimiter.reset(currentSpeeds.omegaRadiansPerSecond);
+    this.xVelLimiter.reset(0);
+    this.yVelLimiter.reset(0);
+    this.angularVelLimiter.reset(0);
 
     rotationTarget = null;
   }
@@ -62,23 +64,16 @@ public class SwerveDriveWithGamepad extends Command {
     double rot;
     if (RobotContainer.fireControl.trackingTarget()) {
       rot = RobotContainer.fireControl.getRequiredRotation();
-    }
-    else {
-    rot = -RobotContainer.driver.getRightX();
-    rot = Math.copySign(rot * rot, rot);
+    } else {
+      rot = -RobotContainer.driver.getRightX();
+      rot = Math.copySign(rot * rot, rot);
     }
     double targetAngularVel = rot * Constants.Swerve.maxAngularVelTele;
-    boolean targeting = false;
     boolean stop = x == 0 && y == 0 && rot == 0;
 
-    // Only take over game piece aim if driver is not rotating and intake is spinning (we don't have
+    // Only take over game piece aim if driver is not rotating and intake is
+    // spinning (we don't have
     // a game piece in intake)
-   
-
-
-
-      
-    
 
     double xVel = this.xVelLimiter.calculate(x * Constants.Swerve.maxVelTele);
     double yVel = this.yVelLimiter.calculate(y * Constants.Swerve.maxVelTele);
@@ -89,7 +84,7 @@ public class SwerveDriveWithGamepad extends Command {
 
       RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
     } else {
-      if (!aimAtGamePiece && Math.abs(angularVel) <= 0.01) {
+      if (!RobotContainer.fireControl.trackingTarget() && Math.abs(angularVel) <= 0.01) {
         if (rotationTarget == null) {
           rotationTarget = RobotContainer.swerve.getPose().getRotation();
         }
@@ -101,29 +96,15 @@ public class SwerveDriveWithGamepad extends Command {
       } else {
         rotationTarget = null;
       }
-
-      if (!targeting) {
-        RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
-      } else {
-        if (Math.abs(
-                new Translation2d(xVel, yVel)
-                    .getAngle()
-                    .minus(RobotContainer.swerve.getPose().getRotation())
-                    .getDegrees())
-            < 45.0) {
-          double vel = Math.sqrt((xVel * xVel) + (yVel * yVel));
-          RobotContainer.swerve.driveRobotRelative(new ChassisSpeeds(vel, 0.0, angularVel));
-        } else {
-          RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
-        }
-      }
     }
 
-   
+    RobotContainer.swerve.driveFieldRelative(new ChassisSpeeds(xVel, yVel, angularVel));
+
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   @Override
   public boolean isFinished() {
