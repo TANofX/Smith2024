@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -67,7 +68,9 @@ public class Swerve extends AdvancedSubsystem {
     .getStructArrayTopic("/Swerve/States", SwerveModuleState.struct).publish();
   private StructArrayPublisher<SwerveModuleState> targetModuleStatesPublisher = NetworkTableInstance.getDefault()
     .getStructArrayTopic("/Swerve/TargetStates", SwerveModuleState.struct).publish();
-  public Swerve() {
+    private StructPublisher<Rotation2d> gyroPublisher = NetworkTableInstance.getDefault()
+    .getStructTopic("/Swerve/Gyro", Rotation2d.struct).publish();
+    public Swerve() {
     poseLookup = new RobotPoseLookup<Pose2d>();
 
     imu = new Pigeon2(Constants.Swerve.imuCanID, Constants.canivoreBusName);
@@ -203,6 +206,8 @@ public class Swerve extends AdvancedSubsystem {
         modules[3].getTargetState()
     };
     targetModuleStatesPublisher.set(targetModuleStates);
+
+    gyroPublisher.set(getYaw());
     SmartDashboard.putNumberArray(
         "Swerve/Odometry",
         new double[] {

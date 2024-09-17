@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -19,7 +20,7 @@ public class SwerveDriveWithGamepad extends Command {
 
   private Rotation2d rotationTarget = null;
   private final double rotationHoldFactor;
-  private static final double maxSpeedForChild = 0.5;
+  private static double maxSpeedForChild = 0.5;
   private final boolean aimAtGamePiece;
 
   public SwerveDriveWithGamepad(boolean aimAtGamePiece) {
@@ -48,10 +49,12 @@ public class SwerveDriveWithGamepad extends Command {
     this.angularVelLimiter.reset(0);
 
     rotationTarget = null;
+    SmartDashboard.putNumber("Speed Dial", maxSpeedForChild);
   }
 
   @Override
   public void execute() {
+    maxSpeedForChild = SmartDashboard.getNumber("Speed Dial", 0);
     double x = -RobotContainer.driver.getLeftY() * maxSpeedForChild;
     x = Math.copySign(x * x, x);
     double y = -RobotContainer.driver.getLeftX()* maxSpeedForChild;
