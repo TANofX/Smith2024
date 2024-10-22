@@ -20,7 +20,7 @@ public class SwerveDriveWithGamepad extends Command {
 
   private Rotation2d rotationTarget = null;
   private final double rotationHoldFactor;
-  private static double maxSpeedForChild = 0.5;
+  private static double maxSpeedForChild = 1;
   private final boolean aimAtGamePiece;
 
   public SwerveDriveWithGamepad(boolean aimAtGamePiece) {
