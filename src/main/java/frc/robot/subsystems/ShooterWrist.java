@@ -47,7 +47,7 @@ public class ShooterWrist extends AdvancedSubsystem {
     registerHardware("Elevation Motor", elevationMotor);
     registerHardware("Elevation Encoder", elevationEncoder);
     shooterEncoderConfiguration = new CANcoderConfiguration();
-    shooterEncoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    shooterEncoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf; //makes angles go from -180 to 180
     shooterEncoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     shooterEncoderConfiguration.MagnetSensor.MagnetOffset = Preferences.getDouble("intakeRotationOffset", 0.0) / 360.0;
     elevationEncoder.getConfigurator().apply(shooterEncoderConfiguration);
@@ -95,6 +95,7 @@ public class ShooterWrist extends AdvancedSubsystem {
     // tells us what angle we are at
   }
 
+  ///Potenial problem for angle *find better angle or find previous targetelevation*
   private double getAjustedAngle() {
     double getNewAngle = getAbsoluteRotationDegrees();
     if (getNewAngle > 135) {
