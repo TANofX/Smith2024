@@ -3568,6 +3568,36 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "0,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/Speed Dial",
+              "_title": "SmartDashboard/Speed Dial",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Slider Settings/Min": -1.0,
+              "Slider Settings/Max": 1.0,
+              "Slider Settings/Block increment": 0.0625,
+              "Visuals/Display value": true
+            }
+          },
+          "1,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/Wrist",
+              "_title": "SmartDashboard/Wrist",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }

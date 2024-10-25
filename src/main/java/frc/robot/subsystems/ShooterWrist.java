@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.pid.TuneSmartMotionControl;
 import frc.lib.subsystem.AdvancedSubsystem;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 public class ShooterWrist extends AdvancedSubsystem {
   private final CANSparkFlex elevationMotor = new CANSparkFlex(Constants.Shooter.elevationCANID, MotorType.kBrushless);

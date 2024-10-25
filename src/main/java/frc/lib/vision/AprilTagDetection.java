@@ -41,8 +41,8 @@ public class AprilTagDetection {
    * @param robotPose Current robot pose on the field
    * @return Pose of the tag on the field
    */
-  public static Transform3d cameraToRobot = new Transform3d(Units.inchesToMeters(10.25), Units.inchesToMeters(11.0), Units.inchesToMeters(-25.375), new Rotation3d(0,Units.degreesToRadians(-34.26),Units.degreesToRadians(180)));
-  public static Transform3d cameraToRobot2 = new Transform3d(Units.inchesToMeters(-12.625), Units.inchesToMeters(-10.75), Units.inchesToMeters(-17.5), new Rotation3d(0, Units.degreesToRadians(39), Units.degreesToRadians(0)));
+  public static Transform3d cameraToRobot = new Transform3d(Units.inchesToMeters(-28.25), Units.inchesToMeters(-11.0), Units.inchesToMeters(-25.375), new Rotation3d(0,Units.degreesToRadians(-34.26),Units.degreesToRadians(180)));
+  public static Transform3d cameraToRobot2 = new Transform3d(Units.inchesToMeters(-24.625), Units.inchesToMeters(-12.75), Units.inchesToMeters(-17.5), new Rotation3d(0, Units.degreesToRadians(39), Units.degreesToRadians(0)));
 
   public Pose3d getEstimatedTagPose(Transform3d cameraToRobot, Pose2d robotPose) {
     Transform3d robotToTag = getRobotToTag(cameraToRobot);

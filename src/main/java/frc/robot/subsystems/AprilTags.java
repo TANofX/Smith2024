@@ -15,20 +15,15 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import frc.lib.util.AprilTagStruct;
 import frc.lib.vision.AprilTagDetection;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.util.RobotPoseLookup;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -121,7 +116,7 @@ public class AprilTags extends SubsystemBase {
         AprilTagLookup.addPose(robotPose);
         aprilField.setRobotPose(robotPose.toPose2d());
         if (passedTarget.getPoseAmbiguity() < 0.10) {
-          RobotContainer.swerve.odometry.setVisionMeasurementStdDevs(VecBuilder.fill(1, 1, 0.25));
+          RobotContainer.swerve.odometry.setVisionMeasurementStdDevs(VecBuilder.fill(.25, .25, .5));
           RobotContainer.swerve.odometry.addVisionMeasurement(robotPose.toPose2d(), imageCaptureTime);
         }
         

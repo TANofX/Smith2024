@@ -12,16 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoSpeakerShot"
-                }
-              }
-            ]
+            "name": "AutoSpeakerShot"
           }
         },
         {
@@ -29,22 +22,9 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.125
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "D to piece 1"
-                      }
-                    }
-                  ]
+                  "pathName": "D to piece 1"
                 }
               },
               {
@@ -57,16 +37,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoSpeakerShot"
-                }
-              }
-            ]
+            "name": "AutoSpeakerShot"
           }
         },
         {

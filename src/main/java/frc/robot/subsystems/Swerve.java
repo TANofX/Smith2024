@@ -4,13 +4,6 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.sim.Pigeon2SimState;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,7 +16,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -208,6 +200,8 @@ public class Swerve extends AdvancedSubsystem {
     targetModuleStatesPublisher.set(targetModuleStates);
 
     gyroPublisher.set(getYaw());
+    ChassisSpeeds Chassis = getCurrentSpeeds();
+    SmartDashboard.putNumberArray("Swerve/RobotVelocity", new double[] {Chassis.vxMetersPerSecond, Chassis.vyMetersPerSecond, Chassis.omegaRadiansPerSecond});
     SmartDashboard.putNumberArray(
         "Swerve/Odometry",
         new double[] {

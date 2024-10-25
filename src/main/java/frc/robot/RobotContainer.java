@@ -6,19 +6,13 @@ package frc.robot;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.input.controllers.XboxControllerWrapper;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.commands.AtRedSubWoofer;
 import frc.robot.commands.AutoFireControl;
 import frc.robot.commands.CalibrateElevator;
 import frc.robot.commands.CancelShooter;
@@ -27,10 +21,8 @@ import frc.robot.commands.CustomShooterElevation;
 import frc.robot.commands.CustomSpeed;
 import frc.robot.commands.ElevateShooter;
 import frc.robot.commands.ElevatorAfterAmp;
-import frc.robot.commands.ElevatorToMax;
 import frc.robot.commands.ElevatorToMin;
 import frc.robot.commands.ExtendElevator;
-import frc.robot.commands.FindMotorExtents;
 import frc.robot.commands.FireControlWrist;
 import frc.robot.commands.IntakeNote;
 import frc.robot.commands.ManualShooterElevation;
@@ -43,15 +35,12 @@ import frc.robot.commands.SafePosition;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ShootInAmp;
 import frc.robot.commands.ShootInSpeaker;
-import frc.robot.commands.ShooterIntake;
 import frc.robot.commands.SwerveDriveWithGamepad;
 import frc.robot.commands.TransferNote;
 import frc.robot.commands.auto.Autos;
-import frc.robot.commands.LEDs.LEDHasNote;
 import frc.robot.commands.Notifications;
 
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 
 public class RobotContainer {

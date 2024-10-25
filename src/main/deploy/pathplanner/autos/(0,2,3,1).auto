@@ -24,7 +24,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -43,9 +43,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Middle Note to Shoot"
+            "name": "AutoSpeakerShot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "New Middle Note to Speaker Note"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -61,38 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Middle Note to Speaker Note"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "RunIntake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Speaker Note to Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoSpeakerShot"
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Shoot to Amp Note"
+                  "pathName": "Speaker Note to Amp Note"
                 }
               },
               {

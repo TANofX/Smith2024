@@ -29,41 +29,15 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.125
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "D to piece 1"
-                      }
-                    }
-                  ]
+                  "pathName": "D to piece 1"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "RunIntake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "AutoSpeakerShot"
                 }
               }
             ]
@@ -120,16 +94,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Piece 5 to Shoot Pose"
-                }
-              }
-            ]
+            "pathName": "Piece 5 to Shoot Pose"
           }
         },
         {
