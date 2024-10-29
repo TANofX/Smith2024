@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Addition to D"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "AutoSpeakerShot"
